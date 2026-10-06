@@ -377,12 +377,34 @@ def choose_backgrounds(grid: Grid, candidates: Sequence[Filament], strips: Seque
             seen.add(f.hex)
             pool.append(f)
     k = min(k, len(pool))
-    best, best_err = list(pool[:k]), float("inf")
-    for sub in combinations(pool, k):
-        err = _total_error(targets, areas, build_options(sub, strips, ladder, cov))
-        if err < best_err:
-            best, best_err = list(sub), err
-    return best
+
+    def total(sub):
+        return _total_error(targets, areas, build_options(sub, strips, ladder, cov))
+
+    if len(pool) <= 12:
+        best, best_err = list(pool[:k]), float("inf")
+        for sub in combinations(pool, k):
+            err = total(sub)
+            if err < best_err:
+                best, best_err = list(sub), err
+        return best
+    # large candidate set (e.g. the whole catalogue): greedy forward selection + swap pass
+    chosen: List[Filament] = []
+    while len(chosen) < k:
+        chosen.append(min((f for f in pool if f not in chosen), key=lambda f: total(chosen + [f])))
+    improved = True
+    while improved:
+        improved = False
+        cur = total(chosen)
+        for j in range(len(chosen)):
+            for f in pool:
+                if f in chosen:
+                    continue
+                trial = chosen[:j] + [f] + chosen[j + 1:]
+                t = total(trial)
+                if t < cur - 1e-9:
+                    chosen, cur, improved = trial, t, True
+    return chosen
 
 
 def choose_filaments_multi(grid: Grid, candidates: Sequence[Filament], bgs: Sequence[Filament],

@@ -3,7 +3,7 @@
 Turn a picture into a 3D-printed kumiko panel: coloured kumiko line inserts in a triangular
 lattice frame, where the picture emerges from the colour and density of the lines.
 
-![Golden Gate Bridge, 60 columns](examples/gallery/golden_gate_bridge_60cols.jpg)
+![The Great Wave as a kumiko panel](examples/gallery/great_wave_60cols_compare.jpg)
 
 **Status (Oct 2026):** working end to end. Verified against Paper View's photos and panel
 sizes; not yet verified on a printed frame. Open items are tracked as GitHub issues.
@@ -25,6 +25,34 @@ Give the tool an image (and optionally a size). It returns:
 Why still use Paper View's frame: the board is the hard part (sub-panels, seams, dovetails,
 borders, hangers, LED channel, print profiles for 180/250 mm beds). The inserts are simple
 extruded strip patterns, which is what this tool makes. His insert generator is not needed.
+
+## Examples
+
+Source on the left, planned panel on the right, drawn with the real insert silhouettes. All at 60 columns (2.6 m wide at 50 mm pitch, 1.6 m at 30 mm), 8 Bambu PLA strip filaments, 3 grey background filaments, at most 4 line patterns, dark frame. The fidelity number is the mean CIELAB error at viewing distance (lower is better; under 10 reads as the picture from across a room). Rebuild with `python scripts/make_gallery.py && python scripts/readme_examples.py`.
+
+**The Great Wave (Hokusai)**: 60 x 35 triangles, 4260 cells, 4249 pattern inserts, fidelity 14.15
+
+![The Great Wave (Hokusai)](examples/gallery/great_wave_60cols_compare.jpg)
+
+**Golden Gate Bridge**: 60 x 39 triangles, 4740 cells, 4575 pattern inserts, fidelity 9.42
+
+![Golden Gate Bridge](examples/gallery/golden_gate_bridge_60cols_compare.jpg)
+
+**Toco toucan**: 60 x 31 triangles, 3780 cells, 3493 pattern inserts, fidelity 7.17
+
+![Toco toucan](examples/gallery/toucan_60cols_compare.jpg)
+
+**Earth from Apollo 17**: 60 x 52 triangles, 6300 cells, 3960 pattern inserts, fidelity 6.12
+
+![Earth from Apollo 17](examples/gallery/earth_60cols_compare.jpg)
+
+**The Starry Night (Van Gogh)**: 60 x 41 triangles, 4980 cells, 4903 pattern inserts, fidelity 12.76
+
+![The Starry Night (Van Gogh)](examples/gallery/starry_night_60cols_compare.jpg)
+
+**Red Fuji (Hokusai)**: 60 x 35 triangles, 4260 cells, 4207 pattern inserts, fidelity 17.66
+
+![Red Fuji (Hokusai)](examples/gallery/red_fuji_60cols_compare.jpg)
 
 ## Install
 

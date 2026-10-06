@@ -1,38 +1,74 @@
 [
  {
-  "name": "golden_gate_bridge",
-  "source": "golden_gate_bridge_source.jpg",
+  "name": "earth",
+  "source": "earth_source.jpg",
   "rows": [
    {
-    "variant": "default_40cols",
-    "img": "golden_gate_bridge_default_40cols.jpg",
+    "variant": "60cols",
+    "img": "earth_60cols.jpg",
     "grid": [
-     40,
-     26
+     60,
+     52
     ],
     "outer": [
-     1747.1,
-     1318.0
+     2613.1,
+     2618.0
     ],
-    "cells": 2120,
-    "inserts": 2044,
+    "cells": 6300,
+    "inserts": 3960,
     "palette": [
-     "#A3D8E1",
-     "#56B7E6",
+     "#0A2989",
+     "#0056B8",
+     "#AE96D4",
      "#5B6579",
-     "#9D432C",
-     "#BECF00",
-     "#FF6A13",
-     "#E8DBB7",
-     "#C12E1F"
+     "#FFFFFF",
+     "#0086D6",
+     "#042F56",
+     "#950051"
     ],
     "backgrounds": [
      "#000000",
-     "#545454",
-     "#FFFFFF"
+     "#757575",
+     "#D1D3D5"
     ],
-    "fidelity": 10.1
+    "fidelity": 6.12
    },
+   {
+    "variant": "40cols",
+    "img": "earth_40cols.jpg",
+    "grid": [
+     40,
+     35
+    ],
+    "outer": [
+     1747.1,
+     1768.0
+    ],
+    "cells": 2840,
+    "inserts": 1799,
+    "palette": [
+     "#0A2989",
+     "#0056B8",
+     "#AE96D4",
+     "#5B6579",
+     "#FFFFFF",
+     "#042F56",
+     "#0086D6",
+     "#950051"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#757575",
+     "#D1D3D5"
+    ],
+    "fidelity": 6.88
+   }
+  ]
+ },
+ {
+  "name": "golden_gate_bridge",
+  "source": "golden_gate_bridge_source.jpg",
+  "rows": [
    {
     "variant": "60cols",
     "img": "golden_gate_bridge_60cols.jpg",
@@ -62,82 +98,76 @@
      "#FFFFFF"
     ],
     "fidelity": 9.42
-   }
-  ]
- },
- {
-  "name": "lighthouse",
-  "source": "lighthouse_source.jpg",
-  "rows": [
+   },
    {
-    "variant": "default_40cols",
-    "img": "lighthouse_default_40cols.jpg",
+    "variant": "40cols",
+    "img": "golden_gate_bridge_40cols.jpg",
     "grid": [
      40,
-     19
+     26
     ],
     "outer": [
      1747.1,
-     968.0
+     1318.0
     ],
-    "cells": 1560,
-    "inserts": 1509,
+    "cells": 2120,
+    "inserts": 2044,
     "palette": [
-     "#0086D6",
-     "#FFFFFF",
-     "#7D6556",
-     "#F7D959",
+     "#A3D8E1",
+     "#56B7E6",
      "#5B6579",
+     "#9D432C",
      "#BECF00",
-     "#847D48",
-     "#DE4343"
+     "#FF6A13",
+     "#E8DBB7",
+     "#C12E1F"
     ],
     "backgrounds": [
      "#000000",
      "#545454",
-     "#9B9EA0"
+     "#FFFFFF"
     ],
-    "fidelity": 15.66
-   },
-   {
-    "variant": "60cols",
-    "img": "lighthouse_60cols.jpg",
-    "grid": [
-     60,
-     29
-    ],
-    "outer": [
-     2613.1,
-     1468.0
-    ],
-    "cells": 3540,
-    "inserts": 3385,
-    "palette": [
-     "#0086D6",
-     "#FFFFFF",
-     "#5B6579",
-     "#F7D959",
-     "#D3B7A7",
-     "#BECF00",
-     "#847D48",
-     "#DE4343"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#545454",
-     "#D1D3D5"
-    ],
-    "fidelity": 15.02
+    "fidelity": 10.1
    }
   ]
  },
  {
-  "name": "red_fuji",
-  "source": "red_fuji_source.jpg",
+  "name": "great_wave",
+  "source": "great_wave_source.jpg",
   "rows": [
    {
-    "variant": "default_40cols",
-    "img": "red_fuji_default_40cols.jpg",
+    "variant": "60cols",
+    "img": "great_wave_60cols.jpg",
+    "grid": [
+     60,
+     35
+    ],
+    "outer": [
+     2613.1,
+     1768.0
+    ],
+    "cells": 4260,
+    "inserts": 4249,
+    "palette": [
+     "#FEC600",
+     "#F7D959",
+     "#0078BF",
+     "#5B6579",
+     "#D1D3D5",
+     "#E8DBB7",
+     "#A3D8E1",
+     "#56B7E6"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#CBC6B8",
+     "#FFFFFF"
+    ],
+    "fidelity": 14.15
+   },
+   {
+    "variant": "40cols",
+    "img": "great_wave_40cols.jpg",
     "grid": [
      40,
      23
@@ -147,24 +177,30 @@
      1168.0
     ],
     "cells": 1880,
-    "inserts": 1857,
+    "inserts": 1862,
     "palette": [
      "#E8DBB7",
-     "#0056B8",
-     "#FF6A13",
-     "#545454",
-     "#3F8E43",
-     "#0086D6",
-     "#C12E1F",
-     "#0A2989"
+     "#F7D959",
+     "#042F56",
+     "#0078BF",
+     "#A3D8E1",
+     "#FEC600",
+     "#CBC6B8",
+     "#56B7E6"
     ],
     "backgrounds": [
      "#000000",
      "#545454",
-     "#A6A9AA"
+     "#CBC6B8"
     ],
-    "fidelity": 19.09
-   },
+    "fidelity": 16.83
+   }
+  ]
+ },
+ {
+  "name": "red_fuji",
+  "source": "red_fuji_source.jpg",
+  "rows": [
    {
     "variant": "60cols",
     "img": "red_fuji_60cols.jpg",
@@ -194,6 +230,36 @@
      "#A6A9AA"
     ],
     "fidelity": 17.66
+   },
+   {
+    "variant": "40cols",
+    "img": "red_fuji_40cols.jpg",
+    "grid": [
+     40,
+     23
+    ],
+    "outer": [
+     1747.1,
+     1168.0
+    ],
+    "cells": 1880,
+    "inserts": 1857,
+    "palette": [
+     "#E8DBB7",
+     "#0056B8",
+     "#FF6A13",
+     "#545454",
+     "#3F8E43",
+     "#0086D6",
+     "#C12E1F",
+     "#0A2989"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#545454",
+     "#A6A9AA"
+    ],
+    "fidelity": 19.09
    }
   ]
  },
@@ -201,36 +267,6 @@
   "name": "starry_night",
   "source": "starry_night_source.jpg",
   "rows": [
-   {
-    "variant": "default_40cols",
-    "img": "starry_night_default_40cols.jpg",
-    "grid": [
-     40,
-     27
-    ],
-    "outer": [
-     1747.1,
-     1368.0
-    ],
-    "cells": 2200,
-    "inserts": 2174,
-    "palette": [
-     "#0056B8",
-     "#0086D6",
-     "#8E9089",
-     "#C2E189",
-     "#5B6579",
-     "#A3D8E1",
-     "#56B7E6",
-     "#F4EE2A"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#545454",
-     "#9B9EA0"
-    ],
-    "fidelity": 12.3
-   },
    {
     "variant": "60cols",
     "img": "starry_night_60cols.jpg",
@@ -260,72 +296,102 @@
      "#9B9EA0"
     ],
     "fidelity": 12.76
+   },
+   {
+    "variant": "40cols",
+    "img": "starry_night_40cols.jpg",
+    "grid": [
+     40,
+     27
+    ],
+    "outer": [
+     1747.1,
+     1368.0
+    ],
+    "cells": 2200,
+    "inserts": 2174,
+    "palette": [
+     "#0056B8",
+     "#0086D6",
+     "#8E9089",
+     "#C2E189",
+     "#5B6579",
+     "#A3D8E1",
+     "#56B7E6",
+     "#F4EE2A"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#545454",
+     "#9B9EA0"
+    ],
+    "fidelity": 12.3
    }
   ]
  },
  {
-  "name": "sunflower",
-  "source": "sunflower_source.jpg",
+  "name": "toucan",
+  "source": "toucan_source.jpg",
   "rows": [
    {
-    "variant": "default_40cols",
-    "img": "sunflower_default_40cols.jpg",
-    "grid": [
-     40,
-     23
-    ],
-    "outer": [
-     1747.1,
-     1168.0
-    ],
-    "cells": 1880,
-    "inserts": 1821,
-    "palette": [
-     "#0086D6",
-     "#5E43B7",
-     "#3F8E43",
-     "#FEC600",
-     "#F4EE2A",
-     "#FF6A13",
-     "#56B7E6",
-     "#FF9016"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#9B9EA0",
-     "#FFFFFF"
-    ],
-    "fidelity": 22.56
-   },
-   {
     "variant": "60cols",
-    "img": "sunflower_60cols.jpg",
+    "img": "toucan_60cols.jpg",
     "grid": [
      60,
-     35
+     31
     ],
     "outer": [
      2613.1,
-     1768.0
+     1568.0
     ],
-    "cells": 4260,
-    "inserts": 4120,
+    "cells": 3780,
+    "inserts": 3493,
     "palette": [
-     "#0086D6",
-     "#5E43B7",
+     "#8E9089",
      "#3F8E43",
-     "#F4EE2A",
-     "#FEC600",
-     "#56B7E6",
+     "#482960",
+     "#757575",
      "#FF6A13",
-     "#FF9016"
+     "#C12E1F",
+     "#F4EE2A",
+     "#FEC600"
     ],
     "backgrounds": [
      "#000000",
-     "#9B9EA0",
+     "#545454",
      "#FFFFFF"
     ],
-    "fidelity": 22.08
+    "fidelity": 7.17
+   },
+   {
+    "variant": "40cols",
+    "img": "toucan_40cols.jpg",
+    "grid": [
+     40,
+     20
+    ],
+    "outer": [
+     1747.1,
+     1018.0
+    ],
+    "cells": 1640,
+    "inserts": 1520,
+    "palette": [
+     "#8E9089",
+     "#3F8E43",
+     "#482960",
+     "#757575",
+     "#FF6A13",
+     "#C12E1F",
+     "#F4EE2A",
+     "#FEC600"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#545454",
+     "#FFFFFF"
+    ],
+    "fidelity": 7.61
    }
   ]
  }

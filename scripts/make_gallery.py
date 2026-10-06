@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SAMPLES = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "examples" / "samples"
 OUT = ROOT / "examples" / "gallery"
 VARIANTS = {
-    "default_40cols": Params(),
     "60cols": Params(cols=60),
+    "40cols": Params(),
 }
 
 OUT.mkdir(parents=True, exist_ok=True)
@@ -40,6 +40,9 @@ for img in sorted(SAMPLES.glob("*")):
         pv = Image.open(d / "preview.png")
         pv.thumbnail((1400, 1400))
         pv.save(OUT / f"{name}_{vname}.jpg", quality=85)
+        cmp_ = Image.open(d / "compare.jpg")
+        cmp_.thumbnail((1600, 1600))
+        cmp_.save(OUT / f"{name}_{vname}_compare.jpg", quality=85)
         shutil.rmtree(d / "plates", ignore_errors=True)
         g = s["grid"]
         rows.append({"variant": vname, "img": f"{name}_{vname}.jpg", "grid": g["triangle_generator"],
