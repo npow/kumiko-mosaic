@@ -2,7 +2,7 @@
 
 Usage: python scripts/compare_variants.py NAME=json_params [NAME=json_params ...] [--images a,b,c] [--cols 40]
 Example: python scripts/compare_variants.py base='{}' wide='{"pattern_mode":"auto"}'
-Prints mean CIELAB error (lower is better) per image and variant, then the mean per variant.
+Prints colour error (CIELAB, lower is better) and SSIM structure (higher is better) per image and variant.
 """
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def work(job):
     from kumiko_mosaic.pipeline import Params, run
     p = {"cols": cols, "preview_only": True, **params}
     s = run(str(ROOT / "examples" / "samples" / f"{img}.jpg"), f"/tmp/cmp_{img}_{name}", Params(**p))
-    return img, name, s["fidelity"]["mean_dE"], s["fidelity"]["p90_dE"]
+    return img, name, s["fidelity"]["mean_dE"], s["fidelity"]["ssim"]
 
 
 def main():
@@ -42,14 +42,14 @@ def main():
     with ProcessPoolExecutor(a.workers) as ex:
         res = list(ex.map(work, jobs))
     table = {}
-    for img, name, m, p90 in res:
-        table.setdefault(img, {})[name] = (m, p90)
+    for img, name, m, ssim in res:
+        table.setdefault(img, {})[name] = (m, ssim)
     names = list(variants)
-    print(f"{'image':22s}" + "".join(f"{n:>16s}" for n in names))
+    print(f"{'image':22s}" + "".join(f"{n:>18s}" for n in names))
     for img, d in table.items():
-        print(f"{img:22s}" + "".join(f"{d[n][0]:>9.2f}/{d[n][1]:<6.1f}" for n in names))
-    print(f"{'MEAN':22s}" + "".join(f"{sum(d[n][0] for d in table.values()) / len(table):>16.2f}" for n in names))
-    print("(mean dE / p90 dE; lower is better)")
+        print(f"{img:22s}" + "".join(f"{d[n][0]:>10.2f} / {d[n][1]:<5.3f}" for n in names))
+    print(f"{'MEAN':22s}" + "".join(f"{sum(d[n][0] for d in table.values()) / len(table):>10.2f} / {sum(d[n][1] for d in table.values()) / len(table):<5.3f}" for n in names))
+    print("(colour error dE, lower is better / SSIM structure, higher is better)")
 
 
 if __name__ == "__main__":

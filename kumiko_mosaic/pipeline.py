@@ -6,7 +6,7 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 from . import bom as bom_mod
 import numpy as np
@@ -33,9 +33,10 @@ class Params:
     measure: str = "outer"
     # image
     fit: str = "cover"
+    crop: Optional[List[float]] = None     # [left, top, right, bottom] as fractions of the image, applied first
     enhance: bool = True                   # autocontrast + mild saturation boost before sampling
     sample_shrink: float = 0.85
-    sampling: str = "vote"                 # vote (pixel-art style region voting, default) | mean (per-cell average)
+    sampling: str = "mean"                 # mean (nearest option to each cell's average colour, default) | vote (region voting)
     smooth_mm: float = 10.0                # vote mode: edge-preserving smoothing radius before quantising
     line_boost: float = 4.0                # keep thin contrasting features (cables, masts); 0 = off, 8 = strong
     line_coherence: float = 34.0           # max colour spread (CIELAB) of a feature to count as a line, not texture
@@ -44,6 +45,7 @@ class Params:
     filament_set: str = "bambu"            # purchasable catalogue to pick from: bambu | bambu-matte | bambu-basic
     max_colors: int = 8
     dither: bool = False
+    dither_strength: float = 0.3           # share of each cell's colour error passed to its neighbours
     color_layer: str = "pattern"           # pattern (coloured strips over one background, default) | background | both
     background_color: str = "Matte Charcoal=#000000"   # used when max_backgrounds == 1
     max_backgrounds: int = 3               # auto mode: background filaments chosen per panel (1 = single colour)
@@ -107,6 +109,16 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     img = Image.open(image_path)
+    img = ImageOps.exif_transpose(img).convert("RGB")
+    crop_used = None
+    if params.crop:
+        crop_used = [float(v) for v in params.crop]
+    if crop_used:
+        l, t, r, b = crop_used
+        if not (0 <= l < r <= 1 and 0 <= t < b <= 1):
+            raise ValueError(f"bad crop {crop_used}: need 0 <= left < right <= 1 and 0 <= top < bottom <= 1")
+        img = img.crop((int(l * img.width), int(t * img.height), max(int(r * img.width), int(l * img.width) + 8),
+                        max(int(b * img.height), int(t * img.height) + 8)))
     spec = FrameSpec(pitch=params.pitch, mitsuke=params.mitsuke, border=params.border,
                      insert_depth=params.insert_depth)
     aspect = img.width / img.height
@@ -152,15 +164,7 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
                                       line_boost=params.line_boost, line_coherence=params.line_coherence,
                                       sharpen=params.sharpen)
         else:
-            opt_lab = match.rgb_to_lab(np.array([o[3] for o in options]))
-            for c in grid.cells:
-                i = int(((opt_lab - match.rgb_to_lab(np.asarray(c.rgb_mean, dtype=float))) ** 2).sum(1).argmin())
-                b, f, pid, _ = options[i]
-                c.bg_color, c.bg_name = b.hex, b.name
-                if f is None:
-                    c.color, c.color_name, c.pattern = b.hex, "background", None
-                else:
-                    c.color, c.color_name, c.pattern = f.hex, f.name, pid
+            match.assign_options_mean(grid, options, dither=params.dither_strength if params.dither else 0.0)
         if params.edge_halves == "background":
             for c in grid.half_cells():
                 c.pattern = None
@@ -280,7 +284,7 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
     summary = {
         "seconds": tm.stages,
         "grid": grid.summary(),
-        "image": {"source": str(image_path), "fit": params.fit, "aspect": round(aspect, 4),
+        "image": {"source": str(image_path), "fit": params.fit, "crop": crop_used, "aspect": round(aspect, 4),
                   "lattice_aspect": round(grid.lattice_width / grid.lattice_height, 4)},
         "palette_used": [{"name": f.name, "hex": f.hex} for f in used],
         "backgrounds_used": [{"name": f.name, "hex": f.hex} for f in palette_used_bg],

@@ -605,5 +605,54 @@ def fidelity_score(grid: Grid, fitted, cov: Dict[str, float], view_blur_mm: Opti
     # contrast: std of L in the plan vs the source
     La = rgb_to_lab(a.reshape(-1, 3))[:, 0]
     Lb = rgb_to_lab(b.reshape(-1, 3))[:, 0]
+    # structure: SSIM of lightness at a finer blur than the colour error, so edges and contrast count
+    from scipy.ndimage import uniform_filter
+    r2 = max(1.0, (view_blur_mm or grid.spec.pitch * 0.5) / 8.0)
+    pa = rgb_to_lab(np.asarray(plan.filter(ImageFilter.GaussianBlur(r2)), dtype=float).reshape(-1, 3))[:, 0].reshape(H, W)
+    sb = rgb_to_lab(np.asarray(src.filter(ImageFilter.GaussianBlur(r2)), dtype=float).reshape(-1, 3))[:, 0].reshape(H, W)
+    k = max(5, int(grid.spec.pitch * 0.5))
+    ma, mb = uniform_filter(pa, k), uniform_filter(sb, k)
+    va, vb = uniform_filter(pa * pa, k) - ma * ma, uniform_filter(sb * sb, k) - mb * mb
+    cov_ab = uniform_filter(pa * sb, k) - ma * mb
+    C1, C2 = 1.0, 9.0
+    ssim = ((2 * ma * mb + C1) * (2 * cov_ab + C2)) / ((ma * ma + mb * mb + C1) * (va + vb + C2))
     return {"mean_dE": round(float(dE.mean()), 2), "p90_dE": round(float(np.percentile(dE, 90)), 2),
+            "ssim": round(float(ssim.mean()), 3),
             "L_std_plan": round(float(La.std()), 1), "L_std_source": round(float(Lb.std()), 1)}
+
+
+def assign_options_mean(grid: Grid, options: List[tuple], dither: float = 0.0) -> None:
+    """Give every cell the achievable option nearest to its mean colour (CIELAB).
+
+    dither > 0 diffuses a fraction of each cell's colour error onto the neighbouring cells that have
+    not been assigned yet (cells share an edge), so smooth gradients alternate between two nearby
+    options instead of banding. 0.5 to 0.7 keeps noise low; 1.0 is full error diffusion."""
+    from scipy.spatial import cKDTree
+    opt_lab = rgb_to_lab(np.array([o[3] for o in options]))
+    tree = cKDTree(opt_lab)
+    targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
+    if dither <= 0:
+        picks = tree.query(targets)[1]
+    else:
+        nb = _cell_neighbours(grid)
+        index = {(c.col, c.row): i for i, c in enumerate(grid.cells)}
+        order = sorted(range(len(grid.cells)), key=lambda i: (grid.cells[i].col, grid.cells[i].row))
+        done = np.zeros(len(grid.cells), dtype=bool)
+        err = np.zeros_like(targets)
+        picks = np.zeros(len(grid.cells), dtype=int)
+        for i in order:
+            want = targets[i] + err[i]
+            j = int(tree.query(want)[1])
+            picks[i] = j
+            done[i] = True
+            e = (want - opt_lab[j]) * dither
+            todo = [index[k] for k in nb[(grid.cells[i].col, grid.cells[i].row)] if not done[index[k]]]
+            for t in todo:
+                err[t] += e / len(todo)
+    for c, j in zip(grid.cells, picks):
+        b, f, pid, _ = options[int(j)]
+        c.bg_color, c.bg_name = b.hex, b.name
+        if f is None:
+            c.color, c.color_name, c.pattern = b.hex, "background", None
+        else:
+            c.color, c.color_name, c.pattern = f.hex, f.name, pid

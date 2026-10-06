@@ -87,16 +87,24 @@ The achievable cell colours are every (background, strip filament, pattern) trip
 coverage x strip + (1 - coverage) x background, mixed in linear light.
 
 Every run reports a **fidelity score**: the plan and the source are both blurred to roughly
-one pitch (what the eye sees from a few metres) and compared in CIELAB; lower is better.
-On the gallery images, 3 backgrounds vs 1 cut the error by 15-40% (Golden Gate 15.0 -> 9.4).
-An unsharp-mask option (`--sharpen`) exists but made every sample worse, so it is off.
+one pitch (what the eye sees from a few metres) and compared. Two numbers: the colour error
+in CIELAB (lower is better) and SSIM of lightness (higher is better, 1 is identical structure).
+On the sample images, 3 backgrounds instead of 1 cut the colour error by 15 to 40%.
 
-Default assignment is **region voting** (`--sampling vote`, after Kopf & Lischinski's pixel-art
-abstraction): the image is smoothed with an edge-preserving median filter (`--smooth-mm 10`) to
-remove texture, every pixel is quantised to the nearest achievable colour in CIELAB, and each
-cell takes the majority label. Region boundaries stay crisp instead of averaging into muddy
-in-between cells. Isolated cells that disagree with all their neighbours are flipped to the
-neighbours' label. `--sampling mean` is the older per-cell average + nearest match.
+**Assignment.** Each cell takes the achievable option (background, strip filament, pattern) that is
+nearest to the cell's average colour (`--sampling mean`, default). The alternative is region
+voting (`--sampling vote`, after Kopf and Lischinski's pixel-art abstraction): smooth the image,
+quantise every pixel, take the majority per cell. Measured on six images with
+`scripts/compare_variants.py`, averaging beats voting on both numbers (colour error 9.75 vs 11.13,
+SSIM 0.496 vs 0.478), and looks cleaner now that a cell can choose among hundreds of options.
+Other things that were tried and are off by default: unsharp masking (`--sharpen`, worse on every
+image), error diffusion (`--dither`, colour error 9.75 to 9.47 but SSIM 0.496 to 0.471, so it trades
+structure for smoothness), and a different smoothing radius for voting (4 to 20 mm changes the mean
+error by under 0.3, with no consistent best value per image).
+
+**Cropping.** `--crop left,top,right,bottom` (fractions of the image) or drag a box on the picture in
+the web app. An automatic crop to the "salient" region was tried and removed: colour-distance
+saliency cut off the toucan's body and the dark side of the Earth, so it was worse than no crop.
 
 The density ladder is filtered per pitch so that **every opening stays at least `--min-hole`
 (2.5 mm) wide** and no pattern covers more than 65% of the cell: lines must stay lines, not
@@ -146,7 +154,7 @@ dense patterns survive the `--min-hole` test (at 30 mm only `y, asanoha, mesh2, 
   colour qualify (`--line-coherence`, default 34; lower it if textured areas get speckled).
   Checked on all five gallery images: bridge cables and Fuji's snow streaks appear, the
   sunflower and lighthouse are unchanged.
-* `--dither` adds error diffusion (smoother gradients, noisier look).
+* `--dither` adds error diffusion between neighbouring triangles (`dither_strength`, default 0.3); it lowers the colour error slightly and the structure score more, so it is off by default.
 
 Look at `examples/gallery/index.html` (also served at `/gallery` by the web app): before/after
 for Starry Night, the Great Wave, Mona Lisa, Girl with a Pearl Earring and the Golden Gate

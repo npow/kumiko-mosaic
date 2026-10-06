@@ -231,7 +231,7 @@ def test_vote_mode_crisp_regions(tmp_path):
         a[:, x] = (np.array((220, 40, 40)) * (1 - t) + np.array((40, 60, 220)) * t).astype(np.uint8)
     p = tmp_path / "two.png"
     Image.fromarray(a).save(p)
-    s = run(str(p), str(tmp_path / "o7"), Params(cols=12, max_colors=3, max_patterns=2, enhance=False,
+    s = run(str(p), str(tmp_path / "o7"), Params(cols=12, max_colors=3, max_patterns=2, enhance=False, sampling="vote",
                                                  line_boost=0, export_3mf=False, export_stl=False))
     # a flat region may be a coloured background with no strips, so look at every part colour:
     # voting must not invent a third boundary colour (averaging would give purple)
@@ -274,3 +274,15 @@ def test_bag_labels_and_plate_codes(tmp_path, img):
     # bag codes in plates match the codes used on the assembly sheet (letter+digit for strips, BG for backgrounds)
     codes = {c for pl in s["plates"] for c in pl["codes"]}
     assert any(c.startswith("BG") for c in codes) and any(c[0].isalpha() and c[1:2].isdigit() for c in codes)
+
+
+def test_manual_crop(tmp_path, img):
+    base = run(str(img), str(tmp_path / "c0"), Params(cols=8, preview_only=True))
+    cropped = run(str(img), str(tmp_path / "c1"), Params(cols=8, crop=[0.0, 0.0, 0.33, 1.0], preview_only=True))
+    # the image is 180x120; a left-third crop is a tall image, so at equal columns it has more rows
+    assert cropped["grid"]["rows_pitches_tall"] > base["grid"]["rows_pitches_tall"]
+    # the cropped region is the white strip only (the left third), so no red or blue filament is needed
+    names = " ".join(p["name"] for p in cropped["palette_used"]).lower()
+    assert "red" not in names and "blue" not in names
+    with pytest.raises(ValueError):
+        run(str(img), str(tmp_path / "c2"), Params(cols=8, crop=[0.6, 0.0, 0.2, 1.0], preview_only=True))
