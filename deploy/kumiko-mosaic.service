@@ -1,0 +1,15 @@
+[Unit]
+Description=Kumiko mosaic planner (web app)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@ROOT@
+Environment=PORT=@PORT@
+Environment=KUMIKO_RUN_TTL_HOURS=24
+ExecStart=@ROOT@/serve.sh
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

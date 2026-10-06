@@ -10,6 +10,14 @@ pip install -r requirements.txt
 python -m pytest -q
 ```
 
+## Run it permanently
+
+`scripts/install_service.sh --https-port 8444` installs a systemd user service (starts at boot,
+restarts after a crash) and publishes the app on your tailnet over HTTPS with `tailscale serve`.
+Without `--https-port` it only installs the service. Settings: `PORT`, `KUMIKO_MAX_JOBS` (plans
+running at once, default 2) and `KUMIKO_RUN_TTL_HOURS` (how long results are kept, default 24).
+Logs: `journalctl --user -u kumiko-mosaic -f`.
+
 ## Use: web UI
 
 ```bash
