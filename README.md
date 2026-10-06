@@ -59,9 +59,9 @@ instead.
 
 ## Zoom in
 
-The panel is a vector drawing, so you can zoom until single inserts fill the screen. In the web app,
-open `/catalog` and click any panel, then scroll to zoom and drag to pan. The picture below shows the
-same thing in three steps.
+The panel is a vector drawing, so you can zoom until single inserts fill the screen. The preview on
+the web app's result page does this (scroll to zoom, drag to pan, double-click to zoom in), and so
+does every panel in `/catalog`. The picture below shows the idea in three steps.
 
 ![Zoom: whole panel, a square, the line inserts](docs/img/zoom.png)
 

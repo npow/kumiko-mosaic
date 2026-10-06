@@ -188,6 +188,9 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
     kw = dict(color_layer=params.color_layer, background_color=bgf.hex, pattern_color=patf.hex,
               frame_color=params.frame_color, strip_mm=params.strip_mm)
     (out / "preview.svg").write_text(render.svg_preview(grid, labels=params.labels, **kw))
+    if params.color_layer == "pattern":                     # compact vector plan for the zoom viewer
+        (out / "plan.svg").write_text(render.svg_compact(grid, background_color=bgf.hex,
+                                                         frame_color=params.frame_color, strip_mm=params.strip_mm))
     ppm_preview = min(3.0, 4000.0 / max(grid.lattice_width, grid.lattice_height))
     preview = render.png_preview(grid, labels=params.labels, px_per_mm=ppm_preview, **kw)
     preview.save(out / "preview.png")

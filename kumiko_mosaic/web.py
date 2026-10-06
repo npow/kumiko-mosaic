@@ -71,6 +71,7 @@ async def api_run(image: UploadFile = File(...), params: str = Form("{}")):
     summary["run_id"] = rid
     summary["files"] = {
         "preview_svg": f"/runs/{rid}/preview.svg",
+        "plan_svg": f"/runs/{rid}/plan.svg" if (rdir / "plan.svg").exists() else None,
         "preview_png": f"/runs/{rid}/preview.png",
         "compare": f"/runs/{rid}/compare.jpg",
         "report": f"/runs/{rid}/REPORT.md",

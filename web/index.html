@@ -106,7 +106,8 @@ marine blue=#1F4E9A
  <div id="out" style="display:none">
   <h2>Frame</h2><div id="frame"></div>
   <h2>Source vs plan</h2><img id="compare" style="max-width:100%;border-radius:6px">
-  <h2>Preview</h2><div id="preview"></div>
+  <h2>Preview <span style="font-size:12px;color:#999;font-weight:normal">scroll to zoom, drag to pan, double-click to zoom in</span> <button type="button" id="pfit" style="width:auto;margin:0 0 0 8px;padding:2px 10px;font-size:12px">fit</button></h2>
+  <div id="preview" style="height:72vh;background:#000;border-radius:6px;overflow:hidden"></div>
   <div class="pal" id="pal"></div>
   <h2>Filament per colour</h2><div id="mat"></div>
   <h2>Insert counts per colour</h2><div id="chk"></div>
@@ -156,6 +157,22 @@ f.addEventListener('submit',async e=>{
  }catch(err){document.getElementById('status').textContent='Error: '+err.message}
  go.disabled=false;
 });
+let pv=null,pfull=null,pvb=null;
+function pvSet(){pv.setAttribute('viewBox',`${pvb.x} ${pvb.y} ${pvb.w} ${pvb.h}`)}
+function pvUser(e){const p=pv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(pv.getScreenCTM().inverse())}
+function pvZoom(cx,cy,k){const p=pvUser({clientX:cx,clientY:cy});const nw=Math.min(pfull.w*1.05,Math.max(pfull.w/90,pvb.w*k)),r=nw/pvb.w;pvb={x:p.x-(p.x-pvb.x)*r,y:p.y-(p.y-pvb.y)*r,w:nw,h:pvb.h*r};pvSet()}
+async function showPreview(url,zoomable){const host=document.getElementById('preview');host.innerHTML=await (await fetch(url)).text();pv=host.querySelector('svg');
+ pv.removeAttribute('width');pv.removeAttribute('height');pv.style.cssText='width:100%;height:100%;display:block;touch-action:none;cursor:grab';
+ const v=pv.viewBox.baseVal;pfull={x:v.x,y:v.y,w:v.width,h:v.height};pvb={...pfull};if(!zoomable)return;
+ const ptrs=new Map();let last=0;
+ pv.onwheel=e=>{e.preventDefault();pvZoom(e.clientX,e.clientY,Math.exp(e.deltaY*0.0015))};
+ pv.ondblclick=e=>pvZoom(e.clientX,e.clientY,0.3);
+ pv.onpointerdown=e=>{pv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);last=0};
+ pv.onpointerup=pv.onpointercancel=e=>ptrs.delete(e.pointerId);
+ pv.onpointermove=e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if(ptrs.size==1){const sc=pv.getScreenCTM().a;pvb.x-=(e.clientX-prev[0])/sc;pvb.y-=(e.clientY-prev[1])/sc;pvSet()}
+  else if(ptrs.size==2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(last)pvZoom((a[0]+b[0])/2,(a[1]+b[1])/2,last/d);last=d}}}
+document.getElementById('pfit').onclick=()=>{if(pv){pvb={...pfull};pvSet()}};
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 async function render(s){
  document.getElementById('status').textContent='';
@@ -171,7 +188,7 @@ async function render(s){
   <tr><th>Fidelity</th><td>${s.fidelity?`mean colour error ${s.fidelity.mean_dE} (p90 ${s.fidelity.p90_dE}); lightness spread ${s.fidelity.L_std_plan} vs source ${s.fidelity.L_std_source}`:'n/a'} — backgrounds: ${(s.backgrounds_used||[]).map(b=>`<i class="sw" style="background:${b.hex}"></i>${esc(b.name)}`).join(' ')}</td></tr>
   <tr><th>Patterns</th><td>${s.patterns_used.map(v=>`<code>${esc(v.id)}</code> ${esc(v.name)}${v.ok?'':' <b style="color:#f88">CHECK: loose parts</b>'}`).join(', ')}</td></tr></table>`;
  document.getElementById('compare').src=s.files.compare;
- document.getElementById('preview').innerHTML=await (await fetch(s.files.preview_svg)).text();
+ await showPreview(s.files.plan_svg||s.files.preview_svg,!!s.files.plan_svg);
  document.getElementById('pal').innerHTML=s.palette_used.map(c=>`<span><i class="sw" style="background:${c.hex}"></i>${esc(c.name)} ${c.hex}</span>`).join('');
  document.getElementById('mat').innerHTML='<table><tr><th>colour</th><th>pattern inserts</th><th>background inserts</th><th>grams (rough)</th></tr>'+
   Object.entries(s.material_estimate_g).map(([n,e])=>`<tr><td><i class="sw" style="background:${e.color}"></i> ${esc(n)}</td><td>${e.pattern_inserts}</td><td>${e.background_inserts}</td><td>${e.grams}</td></tr>`).join('')+'</table>';
