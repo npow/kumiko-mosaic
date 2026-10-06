@@ -39,6 +39,8 @@ def main():
     ap.add_argument("--workers", type=int, default=20)
     a = ap.parse_args()
     ids = [r["id"] for r in json.load(open(PUB / "attribution.json"))]
+    ids = [c for c in ids if not ((PUB / "v" / f"{c}.svgz").exists() and (PUB / "o" / f"{c}.jpg").exists())]
+    print(f"{len(ids)} to build", flush=True)
     (PUB / "v").mkdir(exist_ok=True)
     (PUB / "o").mkdir(exist_ok=True)
     done = 0

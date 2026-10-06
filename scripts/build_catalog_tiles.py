@@ -4,13 +4,14 @@ Writes
   catalog/tiles/{p,s}/<id>.jpg      every planned image (local)         + catalog/index.html
   examples/catalog/{p,s}/<id>.jpg   curated set (committed)             + examples/catalog/index.html
   examples/catalog_wall.jpg         one-image montage of the curated plans for the README
-Usage: python scripts/build_catalog_tiles.py [--top 120] [--per-category 18] [--per-hue 16]
+Usage: python scripts/build_catalog_tiles.py [--top 120] [--per-category 26] [--per-hue 40] [--per-subject 1]
 """
 from __future__ import annotations
 
 import argparse
 import colorsys
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -26,6 +27,22 @@ from build_catalog_site import hue_bin, wow_score  # noqa: E402
 CAT = ROOT / "catalog"
 PUB = ROOT / "examples" / "catalog"
 TILE_H = 360
+
+
+def title_stem(title: str) -> str:
+    """File-name family: 'Herbarium. Fragaria vesca. img-010' and 'img-008' share one stem."""
+    t = title.replace("File:", "").rsplit(".", 1)[0].lower()
+    t = re.sub(r"\([^)]*\)", " ", t)
+    t = re.sub(r"[0-9_\-]+", " ", t)
+    return re.sub(r"[^a-z]+", " ", t).strip()
+
+
+def thumb_vec(path: Path) -> np.ndarray:
+    im = Image.open(path).convert("RGB").resize((24, 24), Image.BILINEAR)
+    return np.asarray(im, dtype=float).ravel() / 255.0
+
+
+DUP_DIST = 0.15      # RMS difference of 24x24 thumbnails; same-subject pairs measured 0.11-0.13, distinct scenes >= 0.17
 
 
 def split(cid: str, res: dict):
@@ -155,8 +172,9 @@ let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(render,150)
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=120)
-    ap.add_argument("--per-category", type=int, default=18)
-    ap.add_argument("--per-hue", type=int, default=16)
+    ap.add_argument("--per-category", type=int, default=26)
+    ap.add_argument("--per-hue", type=int, default=40, help="cap per dominant hue family, for colour variety")
+    ap.add_argument("--per-subject", type=int, default=1, help="max images per search query (subject)")
     a = ap.parse_args()
     sources = json.load(open(CAT / "sources.json"))
     results = json.load(open(CAT / "results.json"))
@@ -180,19 +198,40 @@ def main():
     (CAT / "index.html").write_text(PAGE.replace("__ITEMS__", json.dumps(light)).replace("__BASE__", "tiles/"))
     # curated set (same selection logic as the catalog page)
     cand = sorted((i["_full"] for i in items), key=wow_score, reverse=True)
-    picked, per, perq, perh = [], {}, {}, {}
-    for f in cand:
-        if f["fidelity"]["L_std_source"] < 12 or f["fidelity"]["mean_dE"] > 16:
-            continue
-        hb = hue_bin(f)
-        if per.get(f["category"], 0) >= a.per_category or perq.get(f["query"], 0) >= 3 or perh.get(hb, 0) >= a.per_hue:
-            continue
-        picked.append(f["id"]); per[f["category"]] = per.get(f["category"], 0) + 1
-        perq[f["query"]] = perq.get(f["query"], 0) + 1; perh[hb] = perh.get(hb, 0) + 1
-        if len(picked) >= a.top:
-            break
+    vecs = {}
+
+    def select(cap_q):
+        picked, per, perq, perh, stems, skipped = [], {}, {}, {}, set(), 0
+        for f in cand:
+            if f["fidelity"]["L_std_source"] < 12 or f["fidelity"]["mean_dE"] > 16:
+                continue
+            hb = hue_bin(f)
+            if per.get(f["category"], 0) >= a.per_category or perq.get(f["query"], 0) >= cap_q or perh.get(hb, 0) >= a.per_hue:
+                continue
+            v = vecs.setdefault(f["id"], thumb_vec(CAT / "tiles" / "s" / f"{f['id']}.jpg"))
+            stem = title_stem(f["title"])
+            if stem in stems or any(np.sqrt(((v - vecs[q]) ** 2).mean()) < DUP_DIST for q in picked):
+                skipped += 1
+                continue
+            stems.add(stem)
+            picked.append(f["id"]); per[f["category"]] = per.get(f["category"], 0) + 1
+            perq[f["query"]] = perq.get(f["query"], 0) + 1; perh[hb] = perh.get(hb, 0) + 1
+            if len(picked) >= a.top:
+                break
+        return picked, skipped
+
+    # one picture per subject (search query) by default: same-subject photos look alike even when
+    # pixels differ, so --top is a maximum rather than a quota
+    cap_q = a.per_subject
+    picked, skipped = select(cap_q)
+    print(f"per-subject cap {cap_q}: {len(picked)} picked (max {a.top})")
+    print(f"skipped {skipped} near-duplicates")
     for sub in ("p", "s"):
         shutil.rmtree(PUB / sub, ignore_errors=True)
+    for sub, ext in (("v", ".svgz"), ("o", ".jpg")):          # drop vectors of images no longer curated
+        for f in (PUB / sub).glob("*" + ext):
+            if f.stem not in picked:
+                f.unlink()
     for sub in ("p", "s", "v", "o"):
         (PUB / sub).mkdir(parents=True, exist_ok=True)
     by_id = {i["id"]: i for i in items}

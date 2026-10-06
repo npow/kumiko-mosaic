@@ -61,11 +61,11 @@ Source on the left, planned panel on the right, drawn with the real insert silho
 *Ten catalog images in turn: the photo, a wipe to the planned panel, then a zoom into the actual line
 inserts (rendered from the vector plans). Regenerate with `python scripts/make_tour_gif.py`.*
 
-![120 kumiko plans](examples/catalog_wall.jpg)
+![119 kumiko plans](examples/catalog_wall.jpg)
 
 About 1,000 Wikimedia Commons images (public domain, CC0, CC BY, CC BY-SA; author and licence recorded)
-planned at 60 columns: animals, flowers, mountains, sky, art, architecture, space, vehicles. The 120
-best, chosen for colour, variety and fidelity, are in `examples/catalog/`. Median fidelity error over
+planned at 60 columns: animals, flowers, mountains, sky, art, architecture, space, vehicles. The 119
+best, one per subject and with near-duplicates removed, chosen for colour, variety and fidelity, are in `examples/catalog/`. Median fidelity error over
 all 1,000 is 8.1 and 90% are under 12.4.
 
 Run the web app and open `/catalog/`: a gap-free mosaic of the kumiko plans (justified rows, no
