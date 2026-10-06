@@ -56,6 +56,11 @@ Source on the left, planned panel on the right, drawn with the real insert silho
 
 ## Catalog
 
+![Tour of the catalog: photo, kumiko plan, zoom into the line inserts](examples/catalog_tour.gif)
+
+*Ten catalog images in turn: the photo, a wipe to the planned panel, then a zoom into the actual line
+inserts (rendered from the vector plans). Regenerate with `python scripts/make_tour_gif.py`.*
+
 ![120 kumiko plans](examples/catalog_wall.jpg)
 
 About 1,000 Wikimedia Commons images (public domain, CC0, CC BY, CC BY-SA; author and licence recorded)
