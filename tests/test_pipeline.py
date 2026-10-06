@@ -218,3 +218,22 @@ def test_mixed_rgb_endpoints():
     assert np.allclose(mixed_rgb((200, 10, 10), (0, 0, 0), 0.0), (0, 0, 0), atol=0.5)
     mid = mixed_rgb((255, 255, 255), (0, 0, 0), 0.5)
     assert 180 < mid[0] < 195          # linear-light average of white and black is ~188 sRGB
+
+
+def test_vote_mode_crisp_regions(tmp_path):
+    """Two flat regions with a soft boundary: vote mode must produce exactly two labels and no
+    boundary cells of a third colour, which averaging would create."""
+    from kumiko_mosaic import match
+    a = np.zeros((300, 450, 3), dtype=np.uint8)
+    a[:, :225] = (220, 40, 40)
+    a[:, 225:] = (40, 60, 220)
+    for x in range(215, 235):               # soft 20 px boundary
+        t = (x - 215) / 20.0
+        a[:, x] = (np.array((220, 40, 40)) * (1 - t) + np.array((40, 60, 220)) * t).astype(np.uint8)
+    p = tmp_path / "two.png"
+    Image.fromarray(a).save(p)
+    s = run(str(p), str(tmp_path / "o7"), Params(cols=12, max_colors=3, max_patterns=2, enhance=False,
+                                                 line_boost=0, export_3mf=False, export_stl=False))
+    colours = {r["color"] for r in s["bom"] if r["layer"] == "pattern"}
+    assert len(colours) == 2
+    assert s["params"]["sampling"] == "vote"

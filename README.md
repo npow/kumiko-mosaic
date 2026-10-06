@@ -92,11 +92,16 @@ counts and grams so you can trade off.
 
 ### Colour (how the image is reproduced)
 
-Default: the **kumiko strips carry the colour** over one background filament (black), and the
-tone comes from strip density. For every cell the tool picks the filament *and* the pattern
-whose mixed colour (coverage x filament + (1 - coverage) x background, in linear light) is
-closest to the image in CIELAB. Dark areas get sparse patterns, bright or saturated areas dense
-ones.
+The **kumiko strips carry the colour** over one background filament (black), and the tone
+comes from strip density. The achievable colours are every (filament, pattern) pair: coverage x
+filament + (1 - coverage) x background, mixed in linear light.
+
+Default assignment is **region voting** (`--sampling vote`, after Kopf & Lischinski's pixel-art
+abstraction): the image is smoothed with an edge-preserving median filter (`--smooth-mm 10`) to
+remove texture, every pixel is quantised to the nearest achievable colour in CIELAB, and each
+cell takes the majority label. Region boundaries stay crisp instead of averaging into muddy
+in-between cells. Isolated cells that disagree with all their neighbours are flipped to the
+neighbours' label. `--sampling mean` is the older per-cell average + nearest match.
 
 The density ladder is filtered per pitch so that **every opening stays at least `--min-hole`
 (2.5 mm) wide** and no pattern covers more than 65% of the cell: lines must stay lines, not

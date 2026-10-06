@@ -215,3 +215,130 @@ def assign_strips(grid: Grid, palette: Sequence[Filament], bg_hex: str, ladder: 
                 err[(c.col, c.row + 1)] = err.get((c.col, c.row + 1), 0.0) + e * 0.5
                 err[(c.col + 1, c.row)] = err.get((c.col + 1, c.row), 0.0) + e * 0.5
     return cov
+
+
+# ---- region voting (pixel-art style) --------------------------------------------------------------
+
+def _cell_neighbours(grid: Grid) -> Dict[Tuple[int, int], List[Tuple[int, int]]]:
+    """Cells that share an edge (two vertices)."""
+    key = lambda p: (round(p[0], 3), round(p[1], 3))  # noqa: E731
+    edges: Dict[tuple, List[Tuple[int, int]]] = {}
+    for c in grid.cells:
+        pts = [key(p) for p in c.poly]
+        for i in range(len(pts)):
+            e = tuple(sorted((pts[i], pts[(i + 1) % len(pts)])))
+            edges.setdefault(e, []).append((c.col, c.row))
+    nb: Dict[Tuple[int, int], List[Tuple[int, int]]] = {(c.col, c.row): [] for c in grid.cells}
+    for cells in edges.values():
+        if len(cells) == 2:
+            a, b = cells
+            nb[a].append(b)
+            nb[b].append(a)
+    return nb
+
+
+def assign_strips_vote(grid: Grid, palette: Sequence[Filament], bg_hex: str, ladder: Sequence[str],
+                       strip_mm: float, fitted, px_per_mm: float, clearance: float = 0.0,
+                       allow_empty: bool = True, max_patterns: Optional[int] = None,
+                       min_hole_mm: float = MIN_HOLE_MM, smooth_mm: float = 10.0,
+                       line_boost: float = 4.0, line_min_delta: float = 22.0,
+                       cleanup: bool = True) -> Dict[str, float]:
+    """Pixel-art style assignment. 1) edge-preserving (median) smoothing of the image at
+    1 px/mm removes texture, 2) every pixel is quantised to the nearest achievable mix
+    (filament x pattern density over the background), 3) each cell takes the majority label,
+    so region boundaries stay crisp instead of averaging into in-between colours, 4) a thin
+    coherent feature (cable, mast) may still take a cell (line boost), 5) isolated cells that
+    disagree with all their neighbours are flipped to the neighbours' label when they have
+    some support for it."""
+    from PIL import Image, ImageDraw, ImageFilter
+    from .imagemap import hex_to_rgb
+    bg = hex_to_rgb(bg_hex)
+    ladder = usable_ladder(grid, ladder, strip_mm, min_hole_mm)
+    if not ladder:
+        raise ValueError("no pattern in the ladder is printable at this pitch/strip width")
+    cov = coverage_table(grid, ladder, strip_mm, clearance)
+    if max_patterns:
+        ladder = choose_pattern_subset(grid, palette, bg, ladder, cov, max_patterns, allow_empty)
+        cov = {k: cov[k] for k in ladder}
+    options: List[Tuple[Optional[Filament], Optional[str], np.ndarray]] = []
+    for f in palette:
+        for pid in ladder:
+            options.append((f, pid, mixed_rgb(f.rgb, bg, cov[pid])))
+    if allow_empty:
+        options.append((None, None, np.asarray(bg, dtype=float)))
+    opt_rgb = np.array([o[2] for o in options])
+    opt_lab = rgb_to_lab(opt_rgb)
+
+    # 1) smoothed working image at 1 px/mm
+    W = max(1, int(round(grid.lattice_width)))
+    H = max(1, int(round(grid.lattice_height)))
+    base = fitted.convert("RGB").resize((W, H), Image.LANCZOS)
+    k = max(3, int(round(smooth_mm)) | 1)
+    img = base.filter(ImageFilter.MedianFilter(k))
+    arr = np.asarray(img, dtype=np.float64)
+    lab = rgb_to_lab(arr.reshape(-1, 3)).reshape(H, W, 3)          # smoothed: for the vote
+    raw = rgb_to_lab(np.asarray(base, dtype=np.float64).reshape(-1, 3)).reshape(H, W, 3)  # for thin features
+
+    # 2+3) per-cell quantise and vote
+    labels: Dict[Tuple[int, int], int] = {}
+    hist: Dict[Tuple[int, int], np.ndarray] = {}
+    boosted: set = set()
+    for c in grid.cells:
+        xs = [p[0] for p in c.poly]
+        ys = [p[1] for p in c.poly]
+        x0, x1 = max(0, int(min(xs))), min(W, int(np.ceil(max(xs))) + 1)
+        y0, y1 = max(0, int(min(ys))), min(H, int(np.ceil(max(ys))) + 1)
+        mask = Image.new("L", (x1 - x0, y1 - y0), 0)
+        ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in c.poly], fill=255)
+        m = np.asarray(mask) > 0
+        pl = lab[y0:y1, x0:x1][m]
+        if len(pl) == 0:
+            cx, cy = c.centroid
+            pl = lab[min(H - 1, int(cy)), min(W - 1, int(cx))][None, :]
+        d = ((pl[:, None, :] - opt_lab[None, :, :]) ** 2).sum(-1)
+        li = d.argmin(1)
+        h = np.bincount(li, minlength=len(options)).astype(float)
+        mode = int(h.argmax())
+        # 4) line boost on the UNSMOOTHED pixels: a coherent minority far from the chosen
+        #    colour takes the cell (cables, masts, outlines thinner than the smoothing radius)
+        pr = raw[y0:y1, x0:x1][m]
+        if line_boost > 0 and len(pr) >= 16:
+            med = np.median(pr, axis=0)                 # the cell's own typical colour
+            far = np.sqrt(((pr - med) ** 2).sum(1)) > line_min_delta
+            f = far.mean()
+            if 0.03 < f < 0.45:
+                fl = pr[far]
+                spread = float(np.sqrt(((fl - fl.mean(0)) ** 2).sum(1)).mean())
+                if spread < 34.0:
+                    # push the cell colour from its median towards the feature in proportion
+                    # to the feature's area, then pick the nearest achievable mix
+                    w = min(1.0, f * line_boost)
+                    target = med + (fl.mean(0) - med) * w
+                    new = int(((opt_lab - target) ** 2).sum(1).argmin())
+                    if new != mode:
+                        boosted.add((c.col, c.row))   # intentional: exempt from speckle cleanup
+                        mode = new
+        labels[(c.col, c.row)] = mode
+        hist[(c.col, c.row)] = h / h.sum()
+
+    # 5) speckle cleanup
+    if cleanup:
+        nb = _cell_neighbours(grid)
+        for key_, lbl in list(labels.items()):
+            if key_ in boosted:
+                continue
+            ns = [labels[n] for n in nb[key_]]
+            if not ns or lbl in ns:
+                continue
+            vals, counts = np.unique(ns, return_counts=True)
+            best = int(vals[counts.argmax()])
+            if counts.max() >= 2 and hist[key_][best] >= 0.2:
+                labels[key_] = best
+
+    for c in grid.cells:
+        f, pid, _ = options[labels[(c.col, c.row)]]
+        if f is None:
+            c.color, c.color_name, c.pattern = bg_hex, "background", None
+        else:
+            c.color, c.color_name, c.pattern = f.hex, f.name, pid
+    return cov

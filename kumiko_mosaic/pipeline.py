@@ -33,6 +33,8 @@ class Params:
     fit: str = "cover"
     enhance: bool = True                   # autocontrast + mild saturation boost before sampling
     sample_shrink: float = 0.85
+    sampling: str = "vote"                 # vote (pixel-art style region voting, default) | mean (per-cell average)
+    smooth_mm: float = 10.0                # vote mode: edge-preserving smoothing radius before quantising
     line_boost: float = 4.0                # keep thin contrasting features (cables, masts); 0 = off, 8 = strong
     line_coherence: float = 34.0           # max colour spread (CIELAB) of a feature to count as a line, not texture
     # colours
@@ -99,9 +101,15 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
             cov0 = match.coverage_table(grid, usable, params.strip_mm, params.clearance)
             palette = match.choose_filaments(grid, filaments.catalogue(params.filament_set), bgf.rgb, usable,
                                              cov0, params.max_colors)
-        coverage = match.assign_strips(grid, palette, bgf.hex, ladder, params.strip_mm, params.clearance,
-                                       dither=params.dither, max_patterns=params.max_patterns,
-                                       min_hole_mm=params.min_hole_mm)
+        if params.sampling == "vote":
+            coverage = match.assign_strips_vote(grid, palette, bgf.hex, ladder, params.strip_mm, fitted, ppm,
+                                                params.clearance, max_patterns=params.max_patterns,
+                                                min_hole_mm=params.min_hole_mm, smooth_mm=params.smooth_mm,
+                                                line_boost=params.line_boost)
+        else:
+            coverage = match.assign_strips(grid, palette, bgf.hex, ladder, params.strip_mm, params.clearance,
+                                           dither=params.dither, max_patterns=params.max_patterns,
+                                           min_hole_mm=params.min_hole_mm)
         if params.edge_halves == "background":
             for c in grid.half_cells():
                 c.pattern = None
