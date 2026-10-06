@@ -36,6 +36,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--measure", choices=["outer", "lattice"], default="outer")
     i = ap.add_argument_group("image and colour")
     i.add_argument("--fit", choices=["cover", "contain", "stretch"], default="cover")
+    i.add_argument("--line-boost", type=float, default=4.0,
+                   help="keep thin contrasting features that averaging erases (cables, masts); 4-8 is strong, 0 = off")
     i.add_argument("--palette", nargs="*", default=[], help='filaments you own: "name=#RRGGBB" ... (empty = auto)')
     i.add_argument("--max-colors", type=int, default=8)
     i.add_argument("--filament-set", choices=["bambu", "bambu-matte", "bambu-basic"], default="bambu",
@@ -84,7 +86,7 @@ def main(argv=None) -> int:
     bed = a.bed if len(a.bed) == 2 else [a.bed[0], a.bed[0]]
     params = Params(pitch=a.pitch, mitsuke=a.mitsuke, border=a.border, orientation=a.orientation,
                     width_mm=a.width_mm, height_mm=a.height_mm, cols=a.cols, rows=a.rows,
-                    max_cells=a.max_cells, measure=a.measure, fit=a.fit, palette=a.palette,
+                    max_cells=a.max_cells, measure=a.measure, fit=a.fit, line_boost=a.line_boost, palette=a.palette,
                     max_colors=a.max_colors, filament_set=a.filament_set, dither=a.dither, enhance=not a.no_enhance, color_layer=a.color_layer,
                     background_color=a.background_color, pattern_color=a.pattern_color, frame_color=a.frame_color,
                     pattern_mode=a.pattern_mode, max_patterns=a.max_patterns, min_hole_mm=a.min_hole, color_pattern_map=json.loads(a.color_pattern_map),

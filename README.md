@@ -139,6 +139,10 @@ dense patterns survive the `--min-hole` test (at 30 mm only `y, asanoha, mesh2, 
 * `--color-layer background --pattern-mode none` makes a flat triangle mosaic instead; `both`
   colours both layers.
 * Images are auto-contrasted and slightly saturated before sampling (`--no-enhance` to skip).
+* `--line-boost 4` (default) keeps thin, strongly contrasting features that plain averaging
+  erases: if a small part of a cell differs sharply from the rest (a cable, a mast, an
+  outline), the cell takes that colour, so the feature survives as a one-cell line. 0 turns it
+  off, 8 is aggressive and can add speckle in textured areas.
 * `--dither` adds error diffusion (smoother gradients, noisier look).
 
 Look at `examples/gallery/index.html` (also served at `/gallery` by the web app): before/after

@@ -169,8 +169,15 @@ def fit_image(img: Image.Image, target_w: float, target_h: float, mode: str = "c
     return out, px_per_mm
 
 
-def sample_cells(grid: Grid, fitted: Image.Image, px_per_mm: float, shrink: float = 0.85) -> None:
-    """Set cell.rgb_mean = mean colour inside each (slightly shrunken) cell polygon."""
+def sample_cells(grid: Grid, fitted: Image.Image, px_per_mm: float, shrink: float = 0.85,
+                 line_boost: float = 0.0, line_min_delta: float = 22.0) -> None:
+    """Set cell.rgb_mean = mean colour inside each (slightly shrunken) cell polygon.
+
+    line_boost > 0 keeps thin, strongly contrasting features (cables, masts, outlines) that
+    plain averaging would erase: pixels in the cell that differ from the cell's median colour by
+    more than line_min_delta (CIELAB) are treated as a feature; if they cover a fraction f of
+    the cell, the cell colour is pushed from the median towards the feature colour by
+    min(1, f * line_boost). With line_boost = 6 a feature covering 1/6 of the cell takes it over."""
     arr = np.asarray(fitted, dtype=np.float64)
     H, W = arr.shape[:2]
     for c in grid.cells:
@@ -190,8 +197,20 @@ def sample_cells(grid: Grid, fitted: Image.Image, px_per_mm: float, shrink: floa
         if not m.any():
             px = arr[min(H - 1, int(cy * px_per_mm)), min(W - 1, int(cx * px_per_mm))]
             c.rgb_mean = tuple(float(v) for v in px)
-        else:
-            c.rgb_mean = tuple(float(v) for v in arr[y0:y1, x0:x1][m].mean(0))
+            continue
+        pix = arr[y0:y1, x0:x1][m]
+        mean = pix.mean(0)
+        if line_boost > 0 and len(pix) >= 16:
+            med = np.median(pix, axis=0)
+            lab = rgb_to_lab(pix)
+            d = np.sqrt(((lab - rgb_to_lab(med)) ** 2).sum(1))
+            feat = d > line_min_delta
+            f = feat.mean()
+            if 0.02 < f < 0.5:
+                feat_col = pix[feat].mean(0)
+                w = min(1.0, f * line_boost)
+                mean = med + (feat_col - med) * w
+        c.rgb_mean = tuple(float(v) for v in mean)
 
 
 def assign_colors(grid: Grid, palette: Optional[List[Filament]] = None, max_colors: int = 4,
