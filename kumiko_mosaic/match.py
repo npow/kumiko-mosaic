@@ -21,7 +21,8 @@ from .imagemap import Filament, _srgb_to_linear, rgb_to_lab, rgb_to_hex, kmeans_
 DEFAULT_LADDER = ["y", "y2", "hexagram", "hexagram2", "asanoha", "hex", "mesh2", "pinwheel", "kagome2", "kagome3",
                   "cross2", "mesh3", "hex2", "sunburst4", "step2",
                   "stripes3", "stripes4", "stripes5", "stripes6", "mesh4", "rings2", "weave2", "mesh5", "fan3",
-                  "asanoha2", "mesh6", "rings3", "asanoha3"]
+                  "asanoha2", "mesh6", "rings3", "asanoha3",
+                  "mesh3w", "stripes6w", "mesh4w", "mesh3ww"]
 MIN_HOLE_MM = 2.5
 MAX_COVERAGE = 0.65   # above this a pattern is a plate with holes, not a line pattern
 

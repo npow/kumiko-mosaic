@@ -243,6 +243,12 @@ PROCEDURAL: Dict[str, dict] = {
     "hex2":      {"name": "Double hexagon",       "fn": _hex, "detail": 2, "symmetric": True},
     "cross2":    {"name": "Crossed",              "fn": _cross, "detail": 2, "symmetric": True},
     "weave2":    {"name": "Weave",                "fn": _weave, "detail": 2, "symmetric": True},
+    # wider-strip variants: the same line layouts with thicker strips, to reach 56-63% coverage while
+    # every opening stays at least 2.5 mm (wmul multiplies the panel's strip width)
+    "mesh3w":     {"name": "Mesh 3, wide strips",      "fn": _mesh,     "detail": 3, "symmetric": True, "wmul": 1.5},
+    "stripes6w":  {"name": "Stripes 6, wide strips",   "fn": _stripes,  "detail": 6, "symmetric": False, "wmul": 1.75},
+    "mesh4w":     {"name": "Mesh 4, wide strips",      "fn": _mesh,     "detail": 4, "symmetric": True, "wmul": 1.25},
+    "mesh3ww":    {"name": "Mesh 3, extra wide strips", "fn": _mesh,    "detail": 3, "symmetric": True, "wmul": 1.75},
     "stripes3":  {"name": "Stripes 3 (with spine)", "fn": _stripes, "detail": 3, "symmetric": False},
     "stripes4":  {"name": "Stripes 4",            "fn": _stripes, "detail": 4, "symmetric": False},
     "stripes5":  {"name": "Stripes 5",            "fn": _stripes, "detail": 5, "symmetric": False},
@@ -363,7 +369,7 @@ def normalised_polygon(pid: str, strip_mm: float, side_mm: float) -> Polygon:
         return kumiko_studio_polygon(int(pid[2:]), strip_mm, side_mm)
     if pid not in PROCEDURAL:
         raise KeyError(f"unknown pattern {pid}")
-    w = strip_mm / side_mm
+    w = strip_mm * PROCEDURAL[pid].get("wmul", 1.0) / side_mm
     strips = [LineString(pl).buffer(w / 2.0, cap_style="flat", join_style="mitre", mitre_limit=4.0)
               for pl in procedural_polylines(pid) if len(pl) >= 2]
     shape = unary_union(strips).intersection(TRIANGLE)

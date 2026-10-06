@@ -40,7 +40,7 @@ and the plate files.
 ## Inserts
 
 Each triangle gets a flat background insert and, usually, a line insert: a kumiko pattern of thin
-strips. At the default size there are 17 line patterns, from sparse to dense. The planner uses a
+strips. At the default size there are 21 line patterns, from sparse to dense. The planner uses a
 sparse pattern where the image is dark and a dense one where it is bright, and limits a panel to four
 patterns to keep the sorting manageable.
 

@@ -102,7 +102,7 @@ The density ladder is filtered per pitch so that **every opening stays at least 
 (2.5 mm) wide** and no pattern covers more than 65% of the cell: lines must stay lines, not
 merge into near-solid plates. The candidate list has about 30 line patterns (hemp leaf,
 meshes, kagome, stripes, stars, hexagons, pinwheel, fans, rings...); at 50 mm pitch with 2 mm
-strips 17 of them pass, from `y` at 17% to `rings2` at 54% coverage. `--max-patterns` then
+strips 21 of them pass, from `y` at 17% to `mesh3ww` at 63% coverage (the four densest use 2.5 to 3.5 mm strips). `--max-patterns` then
 picks the best few for the image.
 Consequence: a cell can never be brighter than about half the filament colour over black, so
 panels read darker and flatter than the photo. Levers: a lighter background filament
