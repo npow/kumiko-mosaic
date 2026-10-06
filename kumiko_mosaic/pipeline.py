@@ -95,8 +95,15 @@ class _Timer:
         self._t = now
 
 
-def run(image_path: str, out_dir: str, params: Params) -> dict:
+def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
+    """Plan an image. `progress(stage_text, fraction)` is called as the run advances (optional)."""
     tm = _Timer()
+
+    def step(text: str, frac: float):
+        if progress:
+            progress(text, frac)
+
+    step("Reading the image", 0.02)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     img = Image.open(image_path)
@@ -110,10 +117,12 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
 
     bgf = _split_named(params.background_color)
     patf = _split_named(params.pattern_color)
+    step("Sampling colours", 0.08)
     fitted, ppm = fit_image(img, grid.lattice_width, grid.lattice_height, params.fit, background=bgf.hex,
                             enhance=params.enhance)
     sample_cells(grid, fitted, ppm, params.sample_shrink, line_boost=params.line_boost,
                  line_coherence=params.line_coherence)
+    step("Choosing filaments and patterns", 0.18)
     palette = parse_palette(params.palette) if params.palette else None
     coverage = None
     if params.pattern_mode.startswith("auto") and params.color_layer == "pattern":
@@ -137,6 +146,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
             if params.max_patterns else usable
         coverage = {k: cov0[k] for k in sub}
         options = match.build_options(bgs, strips, sub, coverage)
+        step("Assigning a filament and pattern to every cell", 0.45)
         if params.sampling == "vote":
             match.assign_options_vote(grid, options, fitted, smooth_mm=params.smooth_mm,
                                       line_boost=params.line_boost, line_coherence=params.line_coherence,
@@ -174,6 +184,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
                 c.pattern = None
 
     tm.lap("match")
+    step("Building parts and plates", 0.62)
     plan = bom_mod.ColorPlan(params.color_layer, bgf.hex, bgf.name, patf.hex, patf.name)
     bom = bom_mod.build_bom(grid, plan)
     if params.preview_only:
@@ -201,6 +212,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
     volumes = {pid: geometry.mesh_volume(m) for pid, m in meshes.items()}
 
     tm.lap("plan_parts")
+    step("Drawing previews and assembly sheets", 0.72)
     # ---- files -------------------------------------------------------------------------------
     fitted.save(out / "fitted_image.png")
     kw = dict(color_layer=params.color_layer, background_color=bgf.hex, pattern_color=patf.hex,
@@ -233,6 +245,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
             w.writerow([r["plate"], r["file"], r["color_name"], r["layer"], "; ".join(f"{k} x{v}" for k, v in r["codes"].items())])
 
     tm.lap("previews_and_sheets")
+    step("Writing plate files", 0.9)
     plates_dir = out / "plates"
     plates_dir.mkdir(exist_ok=True)
     exported = []

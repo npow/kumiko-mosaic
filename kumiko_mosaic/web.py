@@ -6,7 +6,8 @@ from __future__ import annotations
 
 import io
 import json
-import shutil
+import multiprocessing as mp
+import os
 import uuid
 import zipfile
 from pathlib import Path
@@ -15,13 +16,23 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from .pipeline import Params, run
+from .jobs import cleanup_runs, run_job, write_status
+from .pipeline import Params
 
 ROOT = Path(__file__).resolve().parent.parent
 RUNS = ROOT / "runs"
 RUNS.mkdir(exist_ok=True)
 
-app = FastAPI(title="kumiko mosaic")
+from contextlib import asynccontextmanager  # noqa: E402
+
+
+@asynccontextmanager
+async def _lifespan(_app):
+    cleanup_runs(RUNS, TTL_HOURS)               # drop old runs when the server starts
+    yield
+
+
+app = FastAPI(title="kumiko mosaic", lifespan=_lifespan)
 app.mount("/runs", StaticFiles(directory=str(RUNS)), name="runs")
 from fastapi.responses import Response  # noqa: E402
 
@@ -49,43 +60,66 @@ def index() -> str:
     return (ROOT / "web" / "index.html").read_text()
 
 
+_WORKERS: dict = {}          # run id -> Process, for runs started by this server
+MAX_JOBS = int(os.environ.get("KUMIKO_MAX_JOBS", "2"))
+TTL_HOURS = float(os.environ.get("KUMIKO_RUN_TTL_HOURS", "24"))
+
+
+def _alive() -> list:
+    for rid in [r for r, p in _WORKERS.items() if not p.is_alive()]:
+        _WORKERS.pop(rid).join(timeout=0)
+    return list(_WORKERS)
+
+
 @app.post("/api/run")
 async def api_run(image: UploadFile = File(...), params: str = Form("{}")):
+    """Start a plan in a worker process and return its id; poll /api/status/<id>, fetch /api/result/<id>."""
     try:
         raw = json.loads(params)
-        # drop empty strings / nulls so dataclass defaults apply
         clean = {k: v for k, v in raw.items() if v not in ("", None, [])}
-        p = Params(**clean)
+        Params(**clean)                              # validate field names and types early
     except Exception as e:  # noqa: BLE001
         raise HTTPException(400, f"bad params: {e}")
+    busy = _alive()
+    if len(busy) >= MAX_JOBS:
+        raise HTTPException(429, f"{len(busy)} plans are already running; try again in a minute")
+    cleanup_runs(RUNS, TTL_HOURS, busy=busy)
     rid = uuid.uuid4().hex[:10]
     rdir = RUNS / rid
     rdir.mkdir()
     img_path = rdir / ("input" + Path(image.filename or "img.png").suffix.lower())
     img_path.write_bytes(await image.read())
-    try:
-        summary = run(str(img_path), str(rdir), p)
-    except Exception as e:  # noqa: BLE001
-        shutil.rmtree(rdir, ignore_errors=True)
-        raise HTTPException(400, str(e))
-    summary["run_id"] = rid
-    summary["files"] = {
-        "preview_svg": f"/runs/{rid}/{'plan.svg' if (rdir / 'plan.svg').exists() else 'preview.svg'}",
-        "plan_svg": f"/runs/{rid}/plan.svg" if (rdir / "plan.svg").exists() else None,
-        "preview_png": f"/runs/{rid}/preview.png",
-        "compare": f"/runs/{rid}/compare.jpg",
-        "report": f"/runs/{rid}/REPORT.md",
-        "assembly_csv": f"/runs/{rid}/assembly_map.csv",
-        "assembly_pdf": f"/runs/{rid}/assembly_sheet.pdf",
-        "assembly_txt": f"/runs/{rid}/assembly_map.txt",
-        "zip": f"/api/zip/{rid}",
-        "plates": [{"name": f.stem, "svg": f"/runs/{rid}/plates/{f.name}",
-                    "threemf": f"/runs/{rid}/plates/{f.with_suffix('.3mf').name}" if f.with_suffix('.3mf').exists() else None,
-                    "stl": f"/runs/{rid}/plates/{f.with_suffix('.stl').name}" if f.with_suffix('.stl').exists() else None}
-                   for f in sorted((rdir / "plates").glob("*.svg"))],
-    }
-    (rdir / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False))
-    return JSONResponse(summary)
+    write_status(rdir, state="running", stage="Queued", progress=0.0)
+    proc = mp.get_context("spawn").Process(target=run_job, args=(str(rdir), str(img_path), clean), daemon=True)
+    proc.start()
+    _WORKERS[rid] = proc
+    return {"run_id": rid}
+
+
+def _status(rid: str) -> dict:
+    rdir = RUNS / Path(rid).name
+    f = rdir / "status.json"
+    if not f.exists():
+        raise HTTPException(404, "unknown run")
+    st = json.loads(f.read_text())
+    proc = _WORKERS.get(rid)
+    if st.get("state") == "running" and proc is not None and not proc.is_alive():
+        st = {"state": "error", "stage": "Failed", "progress": 1.0,
+              "error": f"the worker process exited unexpectedly (code {proc.exitcode})"}
+    return st
+
+
+@app.get("/api/status/{rid}")
+def api_status(rid: str):
+    return _status(rid)
+
+
+@app.get("/api/result/{rid}")
+def api_result(rid: str):
+    st = _status(rid)
+    if st["state"] != "done":
+        raise HTTPException(409, st.get("error") or "not finished")
+    return JSONResponse(json.loads((RUNS / Path(rid).name / "summary.json").read_text()))
 
 
 @app.get("/api/zip/{rid}")

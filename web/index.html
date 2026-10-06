@@ -38,6 +38,15 @@
   <h2>Size</h2>
   <label>Columns across: <b id="colsval">40</b> <span id="sizeinfo" style="color:#999"></span></label>
   <input type="range" id="colsrange" min="4" max="80" value="40" style="width:100%">
+  <div style="font-size:11px;color:#999;margin-top:2px">40 columns reads from across a room, 60 is clearly the picture, 80+ is close to the original. Each step multiplies the part count.</div>
+  <details style="margin-top:6px"><summary style="font-size:12px;color:#d2ac86;cursor:pointer">Fit to a wall</summary>
+   <div class="row">
+    <div><label>Wall width (cm)</label><input type="number" id="wallcm" value="120" min="20" max="600"></div>
+    <div><label>Detail</label><select id="walldetail"><option value="30">low (30 columns)</option><option value="40" selected>medium (40)</option><option value="60">high (60)</option><option value="80">very high (80)</option></select></div>
+   </div>
+   <button type="button" id="wallgo" style="margin-top:6px">Set pitch and columns</button>
+   <div id="wallinfo" style="font-size:12px;color:#bbb;margin-top:4px"></div>
+  </details>
   <details><summary style="font-size:12px;color:#bbb;cursor:pointer">Set an exact size instead</summary>
   <div class="row">
    <div><label>Outer width (mm)</label><input type="number" name="width_mm" placeholder="leave empty"></div>
@@ -132,6 +141,22 @@ document.getElementById('colsrange').addEventListener('input',updateSize);
 for(const n of ['pitch','mitsuke','border'])f.querySelector(`[name="${n}"]`).addEventListener('input',updateSize);
 updateSize();
 document.getElementById('showpat').addEventListener('click',async e=>{e.preventDefault();const el=document.getElementById('patlist');if(el.style.display==='none'){const r=await fetch('/api/patterns');const l=await r.json();el.textContent=l.map(p=>`${p.id.padEnd(12)} ${p.name}${p.note?'  ('+p.note+')':''}`).join('\n');el.style.display='block';}else el.style.display='none';});
+document.getElementById('wallgo').onclick=()=>{
+ const W=parseFloat(document.getElementById('wallcm').value)*10, cols=parseInt(document.getElementById('walldetail').value);
+ const m=num('mitsuke')||3,b=num('border')||6,k=Math.sqrt(3)/2;
+ let pitch=Math.round((W-2*b-m)/(cols*k)*2)/2;pitch=Math.max(25,Math.min(80,pitch));
+ const usedCols=Math.max(4,Math.min(80,Math.floor((W-2*b-m)/(pitch*k))));
+ f.querySelector('[name="pitch"]').value=pitch;document.getElementById('colsrange').value=usedCols;updateSize();
+ let note=pitch<=30?' Small pitch: fewer patterns will fit, so tones are less varied.':pitch>=70?' Large pitch: big inserts, long print times per part.':'';
+ if(usedCols<cols)note=` A ${cols}-column panel would need a pitch under 25 mm, which is too small to print well, so this is limited to ${usedCols} columns.`+note;
+ document.getElementById('wallinfo').textContent=`Pitch ${pitch} mm, ${usedCols} columns, about ${((m+usedCols*pitch*k+2*b)/10).toFixed(0)} cm wide.`+note;
+};
+let pollTimer=null;
+function showProgress(st){
+ const pct=Math.round((st.progress||0)*100);
+ document.getElementById('status').innerHTML=`<div style="margin-bottom:6px">${esc(st.stage||'Working')} <span style="color:#999">${pct}%</span></div>
+  <div style="height:8px;background:#333;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#d2ac86;transition:width .4s"></div></div>`;
+}
 f.addEventListener('submit',async e=>{
  e.preventDefault();
  const fd=new FormData(); const img=document.getElementById('image').files[0];
@@ -149,11 +174,22 @@ f.addEventListener('submit',async e=>{
  if(!['width_mm','height_mm','cols','rows','max_cells'].some(k=>p[k]!==undefined))p.cols=parseInt(document.getElementById('colsrange').value);
  fd.append('params',JSON.stringify(p));
  const go=document.getElementById('go'); go.disabled=true;
- document.getElementById('status').textContent='Planning…';
+ showProgress({stage:'Starting',progress:0});
  try{
   const r=await fetch('/api/run',{method:'POST',body:fd});
   if(!r.ok){throw new Error((await r.json()).detail||r.statusText)}
-  render(await r.json());
+  const {run_id}=await r.json();
+  for(;;){
+   await new Promise(res=>setTimeout(res,600));
+   const sr=await fetch('/api/status/'+run_id);if(!sr.ok)throw new Error('lost track of the run');
+   const st=await sr.json();
+   if(st.state==='error')throw new Error(st.error||'the run failed');
+   if(st.state==='done')break;
+   showProgress(st);
+  }
+  const res=await fetch('/api/result/'+run_id);if(!res.ok)throw new Error('could not load the result');
+  document.getElementById('status').textContent='';
+  await render(await res.json());
  }catch(err){document.getElementById('status').textContent='Error: '+err.message}
  go.disabled=false;
 });
@@ -197,7 +233,7 @@ async function render(s){
  const byName=Object.fromEntries(s.files.plates.map(p=>[p.name,p]));
  document.getElementById('plates').innerHTML=s.plates.map(p=>{const fl=byName[p.name];return `<div class="plate"><b>#${p.plate}</b> <i class="sw" style="background:${p.color}"></i> ${esc(p.color_name)} · ${p.layer} · ${p.parts} parts<br>${Object.entries(p.contents).map(([k,v])=>`${esc(k)} ×${v}`).join(', ')}
    ${fl?`<img src="${fl.svg}"><br>${fl.threemf?`<a href="${fl.threemf}">3MF</a> `:''}${fl.stl?`<a href="${fl.stl}">STL</a>`:''}`:'<br><i>no mesh files (missing inserts)</i>'}</div>`}).join('');
- document.getElementById('asm').innerHTML=`<p class="meta" style="font-size:13px;color:#bbb">Every cell has a code: letter = pattern, digit = filament. <a href="${s.files.assembly_pdf}">assembly_sheet.pdf</a> has the legend and the panel in labelled 8-column strips; <a href="${s.files.assembly_txt}">assembly_map.txt</a> is the same as a pick list.</p>`;
+ document.getElementById('asm').innerHTML=`<p class="meta" style="font-size:13px;color:#bbb">Every cell has a code: letter = pattern, digit = filament. <a href="${s.files.assembly_pdf}">assembly_sheet.pdf</a> has the legend and the panel in labelled 8-column strips; <a href="${s.files.assembly_txt}">assembly_map.txt</a> is the same as a pick list. <a href="${s.files.bag_labels}">bag_labels.pdf</a> has one printable label per kind of part.</p>`;
  document.getElementById('dl').innerHTML=`<a href="${s.files.zip}">Download everything (zip)</a> · <a href="${s.files.assembly_pdf}">assembly_sheet.pdf</a> · <a href="${s.files.report}">REPORT.md</a> · <a href="${s.files.assembly_csv}">assembly_map.csv</a> · <a href="${s.files.preview_png}">preview.png</a>`;
 }
 </script>
