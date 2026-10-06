@@ -254,3 +254,11 @@ def test_multi_background_assignment(tmp_path, img):
     assert s["fidelity"]["mean_dE"] <= s1["fidelity"]["mean_dE"] + 1e-6
     # the bright white region should get a light background
     assert any(b["name"].endswith("White") or "Gray" in b["name"] for b in s["backgrounds_used"])
+
+
+def test_paperview_patterns_can_be_disabled(monkeypatch):
+    monkeypatch.setenv("KUMIKO_NO_PAPERVIEW", "1")
+    assert not any(k.startswith("ks") for k in inserts.catalogue())
+    from kumiko_mosaic.patterns import parse_mode
+    with pytest.raises(ValueError):
+        parse_mode("single:7")

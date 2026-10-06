@@ -293,6 +293,10 @@ def report_markdown(s: dict) -> str:
                  f"lightness spread plan {fs['L_std_plan']} vs source {fs['L_std_source']}.")
     L.append("Backgrounds: " + ", ".join(f"{b['name']} {b['hex']}" for b in s["backgrounds_used"]) + "\n")
     L.append("## Patterns used\n")
+    if any(v["id"].startswith("ks") for v in s["patterns_used"]):
+        glue = [v["id"] for v in s["patterns_used"] if v.get("note") == "needs glue"]
+        L.append("Includes Paper View insert designs (ks*): for your own prints only, they derive from his licensed files."
+                 + (f" **{', '.join(glue)} are loose multi-part designs and need glue.**" if glue else "") + "\n")
     for v in s["patterns_used"]:
         flag = "" if v.get("ok") else "  **CHECK: not a single connected piece touching all three edges**"
         L.append(f"- `{v['id']}` {v['name']} ({v['source']}){' - ' + v['note'] if v.get('note') else ''}{flag}")

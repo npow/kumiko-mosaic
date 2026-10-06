@@ -277,14 +277,29 @@ KS_GLUE = {10, 11, 12, 13, 16, 40}   # Kumiko Studio flags these as needing glue
 _KS: Optional[Dict[int, dict]] = None
 
 
+import os as _os
+import sys as _sys
+
+PAPERVIEW_NOTICE = ("Downloading outlines of Paper View's insert designs (extracted by the Kumiko Studio project) "
+                    "to {path}. They derive from his licensed files: use them for your own prints only, do not "
+                    "redistribute. Disable with KUMIKO_NO_PAPERVIEW=1.")
+
+
+def paperview_enabled() -> bool:
+    return _os.environ.get("KUMIKO_NO_PAPERVIEW", "") not in ("1", "true", "yes")
+
+
 def kumiko_studio_data(path: Optional[str] = None, download: bool = True) -> Dict[int, dict]:
     global _KS
+    if not paperview_enabled():
+        raise RuntimeError("Paper View patterns (ks1..ks40) are disabled (KUMIKO_NO_PAPERVIEW is set)")
     if _KS is not None:
         return _KS
     p = Path(path) if path else KS_CACHE
     if not p.exists():
         if not download:
             raise FileNotFoundError(f"{p} missing; run with download=True")
+        print(PAPERVIEW_NOTICE.format(path=p), file=_sys.stderr)
         p.parent.mkdir(parents=True, exist_ok=True)
         with urllib.request.urlopen(KS_URL, timeout=60) as r:
             p.write_bytes(r.read())
@@ -327,7 +342,7 @@ class PatternInfo:
 
 def catalogue(include_ks: bool = True) -> Dict[str, PatternInfo]:
     out = {k: PatternInfo(k, v["name"], "procedural", v["symmetric"]) for k, v in PROCEDURAL.items()}
-    if include_ks:
+    if include_ks and paperview_enabled():
         for i, n in KS_NAMES.items():
             out[f"ks{i}"] = PatternInfo(f"ks{i}", f"Paper View #{i} ({n})", "kumiko-studio", None,
                                         "needs glue" if i in KS_GLUE else "")
