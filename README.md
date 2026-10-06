@@ -67,11 +67,31 @@ does every panel in `/catalog`. The picture below shows the idea in three steps.
 
 ## Examples
 
-![Photo, kumiko plan, zoom into the inserts](examples/catalog_tour.gif)
+Source on the left, planned panel on the right, drawn with the real insert silhouettes. All at 60 columns (2.6 m wide at 50 mm pitch, 1.6 m at 30 mm), 8 Bambu PLA strip filaments, 3 grey background filaments, at most 4 line patterns, dark frame. The fidelity number is the mean CIELAB error at viewing distance (lower is better; under 10 reads as the picture from across a room). Rebuild with `python scripts/make_gallery.py && python scripts/readme_examples.py`.
 
-![119 kumiko plans](examples/catalog_wall.jpg)
+**The Great Wave (Hokusai)**: 60 x 35 triangles, 4260 cells, 4192 pattern inserts, fidelity 11.68
 
-Credits for the images are in [examples/catalog/CREDITS.md](examples/catalog/CREDITS.md).
+![The Great Wave (Hokusai)](examples/gallery/great_wave_60cols_compare.jpg)
+
+**Golden Gate Bridge**: 60 x 39 triangles, 4740 cells, 4580 pattern inserts, fidelity 8.35
+
+![Golden Gate Bridge](examples/gallery/golden_gate_bridge_60cols_compare.jpg)
+
+**Toco toucan**: 60 x 31 triangles, 3780 cells, 3488 pattern inserts, fidelity 6.88
+
+![Toco toucan](examples/gallery/toucan_60cols_compare.jpg)
+
+**Earth from Apollo 17**: 60 x 52 triangles, 6300 cells, 3969 pattern inserts, fidelity 5.63
+
+![Earth from Apollo 17](examples/gallery/earth_60cols_compare.jpg)
+
+**The Starry Night (Van Gogh)**: 60 x 41 triangles, 4980 cells, 4968 pattern inserts, fidelity 9.39
+
+![The Starry Night (Van Gogh)](examples/gallery/starry_night_60cols_compare.jpg)
+
+**Red Fuji (Hokusai)**: 60 x 35 triangles, 4260 cells, 3404 pattern inserts, fidelity 13.56
+
+![Red Fuji (Hokusai)](examples/gallery/red_fuji_60cols_compare.jpg)
 
 ## Notes
 

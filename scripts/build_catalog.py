@@ -23,6 +23,9 @@ sys.path.insert(0, str(ROOT))
 CAT = ROOT / "catalog"
 
 
+ALGO = "mean-v2"      # bump when planner defaults change so every image is re-planned
+
+
 def work(args):
     cid, cols = args
     from PIL import Image
@@ -31,7 +34,7 @@ def work(args):
     t = time.time()
     try:
         s = run(str(CAT / "images" / f"{cid}.jpg"), str(CAT / "out" / cid), Params(cols=cols, preview_only=True))
-        return cid, {"ok": True, "cols": cols, "bgset": "all", "fidelity": s["fidelity"], "grid": s["grid"]["triangle_generator"],
+        return cid, {"ok": True, "cols": cols, "bgset": "all", "algo": ALGO, "fidelity": s["fidelity"], "grid": s["grid"]["triangle_generator"],
                      "outer_mm": s["grid"]["outer_mm"], "counts": s["counts"], "patterns": s["patterns_used"],
                      "strips": [p["name"] for p in s["palette_used"]], "strip_hex": [p["hex"] for p in s["palette_used"]],
                      "backgrounds": [b["name"] for b in s["backgrounds_used"]],
@@ -50,7 +53,7 @@ def main():
     res_path = CAT / "results.json"
     results = json.load(open(res_path)) if res_path.exists() else {}
     todo = [cid for cid in sources if not results.get(cid, {}).get("ok") or results[cid].get("cols") != a.cols
-            or results[cid].get("bgset") != "all"]
+            or results[cid].get("bgset") != "all" or results[cid].get("algo") != ALGO]
     if a.limit:
         todo = todo[: a.limit]
     print(f"{len(todo)} to plan of {len(sources)}", flush=True)

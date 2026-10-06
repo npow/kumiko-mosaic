@@ -1,67 +1,67 @@
 [
  {
-  "name": "earth",
-  "source": "earth_source.jpg",
+  "name": "great_wave",
+  "source": "great_wave_source.jpg",
   "rows": [
    {
     "variant": "60cols",
-    "img": "earth_60cols.jpg",
+    "img": "great_wave_60cols.jpg",
     "grid": [
      60,
-     52
-    ],
-    "outer": [
-     2613.1,
-     2618.0
-    ],
-    "cells": 6300,
-    "inserts": 3973,
-    "palette": [
-     "#FFFFFF",
-     "#D1D3D5",
-     "#A6A9AA",
-     "#8E9089",
-     "#F7E6DE",
-     "#5B6579",
-     "#68724D",
-     "#545454"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#0A2989",
-     "#042F56"
-    ],
-    "fidelity": 6.22
-   },
-   {
-    "variant": "40cols",
-    "img": "earth_40cols.jpg",
-    "grid": [
-     40,
      35
     ],
     "outer": [
-     1747.1,
+     2613.1,
      1768.0
     ],
-    "cells": 2840,
-    "inserts": 1804,
+    "cells": 4260,
+    "inserts": 4192,
     "palette": [
      "#FFFFFF",
-     "#D1D3D5",
-     "#A6A9AA",
-     "#5B6579",
-     "#8E9089",
      "#F7E6DE",
-     "#68724D",
-     "#BECF00"
+     "#CBC6B8",
+     "#A3D8E1",
+     "#5B6579",
+     "#56B7E6",
+     "#0086D6",
+     "#0056B8"
     ],
     "backgrounds": [
      "#000000",
-     "#0A2989",
+     "#F7D959",
      "#042F56"
     ],
-    "fidelity": 7.02
+    "fidelity": 11.68
+   },
+   {
+    "variant": "40cols",
+    "img": "great_wave_40cols.jpg",
+    "grid": [
+     40,
+     23
+    ],
+    "outer": [
+     1747.1,
+     1168.0
+    ],
+    "cells": 1880,
+    "inserts": 1842,
+    "palette": [
+     "#FFFFFF",
+     "#A3D8E1",
+     "#8E9089",
+     "#0078BF",
+     "#E8DBB7",
+     "#F7E6DE",
+     "#56B7E6",
+     "#545454"
+    ],
+    "backgrounds": [
+     "#E4BD68",
+     "#F7D959",
+     "#042F56"
+    ],
+    "fidelity": 12.05
    }
   ]
  },
@@ -81,23 +81,23 @@
      1968.0
     ],
     "cells": 4740,
-    "inserts": 4575,
+    "inserts": 4580,
     "palette": [
      "#A3D8E1",
      "#56B7E6",
      "#5B6579",
      "#BECF00",
      "#9D432C",
-     "#FF6A13",
      "#C12E1F",
-     "#E8DBB7"
+     "#E8DBB7",
+     "#FF6A13"
     ],
     "backgrounds": [
      "#000000",
      "#FFFFFF",
      "#545454"
     ],
-    "fidelity": 9.42
+    "fidelity": 8.35
    },
    {
     "variant": "40cols",
@@ -111,221 +111,23 @@
      1318.0
     ],
     "cells": 2120,
-    "inserts": 2060,
+    "inserts": 2062,
     "palette": [
      "#A3D8E1",
-     "#FFFFFF",
+     "#56B7E6",
      "#5B6579",
-     "#F7D959",
      "#9D432C",
-     "#FF6A13",
      "#C12E1F",
-     "#D3B7A7"
+     "#BECF00",
+     "#E8DBB7",
+     "#FF6A13"
     ],
     "backgrounds": [
      "#000000",
      "#FFFFFF",
-     "#56B7E6"
-    ],
-    "fidelity": 9.85
-   }
-  ]
- },
- {
-  "name": "great_wave",
-  "source": "great_wave_source.jpg",
-  "rows": [
-   {
-    "variant": "60cols",
-    "img": "great_wave_60cols.jpg",
-    "grid": [
-     60,
-     35
-    ],
-    "outer": [
-     2613.1,
-     1768.0
-    ],
-    "cells": 4260,
-    "inserts": 3865,
-    "palette": [
-     "#FFFFFF",
-     "#F7E6DE",
-     "#E8DBB7",
-     "#56B7E6",
-     "#0078BF",
-     "#757575",
-     "#A3D8E1",
-     "#847D48"
-    ],
-    "backgrounds": [
-     "#E4BD68",
-     "#F7D959",
-     "#042F56"
-    ],
-    "fidelity": 13.72
-   },
-   {
-    "variant": "40cols",
-    "img": "great_wave_40cols.jpg",
-    "grid": [
-     40,
-     23
-    ],
-    "outer": [
-     1747.1,
-     1168.0
-    ],
-    "cells": 1880,
-    "inserts": 1704,
-    "palette": [
-     "#FFFFFF",
-     "#56B7E6",
-     "#F7E6DE",
-     "#E8DBB7",
-     "#0078BF",
-     "#A3D8E1",
-     "#8E9089",
      "#545454"
     ],
-    "backgrounds": [
-     "#E4BD68",
-     "#F7D959",
-     "#042F56"
-    ],
-    "fidelity": 14.44
-   }
-  ]
- },
- {
-  "name": "red_fuji",
-  "source": "red_fuji_source.jpg",
-  "rows": [
-   {
-    "variant": "60cols",
-    "img": "red_fuji_60cols.jpg",
-    "grid": [
-     60,
-     35
-    ],
-    "outer": [
-     2613.1,
-     1768.0
-    ],
-    "cells": 4260,
-    "inserts": 3363,
-    "palette": [
-     "#FFFFFF",
-     "#56B7E6",
-     "#545454",
-     "#A3D8E1",
-     "#0078BF",
-     "#61C680",
-     "#9D432C",
-     "#BECF00"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#C12E1F",
-     "#0A2989"
-    ],
-    "fidelity": 15.29
-   },
-   {
-    "variant": "40cols",
-    "img": "red_fuji_40cols.jpg",
-    "grid": [
-     40,
-     23
-    ],
-    "outer": [
-     1747.1,
-     1168.0
-    ],
-    "cells": 1880,
-    "inserts": 1485,
-    "palette": [
-     "#FFFFFF",
-     "#56B7E6",
-     "#545454",
-     "#68724D",
-     "#A3D8E1",
-     "#0078BF",
-     "#E8DBB7",
-     "#9D432C"
-    ],
-    "backgrounds": [
-     "#000000",
-     "#C12E1F",
-     "#0A2989"
-    ],
-    "fidelity": 17.21
-   }
-  ]
- },
- {
-  "name": "starry_night",
-  "source": "starry_night_source.jpg",
-  "rows": [
-   {
-    "variant": "60cols",
-    "img": "starry_night_60cols.jpg",
-    "grid": [
-     60,
-     41
-    ],
-    "outer": [
-     2613.1,
-     2068.0
-    ],
-    "cells": 4980,
-    "inserts": 4942,
-    "palette": [
-     "#A3D8E1",
-     "#C2E189",
-     "#8E9089",
-     "#545454",
-     "#F4EE2A",
-     "#5B6579",
-     "#5E43B7",
-     "#68724D"
-    ],
-    "backgrounds": [
-     "#0A2989",
-     "#0056B8",
-     "#000000"
-    ],
-    "fidelity": 11.27
-   },
-   {
-    "variant": "40cols",
-    "img": "starry_night_40cols.jpg",
-    "grid": [
-     40,
-     27
-    ],
-    "outer": [
-     1747.1,
-     1368.0
-    ],
-    "cells": 2200,
-    "inserts": 1960,
-    "palette": [
-     "#A3D8E1",
-     "#C2E189",
-     "#8E9089",
-     "#0086D6",
-     "#545454",
-     "#4D3324",
-     "#5B6579",
-     "#68724D"
-    ],
-    "backgrounds": [
-     "#F4EE2A",
-     "#0056B8",
-     "#000000"
-    ],
-    "fidelity": 10.71
+    "fidelity": 8.76
    }
   ]
  },
@@ -345,23 +147,23 @@
      1568.0
     ],
     "cells": 3780,
-    "inserts": 3469,
+    "inserts": 3488,
     "palette": [
      "#8E9089",
      "#482960",
-     "#D1D3D5",
-     "#F4EE2A",
-     "#C12E1F",
+     "#9B9EA0",
+     "#FFFFFF",
+     "#DE4343",
      "#5B6579",
-     "#AE96D4",
-     "#9D432C"
+     "#FEC600",
+     "#AE96D4"
     ],
     "backgrounds": [
      "#000000",
      "#FF6A13",
-     "#FFFFFF"
+     "#F4EE2A"
     ],
-    "fidelity": 7.11
+    "fidelity": 6.88
    },
    {
     "variant": "40cols",
@@ -375,15 +177,15 @@
      1018.0
     ],
     "cells": 1640,
-    "inserts": 1516,
+    "inserts": 1524,
     "palette": [
      "#8E9089",
      "#482960",
      "#9B9EA0",
-     "#FFFFFF",
      "#FF6A13",
+     "#FFFFFF",
      "#5B6579",
-     "#AE96D4",
+     "#E8AFCF",
      "#F99963"
     ],
     "backgrounds": [
@@ -391,7 +193,205 @@
      "#C12E1F",
      "#F4EE2A"
     ],
-    "fidelity": 8.14
+    "fidelity": 7.49
+   }
+  ]
+ },
+ {
+  "name": "earth",
+  "source": "earth_source.jpg",
+  "rows": [
+   {
+    "variant": "60cols",
+    "img": "earth_60cols.jpg",
+    "grid": [
+     60,
+     52
+    ],
+    "outer": [
+     2613.1,
+     2618.0
+    ],
+    "cells": 6300,
+    "inserts": 3969,
+    "palette": [
+     "#FFFFFF",
+     "#D1D3D5",
+     "#A6A9AA",
+     "#5B6579",
+     "#8E9089",
+     "#F7E6DE",
+     "#757575",
+     "#545454"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#0A2989",
+     "#042F56"
+    ],
+    "fidelity": 5.63
+   },
+   {
+    "variant": "40cols",
+    "img": "earth_40cols.jpg",
+    "grid": [
+     40,
+     35
+    ],
+    "outer": [
+     1747.1,
+     1768.0
+    ],
+    "cells": 2840,
+    "inserts": 1807,
+    "palette": [
+     "#FFFFFF",
+     "#D1D3D5",
+     "#A6A9AA",
+     "#5B6579",
+     "#8E9089",
+     "#757575",
+     "#F7E6DE",
+     "#545454"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#0A2989",
+     "#042F56"
+    ],
+    "fidelity": 6.23
+   }
+  ]
+ },
+ {
+  "name": "starry_night",
+  "source": "starry_night_source.jpg",
+  "rows": [
+   {
+    "variant": "60cols",
+    "img": "starry_night_60cols.jpg",
+    "grid": [
+     60,
+     41
+    ],
+    "outer": [
+     2613.1,
+     2068.0
+    ],
+    "cells": 4980,
+    "inserts": 4968,
+    "palette": [
+     "#A3D8E1",
+     "#C2E189",
+     "#545454",
+     "#8E9089",
+     "#5B6579",
+     "#68724D",
+     "#0086D6",
+     "#5E43B7"
+    ],
+    "backgrounds": [
+     "#F4EE2A",
+     "#0056B8",
+     "#000000"
+    ],
+    "fidelity": 9.39
+   },
+   {
+    "variant": "40cols",
+    "img": "starry_night_40cols.jpg",
+    "grid": [
+     40,
+     27
+    ],
+    "outer": [
+     1747.1,
+     1368.0
+    ],
+    "cells": 2200,
+    "inserts": 2156,
+    "palette": [
+     "#A3D8E1",
+     "#8E9089",
+     "#C2E189",
+     "#5B6579",
+     "#68724D",
+     "#545454",
+     "#0086D6",
+     "#4D3324"
+    ],
+    "backgrounds": [
+     "#F4EE2A",
+     "#0056B8",
+     "#000000"
+    ],
+    "fidelity": 9.25
+   }
+  ]
+ },
+ {
+  "name": "red_fuji",
+  "source": "red_fuji_source.jpg",
+  "rows": [
+   {
+    "variant": "60cols",
+    "img": "red_fuji_60cols.jpg",
+    "grid": [
+     60,
+     35
+    ],
+    "outer": [
+     2613.1,
+     1768.0
+    ],
+    "cells": 4260,
+    "inserts": 3404,
+    "palette": [
+     "#A3D8E1",
+     "#FFFFFF",
+     "#68724D",
+     "#0078BF",
+     "#545454",
+     "#56B7E6",
+     "#E8DBB7",
+     "#4D3324"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#0A2989",
+     "#C12E1F"
+    ],
+    "fidelity": 13.56
+   },
+   {
+    "variant": "40cols",
+    "img": "red_fuji_40cols.jpg",
+    "grid": [
+     40,
+     23
+    ],
+    "outer": [
+     1747.1,
+     1168.0
+    ],
+    "cells": 1880,
+    "inserts": 1563,
+    "palette": [
+     "#A3D8E1",
+     "#68724D",
+     "#FFFFFF",
+     "#545454",
+     "#56B7E6",
+     "#0078BF",
+     "#000000",
+     "#E8DBB7"
+    ],
+    "backgrounds": [
+     "#000000",
+     "#C12E1F",
+     "#0A2989"
+    ],
+    "fidelity": 14.72
    }
   ]
  }

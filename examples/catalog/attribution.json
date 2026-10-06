@@ -1,15 +1,5 @@
 [
  {
-  "id": "e96a750a5d",
-  "title": "File:Silhouette of palm trees at tropical sunset on Bali island. (44817340244).jpg",
-  "author": "Artem Beliaikin from Moscow, Russia",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3ASilhouette_of_palm_trees_at_tropical_sunset_on_Bali_island._%2844817340244%29.jpg",
-  "category": "sky and water",
-  "fidelity": 6.72
- },
- {
   "id": "abcf612b56",
   "title": "File:Sunrise from Kausani, Almora, Uttarakhand, India.jpg",
   "author": "Abhijit Kar Gupta from Kolkata, India",
@@ -17,7 +7,17 @@
   "license_url": "https://creativecommons.org/licenses/by/2.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ASunrise_from_Kausani%2C_Almora%2C_Uttarakhand%2C_India.jpg",
   "category": "mountains",
-  "fidelity": 9.38
+  "fidelity": 9.2
+ },
+ {
+  "id": "e96a750a5d",
+  "title": "File:Silhouette of palm trees at tropical sunset on Bali island. (44817340244).jpg",
+  "author": "Artem Beliaikin from Moscow, Russia",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASilhouette_of_palm_trees_at_tropical_sunset_on_Bali_island._%2844817340244%29.jpg",
+  "category": "sky and water",
+  "fidelity": 6.38
  },
  {
   "id": "818a5bea0d",
@@ -27,7 +27,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ABalloon_over_Luxor_-_Egypt_denoised.jpg",
   "category": "vehicles and objects",
-  "fidelity": 4.57
+  "fidelity": 4.18
  },
  {
   "id": "6fa70602d0",
@@ -37,7 +37,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ASunflower_and_a_bee.jpg",
   "category": "flowers and nature",
-  "fidelity": 6.11
+  "fidelity": 4.89
  },
  {
   "id": "9170a4e8ea",
@@ -47,7 +47,7 @@
   "license_url": "https://creativecommons.org/licenses/by/2.0",
   "page": "https://commons.wikimedia.org/wiki/File%3APlatanthera_cristata_%2816977581784%29.jpg",
   "category": "flowers and nature",
-  "fidelity": 10.53
+  "fidelity": 8.93
  },
  {
   "id": "82936fdbc5",
@@ -57,7 +57,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ARed-eyed_Tree_Frog_-_Litoria_chloris_edit1.jpg",
   "category": "animals",
-  "fidelity": 6.1
+  "fidelity": 5.34
  },
  {
   "id": "74c11288f9",
@@ -67,27 +67,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ADwarsdoorsnede_van_een_gesloten_bloem_van_een_paardenbloem_%28Taraxacum_officinale%29_08-05-2022._%28d.j.b%29.jpg",
   "category": "flowers and nature",
-  "fidelity": 7.53
- },
- {
-  "id": "ab5cf71a5e",
-  "title": "File:Eucalyptus deglupta 18zz.jpg",
-  "author": "Photo by David J. Stang",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEucalyptus_deglupta_18zz.jpg",
-  "category": "flowers and nature",
-  "fidelity": 7.3
- },
- {
-  "id": "ba8d3521c9",
-  "title": "File:The Forbidden City - View from Coal Hill.jpg",
-  "author": "Pixelflake",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AThe_Forbidden_City_-_View_from_Coal_Hill.jpg",
-  "category": "architecture",
-  "fidelity": 7.8
+  "fidelity": 6.74
  },
  {
   "id": "75760abe38",
@@ -97,67 +77,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AArese_Museo_Storico_Alfa_Romeo_1976_NY_Taxi_1.jpg",
   "category": "cities",
-  "fidelity": 10.5
- },
- {
-  "id": "5cd8de45dc",
-  "title": "File:Vespa crabro head 01.jpg",
-  "author": "H. Zell",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AVespa_crabro_head_01.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 6.09
- },
- {
-  "id": "813a662fe6",
-  "title": "File:Male lion olomouc.jpg",
-  "author": "SonNy cZ",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMale_lion_olomouc.jpg",
-  "category": "animals",
-  "fidelity": 6.68
- },
- {
-  "id": "940606872b",
-  "title": "File:Citrus x limon (Outjo).jpg",
-  "author": "Hans Hillewaert",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ACitrus_x_limon_%28Outjo%29.jpg",
-  "category": "flowers and nature",
-  "fidelity": 5.71
- },
- {
-  "id": "ad61da070b",
-  "title": "File:Angkor Wat Sunrise (209237385).jpeg",
-  "author": "Reinhard Onasch",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AAngkor_Wat_Sunrise_%28209237385%29.jpeg",
-  "category": "architecture",
-  "fidelity": 7.99
- },
- {
-  "id": "8cf7a634f3",
-  "title": "File:Juvenile Kaloula in a drop of water on a Sacred lotus leaf.jpg",
-  "author": "Basile Morin",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AJuvenile_Kaloula_in_a_drop_of_water_on_a_Sacred_lotus_leaf.jpg",
-  "category": "flowers and nature",
-  "fidelity": 9.1
- },
- {
-  "id": "f13f620a8f",
-  "title": "File:Chess pieces - 12-14c - Novgorod Kremlin Museum.jpg",
-  "author": "Лапоть",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AChess_pieces_-_12-14c_-_Novgorod_Kremlin_Museum.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 7.28
+  "fidelity": 9.45
  },
  {
   "id": "dec47583ad",
@@ -167,57 +87,27 @@
   "license_url": "",
   "page": "https://commons.wikimedia.org/wiki/File%3AYokohama-Sumo-Wrestler-Defeating-a-Foreigner-1861-Ipposai-Yoshifuji.png",
   "category": "people and culture",
-  "fidelity": 13.15
+  "fidelity": 11.26
  },
  {
-  "id": "ca95144feb",
-  "title": "File:Toucan Closeup.jpg",
-  "author": "Keenanhye",
-  "license": "CC BY 4.0",
-  "license_url": "https://creativecommons.org/licenses/by/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AToucan_Closeup.jpg",
-  "category": "animals",
-  "fidelity": 7.14
- },
- {
-  "id": "c76878db94",
-  "title": "File:Closeup with drops (422932170).jpg",
-  "author": "Patty O'Hearn Kickham from Guelph, Ontario, Canada",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ACloseup_with_drops_%28422932170%29.jpg",
-  "category": "flowers and nature",
-  "fidelity": 11.17
- },
- {
-  "id": "c319cceb55",
-  "title": "File:Klinz Wolf 2014-02-05 1.jpg",
-  "author": "Isiwal",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AKlinz_Wolf_2014-02-05_1.jpg",
-  "category": "animals",
-  "fidelity": 3.76
- },
- {
-  "id": "f669606e84",
-  "title": "File:Wassily Kandinsky - Impression III (Concert) - Google Art Project.jpg",
-  "author": "Wassily Kandinsky",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AWassily_Kandinsky_-_Impression_III_%28Concert%29_-_Google_Art_Project.jpg",
-  "category": "art",
-  "fidelity": 11.05
- },
- {
-  "id": "d5cd553570",
-  "title": "File:Scarlet macaw (Ara macao cyanopterus) head Copan.jpg",
-  "author": "Charles J. Sharp",
+  "id": "5951aa3c7d",
+  "title": "File:Lemon - whole and split.jpg",
+  "author": "Ivar Leidus",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AScarlet_macaw_%28Ara_macao_cyanopterus%29_head_Copan.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ALemon_-_whole_and_split.jpg",
+  "category": "flowers and nature",
+  "fidelity": 4.65
+ },
+ {
+  "id": "813a662fe6",
+  "title": "File:Male lion olomouc.jpg",
+  "author": "SonNy cZ",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMale_lion_olomouc.jpg",
   "category": "animals",
-  "fidelity": 11.49
+  "fidelity": 6.15
  },
  {
   "id": "e016e40c19",
@@ -227,7 +117,67 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AHummingbird_hawk-moth_feeding_on_flowers_in_Yerevan.jpg",
   "category": "animals",
-  "fidelity": 10.33
+  "fidelity": 9.39
+ },
+ {
+  "id": "d71ebf50b4",
+  "title": "File:Echinopsis unidentified.jpg",
+  "author": "Tomas Castelazo",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AEchinopsis_unidentified.jpg",
+  "category": "flowers and nature",
+  "fidelity": 11.69
+ },
+ {
+  "id": "8cf7a634f3",
+  "title": "File:Juvenile Kaloula in a drop of water on a Sacred lotus leaf.jpg",
+  "author": "Basile Morin",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AJuvenile_Kaloula_in_a_drop_of_water_on_a_Sacred_lotus_leaf.jpg",
+  "category": "flowers and nature",
+  "fidelity": 8.64
+ },
+ {
+  "id": "f13f620a8f",
+  "title": "File:Chess pieces - 12-14c - Novgorod Kremlin Museum.jpg",
+  "author": "Лапоть",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AChess_pieces_-_12-14c_-_Novgorod_Kremlin_Museum.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 6.43
+ },
+ {
+  "id": "ab5cf71a5e",
+  "title": "File:Eucalyptus deglupta 18zz.jpg",
+  "author": "Photo by David J. Stang",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AEucalyptus_deglupta_18zz.jpg",
+  "category": "flowers and nature",
+  "fidelity": 6.62
+ },
+ {
+  "id": "ca95144feb",
+  "title": "File:Toucan Closeup.jpg",
+  "author": "Keenanhye",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AToucan_Closeup.jpg",
+  "category": "animals",
+  "fidelity": 6.54
+ },
+ {
+  "id": "d5cd553570",
+  "title": "File:Scarlet macaw (Ara macao cyanopterus) head Copan.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AScarlet_macaw_%28Ara_macao_cyanopterus%29_head_Copan.jpg",
+  "category": "animals",
+  "fidelity": 10.98
  },
  {
   "id": "c52851bdeb",
@@ -237,27 +187,17 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3A2020._Herbarium._Fragaria_vesca._img-010.jpg",
   "category": "flowers and nature",
-  "fidelity": 6.22
+  "fidelity": 5.53
  },
  {
-  "id": "873387acb2",
-  "title": "File:Firebox on a steam train.jpg",
-  "author": "Mark Pellegrini ( Raul654 )",
+  "id": "ad61da070b",
+  "title": "File:Angkor Wat Sunrise (209237385).jpeg",
+  "author": "Reinhard Onasch",
   "license": "CC BY-SA 3.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AFirebox_on_a_steam_train.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 8.76
- },
- {
-  "id": "60a95ac164",
-  "title": "File:Koi fish in a bay in Laguna, Philippines.jpg",
-  "author": "ARTPollard",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AKoi_fish_in_a_bay_in_Laguna%2C_Philippines.jpg",
-  "category": "animals",
-  "fidelity": 11.26
+  "page": "https://commons.wikimedia.org/wiki/File%3AAngkor_Wat_Sunrise_%28209237385%29.jpeg",
+  "category": "architecture",
+  "fidelity": 6.63
  },
  {
   "id": "e7843b8e94",
@@ -267,17 +207,17 @@
   "license_url": "",
   "page": "https://commons.wikimedia.org/wiki/File%3APaul_Gauguin_-_Fatata_te_Miti_%28By_the_Sea%29_-_Google_Art_Project.jpg",
   "category": "art",
-  "fidelity": 12.06
+  "fidelity": 10.61
  },
  {
-  "id": "6c160a3222",
-  "title": "File:Edouard Manet.- Monet peignant sur son atelier-bâteau.jpg",
-  "author": "Pierre André Leclercq",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEdouard_Manet.-_Monet_peignant_sur_son_atelier-b%C3%A2teau.jpg",
+  "id": "204e352278",
+  "title": "File:St Elisabeth of Hungary (18. century, stained glass).jpg",
+  "author": "Petar Milošević",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASt_Elisabeth_of_Hungary_%2818._century%2C_stained_glass%29.jpg",
   "category": "art",
-  "fidelity": 11.89
+  "fidelity": 9.1
  },
  {
   "id": "7166f41438",
@@ -287,97 +227,17 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ASagrada_Fam%C3%ADlia_2010.JPG",
   "category": "architecture",
-  "fidelity": 10.67
+  "fidelity": 9.44
  },
  {
-  "id": "5e544e7cfe",
-  "title": "File:Gustav Klimt- Poljub.jpg",
-  "author": "IVGA123",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AGustav_Klimt-_Poljub.jpg",
-  "category": "art",
-  "fidelity": 10.93
- },
- {
-  "id": "8b83b70f15",
-  "title": "File:Arabian sunset over the sea.jpg",
-  "author": "Kerry Bolger",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AArabian_sunset_over_the_sea.jpg",
-  "category": "sky and water",
-  "fidelity": 5.21
- },
- {
-  "id": "7509b816c5",
-  "title": "File:Multicolored aurora borealis pillar over Brastad.jpg",
-  "author": "W.carter",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMulticolored_aurora_borealis_pillar_over_Brastad.jpg",
-  "category": "sky and water",
-  "fidelity": 13.17
- },
- {
-  "id": "a8e5610dee",
-  "title": "File:Mountain gorilla (Gorilla beringei beringei) female 2.jpg",
-  "author": "Charles J. Sharp",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMountain_gorilla_%28Gorilla_beringei_beringei%29_female_2.jpg",
-  "category": "animals",
-  "fidelity": 9.39
- },
- {
-  "id": "6ca4f01286",
-  "title": "File:Rothschild's giraffe side view portrait.jpg",
-  "author": "Timothy Akolamazima",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ARothschild%27s_giraffe_side_view_portrait.jpg",
-  "category": "animals",
-  "fidelity": 7.79
- },
- {
-  "id": "335a909902",
-  "title": "File:Tulip field in Holland.jpg",
-  "author": "rboed*",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ATulip_field_in_Holland.jpg",
-  "category": "flowers and nature",
-  "fidelity": 11.4
- },
- {
-  "id": "3ff569a6c1",
-  "title": "File:Holi Festival of Colors.jpg",
-  "author": "Ramesh Lalwani",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AHoli_Festival_of_Colors.jpg",
-  "category": "people and culture",
-  "fidelity": 10.66
- },
- {
-  "id": "91002b9e43",
-  "title": "File:Naked in an armchair and foliage by Henri Matisse in the Musée Matisse de Nice.jpg",
-  "author": "Yair-haklai",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ANaked_in_an_armchair_and_foliage_by_Henri_Matisse_in_the_Mus%C3%A9e_Matisse_de_Nice.jpg",
-  "category": "art",
-  "fidelity": 10.4
- },
- {
-  "id": "804febb93c",
-  "title": "File:Legendary poppy field in Pavy 18.jpg",
-  "author": "Екатерина Борисова",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ALegendary_poppy_field_in_Pavy_18.jpg",
-  "category": "flowers and nature",
-  "fidelity": 12.78
+  "id": "5cd8de45dc",
+  "title": "File:Vespa crabro head 01.jpg",
+  "author": "H. Zell",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AVespa_crabro_head_01.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 5.37
  },
  {
   "id": "99d8b08dc7",
@@ -387,87 +247,107 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AInside_Mind_M_C_Escher_Exhibit_Museum_Science_Boston.jpg",
   "category": "art",
-  "fidelity": 10.16
+  "fidelity": 9.44
  },
  {
-  "id": "6a870bbc5c",
-  "title": "File:Gondola on Venetian canal with buildings -- 33 of 33.jpg",
-  "author": "Maritess Sulcer",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AGondola_on_Venetian_canal_with_buildings_--_33_of_33.jpg",
-  "category": "architecture",
-  "fidelity": 9.61
- },
- {
-  "id": "c648695a12",
-  "title": "File:Fern fronds unfurling - Steall Falls.jpg",
-  "author": "Lauwz The Kiwistralian",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AFern_fronds_unfurling_-_Steall_Falls.jpg",
-  "category": "flowers and nature",
-  "fidelity": 8.06
- },
- {
-  "id": "e2941ec32f",
-  "title": "File:Edvard Munch - The Scream, 1910 (Munch Museum).jpg",
-  "author": "Edvard Munch",
+  "id": "ff558d7a58",
+  "title": "File:Rembrandt - Clowes self-portrait, 1629.png",
+  "author": "Rembrandt",
   "license": "Public domain",
   "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEdvard_Munch_-_The_Scream%2C_1910_%28Munch_Museum%29.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ARembrandt_-_Clowes_self-portrait%2C_1629.png",
   "category": "art",
-  "fidelity": 13.76
+  "fidelity": 4.07
  },
  {
-  "id": "ea59679192",
-  "title": "File:Cactus flower -- Epiphyllum hookeri.jpg",
-  "author": "Jim Evans",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ACactus_flower_--_Epiphyllum_hookeri.jpg",
-  "category": "flowers and nature",
-  "fidelity": 9.81
- },
- {
-  "id": "277299dc76",
-  "title": "File:Composition, 1921 - Piet Mondrian, MET DT4479.jpg",
-  "author": "Piet Mondrian",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AComposition%2C_1921_-_Piet_Mondrian%2C_MET_DT4479.jpg",
-  "category": "art",
-  "fidelity": 9.48
- },
- {
-  "id": "e621f27fd8",
-  "title": "File:Rosa pumpkin patch.jpg",
-  "author": "Ruff tuff cream puff",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3ARosa_pumpkin_patch.jpg",
-  "category": "flowers and nature",
-  "fidelity": 10.09
- },
- {
-  "id": "fef548eeb2",
-  "title": "File:Portrait Of A Bald Eagle (152753399).jpeg",
-  "author": "Georg Botz",
+  "id": "ba8d3521c9",
+  "title": "File:The Forbidden City - View from Coal Hill.jpg",
+  "author": "Pixelflake",
   "license": "CC BY-SA 3.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APortrait_Of_A_Bald_Eagle_%28152753399%29.jpeg",
-  "category": "animals",
-  "fidelity": 4.84
+  "page": "https://commons.wikimedia.org/wiki/File%3AThe_Forbidden_City_-_View_from_Coal_Hill.jpg",
+  "category": "architecture",
+  "fidelity": 7.37
  },
  {
-  "id": "4b0623b992",
-  "title": "File:PORTRAIT OF CHARLES HODGE, Rembrandt Peale.jpg",
-  "author": "Rembrandt Peale",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3APORTRAIT_OF_CHARLES_HODGE%2C_Rembrandt_Peale.jpg",
+  "id": "5e544e7cfe",
+  "title": "File:Gustav Klimt- Poljub.jpg",
+  "author": "IVGA123",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AGustav_Klimt-_Poljub.jpg",
   "category": "art",
-  "fidelity": 4.95
+  "fidelity": 9.56
+ },
+ {
+  "id": "7509b816c5",
+  "title": "File:Multicolored aurora borealis pillar over Brastad.jpg",
+  "author": "W.carter",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMulticolored_aurora_borealis_pillar_over_Brastad.jpg",
+  "category": "sky and water",
+  "fidelity": 12.75
+ },
+ {
+  "id": "2d926c4bb3",
+  "title": "File:Dülmen, Hausdülmen, Blüten der Dülmener Rose -- 2025 -- 7535.jpg",
+  "author": "Dietmar Rabich",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AD%C3%BClmen%2C_Hausd%C3%BClmen%2C_Bl%C3%BCten_der_D%C3%BClmener_Rose_--_2025_--_7535.jpg",
+  "category": "flowers and nature",
+  "fidelity": 11.02
+ },
+ {
+  "id": "60a95ac164",
+  "title": "File:Koi fish in a bay in Laguna, Philippines.jpg",
+  "author": "ARTPollard",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AKoi_fish_in_a_bay_in_Laguna%2C_Philippines.jpg",
+  "category": "animals",
+  "fidelity": 9.9
+ },
+ {
+  "id": "6ac8b1cfeb",
+  "title": "File:Henri Matisse, Nu bleu IV, Nice, 1952, Musée Matisse de Nice.jpg",
+  "author": "Yair-haklai",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AHenri_Matisse%2C_Nu_bleu_IV%2C_Nice%2C_1952%2C_Mus%C3%A9e_Matisse_de_Nice.jpg",
+  "category": "art",
+  "fidelity": 15.48
+ },
+ {
+  "id": "6ca4f01286",
+  "title": "File:Rothschild's giraffe side view portrait.jpg",
+  "author": "Timothy Akolamazima",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ARothschild%27s_giraffe_side_view_portrait.jpg",
+  "category": "animals",
+  "fidelity": 6.99
+ },
+ {
+  "id": "335a909902",
+  "title": "File:Tulip field in Holland.jpg",
+  "author": "rboed*",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ATulip_field_in_Holland.jpg",
+  "category": "flowers and nature",
+  "fidelity": 10.05
+ },
+ {
+  "id": "3ff569a6c1",
+  "title": "File:Holi Festival of Colors.jpg",
+  "author": "Ramesh Lalwani",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AHoli_Festival_of_Colors.jpg",
+  "category": "people and culture",
+  "fidelity": 9.6
  },
  {
   "id": "02fd28213e",
@@ -477,97 +357,47 @@
   "license_url": "https://creativecommons.org/licenses/by/2.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AArt_nouveau_poster_%2833253014395%29.jpg",
   "category": "art",
-  "fidelity": 11.21
+  "fidelity": 9.75
  },
  {
-  "id": "0af97fa24b",
-  "title": "File:Torii path with lantern at Fushimi Inari Taisha Shrine, Kyoto, Japan.jpg",
-  "author": "Basile Morin",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ATorii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg",
-  "category": "architecture",
-  "fidelity": 12.32
+  "id": "0cb12bb5ed",
+  "title": "File:Sunset viewed from Elephant Rock in Ramavarmapuram.jpg",
+  "author": "Krishnachandranvn",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASunset_viewed_from_Elephant_Rock_in_Ramavarmapuram.jpg",
+  "category": "animals",
+  "fidelity": 3.58
  },
  {
-  "id": "74734a1e9d",
-  "title": "File:Scratched drawing of a sailing ship 3000 BC.jpg",
-  "author": "Krishna Chaitanya Velaga",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AScratched_drawing_of_a_sailing_ship_3000_BC.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 7.41
- },
- {
-  "id": "e12628425f",
-  "title": "File:Vincent van Gogh - The yellow house ('The street').jpg",
-  "author": "Vincent van Gogh",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AVincent_van_Gogh_-_The_yellow_house_%28%27The_street%27%29.jpg",
-  "category": "art",
-  "fidelity": 7.82
- },
- {
-  "id": "a45f0335ac",
-  "title": "File:Monarch butterflies (Danaus plexippus plexippus) Piedra Herrada 2.jpg",
+  "id": "a8e5610dee",
+  "title": "File:Mountain gorilla (Gorilla beringei beringei) female 2.jpg",
   "author": "Charles J. Sharp",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMonarch_butterflies_%28Danaus_plexippus_plexippus%29_Piedra_Herrada_2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMountain_gorilla_%28Gorilla_beringei_beringei%29_female_2.jpg",
   "category": "animals",
-  "fidelity": 8.49
+  "fidelity": 8.17
  },
  {
-  "id": "caa8f20098",
-  "title": "File:Chameleon (16139192778).jpg",
-  "author": "Laika ac from UK",
-  "license": "CC BY-SA 2.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AChameleon_%2816139192778%29.jpg",
-  "category": "animals",
-  "fidelity": 9.74
- },
- {
-  "id": "75771dcd85",
-  "title": "File:Elephant sunset.jpg",
-  "author": "Jon Rawlinson",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AElephant_sunset.jpg",
-  "category": "animals",
-  "fidelity": 8.34
- },
- {
-  "id": "f03ed43826",
-  "title": "File:Machu Picchu, Perú, 2015-07-30, DD 47.JPG",
-  "author": "Diego Delso",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMachu_Picchu%2C_Per%C3%BA%2C_2015-07-30%2C_DD_47.JPG",
-  "category": "architecture",
-  "fidelity": 8.24
- },
- {
-  "id": "5b8afeef78",
-  "title": "File:PIA00022 Jupiter Great Red Spot Mosaic.jpg",
-  "author": "NASA/JPL",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3APIA00022_Jupiter_Great_Red_Spot_Mosaic.jpg",
-  "category": "space",
-  "fidelity": 3.77
- },
- {
-  "id": "60b84c2b6e",
-  "title": "File:Kanagawa oki nami ura LCCN2008661021.jpg",
-  "author": "Katsushika, Hokusai, 1760-1849, artist",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AKanagawa_oki_nami_ura_LCCN2008661021.jpg",
+  "id": "38db524322",
+  "title": "File:Kandinsky - Yellow Painting, 1938 - 2.jpg",
+  "author": "Xyxyzyz",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AKandinsky_-_Yellow_Painting%2C_1938_-_2.jpg",
   "category": "art",
-  "fidelity": 11.2
+  "fidelity": 8.77
+ },
+ {
+  "id": "873387acb2",
+  "title": "File:Firebox on a steam train.jpg",
+  "author": "Mark Pellegrini ( Raul654 )",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AFirebox_on_a_steam_train.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 7.35
  },
  {
   "id": "8c0697416e",
@@ -577,47 +407,127 @@
   "license_url": "",
   "page": "https://commons.wikimedia.org/wiki/File%3AHenri_Rousseau_-_The_Avenue_in_the_Park_at_Saint_Cloud_-_Google_Art_Project.jpg",
   "category": "art",
-  "fidelity": 12.53
+  "fidelity": 10.95
  },
  {
-  "id": "ee71371c29",
-  "title": "File:Burj Khalifa Dubai, UAE at Sunset 001 by Eric Chamchoum.jpg",
-  "author": "ECWiki1",
-  "license": "CC BY 4.0",
-  "license_url": "https://creativecommons.org/licenses/by/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ABurj_Khalifa_Dubai%2C_UAE_at_Sunset_001_by_Eric_Chamchoum.jpg",
-  "category": "architecture",
-  "fidelity": 5.72
+  "id": "ca124414ae",
+  "title": "File:Legendary poppy field in Pavy 17.jpg",
+  "author": "Екатерина Борисова",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ALegendary_poppy_field_in_Pavy_17.jpg",
+  "category": "flowers and nature",
+  "fidelity": 11.27
  },
  {
-  "id": "921e4bf47b",
-  "title": "File:Matterhorn sunset 2016 (Unsplash).jpg",
-  "author": "Sam Ferrara samferrara",
+  "id": "fef548eeb2",
+  "title": "File:Portrait Of A Bald Eagle (152753399).jpeg",
+  "author": "Georg Botz",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APortrait_Of_A_Bald_Eagle_%28152753399%29.jpeg",
+  "category": "animals",
+  "fidelity": 4.49
+ },
+ {
+  "id": "277299dc76",
+  "title": "File:Composition, 1921 - Piet Mondrian, MET DT4479.jpg",
+  "author": "Piet Mondrian",
   "license": "CC0",
   "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMatterhorn_sunset_2016_%28Unsplash%29.jpg",
-  "category": "mountains",
-  "fidelity": 7.67
+  "page": "https://commons.wikimedia.org/wiki/File%3AComposition%2C_1921_-_Piet_Mondrian%2C_MET_DT4479.jpg",
+  "category": "art",
+  "fidelity": 7.91
  },
  {
-  "id": "ea4cd0b5e0",
-  "title": "File:DMMMW Biplane (29656935087).jpg",
-  "author": "29656935087 ( photos · photo sets )",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ADMMMW_Biplane_%2829656935087%29.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 8.53
+  "id": "d8ddcbf1b9",
+  "title": "File:Ibn Bukhtishu - Manafi' al-Hayawan - Folio II Recto.png",
+  "author": "Michel Bakni",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AIbn_Bukhtishu_-_Manafi%27_al-Hayawan_-_Folio_II_Recto.png",
+  "category": "art",
+  "fidelity": 13.95
  },
  {
-  "id": "e0090232ef",
-  "title": "File:Chelonia mydas albino p1440273.jpg",
-  "author": "David Monniaux",
+  "id": "0af97fa24b",
+  "title": "File:Torii path with lantern at Fushimi Inari Taisha Shrine, Kyoto, Japan.jpg",
+  "author": "Basile Morin",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ATorii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg",
+  "category": "architecture",
+  "fidelity": 10.53
+ },
+ {
+  "id": "b279e05abf",
+  "title": "File:Wolf Klintz MEP 01.JPG",
+  "author": "Bengt Oberger",
   "license": "CC BY-SA 3.0",
-  "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "page": "https://commons.wikimedia.org/wiki/File%3AChelonia_mydas_albino_p1440273.jpg",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AWolf_Klintz_MEP_01.JPG",
   "category": "animals",
-  "fidelity": 7.8
+  "fidelity": 3.94
+ },
+ {
+  "id": "8b83b70f15",
+  "title": "File:Arabian sunset over the sea.jpg",
+  "author": "Kerry Bolger",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AArabian_sunset_over_the_sea.jpg",
+  "category": "sky and water",
+  "fidelity": 4.64
+ },
+ {
+  "id": "1fa4d5630c",
+  "title": "File:Al-Khazneh, Petra, Jordan.jpg",
+  "author": "Vyacheslav Argenberg",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AAl-Khazneh%2C_Petra%2C_Jordan.jpg",
+  "category": "architecture",
+  "fidelity": 7.13
+ },
+ {
+  "id": "c648695a12",
+  "title": "File:Fern fronds unfurling - Steall Falls.jpg",
+  "author": "Lauwz The Kiwistralian",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AFern_fronds_unfurling_-_Steall_Falls.jpg",
+  "category": "flowers and nature",
+  "fidelity": 7.47
+ },
+ {
+  "id": "e12628425f",
+  "title": "File:Vincent van Gogh - The yellow house ('The street').jpg",
+  "author": "Vincent van Gogh",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AVincent_van_Gogh_-_The_yellow_house_%28%27The_street%27%29.jpg",
+  "category": "art",
+  "fidelity": 6.56
+ },
+ {
+  "id": "caa8f20098",
+  "title": "File:Chameleon (16139192778).jpg",
+  "author": "Laika ac from UK",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AChameleon_%2816139192778%29.jpg",
+  "category": "animals",
+  "fidelity": 8.64
+ },
+ {
+  "id": "27f019a5fa",
+  "title": "File:Day of the Dead Coyoacan 2014 - 20.jpg",
+  "author": "Cristina Zapata Pérez",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ADay_of_the_Dead_Coyoacan_2014_-_20.jpg",
+  "category": "people and culture",
+  "fidelity": 10.48
  },
  {
   "id": "1bc646cb05",
@@ -627,437 +537,77 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3APeacock_displaying_its_feathers.jpg",
   "category": "animals",
-  "fidelity": 8.12
+  "fidelity": 7.43
  },
  {
-  "id": "855e8f61ab",
-  "title": "File:Panda géant (Ailuropoda melanoleuca) (1).jpg",
-  "author": "Gzen92",
+  "id": "04550f08fc",
+  "title": "File:Peace pagoda in autumn cropped.jpg",
+  "author": "Martin Skøtt",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APanda_g%C3%A9ant_%28Ailuropoda_melanoleuca%29_%281%29.jpg",
-  "category": "animals",
-  "fidelity": 6.97
+  "page": "https://commons.wikimedia.org/wiki/File%3APeace_pagoda_in_autumn_cropped.jpg",
+  "category": "architecture",
+  "fidelity": 9.18
  },
  {
-  "id": "d53803075a",
-  "title": "File:A view towards Torres Del Paine.jpg",
-  "author": "Winky from Oxford, UK",
+  "id": "5b8afeef78",
+  "title": "File:PIA00022 Jupiter Great Red Spot Mosaic.jpg",
+  "author": "NASA/JPL",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3APIA00022_Jupiter_Great_Red_Spot_Mosaic.jpg",
+  "category": "space",
+  "fidelity": 3.22
+ },
+ {
+  "id": "b7a924703d",
+  "title": "File:Long exposure of waterfall near Milford Sound (15556927616).jpg",
+  "author": "Tom Hall",
   "license": "CC BY 2.0",
   "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AA_view_towards_Torres_Del_Paine.jpg",
-  "category": "mountains",
-  "fidelity": 8.09
- },
- {
-  "id": "a7030f475d",
-  "title": "File:Snow Leopard Portrait (8831988806).jpg",
-  "author": "Eric Kilby from Somerville, MA, USA",
-  "license": "CC BY-SA 2.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ASnow_Leopard_Portrait_%288831988806%29.jpg",
-  "category": "animals",
-  "fidelity": 6.69
- },
- {
-  "id": "be0179ecbe",
-  "title": "File:Mount Hood reflected in Mirror Lake, Oregon.jpg",
-  "author": "Oregon's Mt. Hood Territory.",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMount_Hood_reflected_in_Mirror_Lake%2C_Oregon.jpg",
-  "category": "mountains",
-  "fidelity": 7.5
- },
- {
-  "id": "bdcf51343d",
-  "title": "File:Burchell's zebra (Equus quagga burchellii) females head to tail.jpg",
-  "author": "Charles J. Sharp",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ABurchell%27s_zebra_%28Equus_quagga_burchellii%29_females_head_to_tail.jpg",
-  "category": "animals",
-  "fidelity": 9.25
- },
- {
-  "id": "4023a9b033",
-  "title": "File:S65-63873 Clouds over the Western Pacific and the full Moon seen from Earth.jpg",
-  "author": "NASA",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AS65-63873_Clouds_over_the_Western_Pacific_and_the_full_Moon_seen_from_Earth.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ALong_exposure_of_waterfall_near_Milford_Sound_%2815556927616%29.jpg",
   "category": "sky and water",
-  "fidelity": 4.21
+  "fidelity": 8.53
  },
  {
-  "id": "73e94e049c",
-  "title": "File:Willow Flats area and Teton Range in Grand Teton National Park.jpg",
-  "author": "Michael Gäbler",
-  "license": "CC BY 3.0",
-  "license_url": "https://creativecommons.org/licenses/by/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AWillow_Flats_area_and_Teton_Range_in_Grand_Teton_National_Park.jpg",
+  "id": "921e4bf47b",
+  "title": "File:Matterhorn sunset 2016 (Unsplash).jpg",
+  "author": "Sam Ferrara samferrara",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMatterhorn_sunset_2016_%28Unsplash%29.jpg",
   "category": "mountains",
-  "fidelity": 9.93
+  "fidelity": 7.21
  },
  {
-  "id": "fa0198793e",
-  "title": "File:Alcazaba Alhambra Grenade Espagne.jpg",
-  "author": "Jebulon",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AAlcazaba_Alhambra_Grenade_Espagne.jpg",
-  "category": "architecture",
-  "fidelity": 8.81
- },
- {
-  "id": "cf0e4b3c82",
-  "title": "File:Persian Miniature Paintings Wellcome L0045152.jpg",
-  "author": "unknown",
-  "license": "CC BY 4.0",
-  "license_url": "https://creativecommons.org/licenses/by/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APersian_Miniature_Paintings_Wellcome_L0045152.jpg",
-  "category": "art",
-  "fidelity": 8.2
- },
- {
-  "id": "ddb35984cb",
-  "title": "File:Steens Mountain Cooperative Management and Protection Area - Poster (25935560744).jpg",
-  "author": "mypubliclands",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3ASteens_Mountain_Cooperative_Management_and_Protection_Area_-_Poster_%2825935560744%29.jpg",
-  "category": "art",
-  "fidelity": 9.57
- },
- {
-  "id": "0aec446f62",
-  "title": "File:Milky Way over Desert - rework 07-2022 - Flickr - Frank-2.0.jpg",
-  "author": "Frank-2.0",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMilky_Way_over_Desert_-_rework_07-2022_-_Flickr_-_Frank-2.0.jpg",
-  "category": "sky and water",
-  "fidelity": 8.0
- },
- {
-  "id": "423afacfcf",
-  "title": "File:Grenjengan Kembar waterfall in Magelang Regency, Indonesia.jpg",
-  "author": "Petrusarif",
+  "id": "9edc530425",
+  "title": "File:Monarch caterpillar (23229).jpg",
+  "author": "Rhododendrites",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AGrenjengan_Kembar_waterfall_in_Magelang_Regency%2C_Indonesia.jpg",
-  "category": "sky and water",
-  "fidelity": 8.44
- },
- {
-  "id": "c5d51d191d",
-  "title": "File:Cherry Blossom in El Retiro Park, Madrid, Spain.jpg",
-  "author": "Satdeep Gill",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ACherry_Blossom_in_El_Retiro_Park%2C_Madrid%2C_Spain.jpg",
-  "category": "flowers and nature",
-  "fidelity": 7.33
- },
- {
-  "id": "00a9c194c2",
-  "title": "File:Top view of the rings of Saturn by Cassini - October 10, 2013.jpg",
-  "author": "NASA / JPL-Caltech / SSI / Cornell",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3ATop_view_of_the_rings_of_Saturn_by_Cassini_-_October_10%2C_2013.jpg",
-  "category": "space",
-  "fidelity": 2.67
- },
- {
-  "id": "b4fbdc461f",
-  "title": "File:Denalibeyersflatcalm.JPG",
-  "author": "Beeblebrox",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ADenalibeyersflatcalm.JPG",
-  "category": "mountains",
-  "fidelity": 7.55
- },
- {
-  "id": "f2ae34d8cc",
-  "title": "File:The island of Santorini, Greece.jpg",
-  "author": "Mustang Joe",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AThe_island_of_Santorini%2C_Greece.jpg",
-  "category": "architecture",
-  "fidelity": 7.45
- },
- {
-  "id": "9875a08243",
-  "title": "File:De Zoeker LCD.jpg",
-  "author": "Murdockcrc",
-  "license": "CC BY 3.0",
-  "license_url": "https://creativecommons.org/licenses/by/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ADe_Zoeker_LCD.jpg",
-  "category": "architecture",
-  "fidelity": 8.78
- },
- {
-  "id": "3b7bba8b19",
-  "title": "File:Puffin (Fratercula arctica) with lesser sand eels (Ammodytes tobianus).jpg",
-  "author": "Charles J. Sharp",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APuffin_%28Fratercula_arctica%29_with_lesser_sand_eels_%28Ammodytes_tobianus%29.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMonarch_caterpillar_%2823229%29.jpg",
   "category": "animals",
-  "fidelity": 8.54
+  "fidelity": 11.17
  },
  {
-  "id": "797876ee58",
-  "title": "File:Flamingo Visitor Center FL1.jpg",
-  "author": "Acroterion",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AFlamingo_Visitor_Center_FL1.jpg",
+  "id": "e0090232ef",
+  "title": "File:Chelonia mydas albino p1440273.jpg",
+  "author": "David Monniaux",
+  "license": "CC BY-SA 3.0",
+  "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "page": "https://commons.wikimedia.org/wiki/File%3AChelonia_mydas_albino_p1440273.jpg",
   "category": "animals",
-  "fidelity": 10.24
+  "fidelity": 7.01
  },
  {
-  "id": "4a9d950607",
-  "title": "File:Collared Kingfisher in Sundarbans National Park October 2025 by Tisha Mukherjee 02.jpg",
-  "author": "Tisha Mukherjee",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ACollared_Kingfisher_in_Sundarbans_National_Park_October_2025_by_Tisha_Mukherjee_02.jpg",
-  "category": "animals",
-  "fidelity": 10.66
- },
- {
-  "id": "fd8c2730ee",
-  "title": "File:Brooklyn-side tower of the Brooklyn Bridge from Brooklyn Bridge Park, New York City.jpg",
-  "author": "Christian David",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ABrooklyn-side_tower_of_the_Brooklyn_Bridge_from_Brooklyn_Bridge_Park%2C_New_York_City.jpg",
-  "category": "architecture",
-  "fidelity": 10.54
- },
- {
-  "id": "286f177d3b",
-  "title": "File:Ōhashi Atake no yūdachi-名所江戸百景 大はしあたけの夕立-Sudden Shower over Shin-Ōhashi Bridge and Atake (Ōhashi Atake no yūdachi), from the series One Hundred Famous Views of Edo (Meisho Edo hyakkei) MET DP130156.jpg",
-  "author": "Utagawa Hiroshige",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3A%C5%8Chashi_Atake_no_y%C5%ABdachi-%E5%90%8D%E6%89%80%E6%B1%9F%E6%88%B8%E7%99%BE%E6%99%AF_%E5%A4%A7%E3%81%AF%E3%81%97%E3%81%82%E3%81%9F%E3%81%91%E3%81%AE%E5%A4%95%E7%AB%8B-Sudden_Shower_over_Shin-%C5%8Chashi_Bridge_and_Atake_%28%C5%8Chashi_Atake_no_y%C5%ABdachi%29%2C_from_the_series_One_Hundred_Famous_Views_of_Edo_%28Meisho_Edo_hyakkei%29_MET_DP130156.jpg",
-  "category": "art",
-  "fidelity": 10.87
- },
- {
-  "id": "fefcd5eb5c",
-  "title": "File:Three-story Pagoda of Joraku-ji Temple in autumn, Konan, Shiga.jpg",
-  "author": "ONO Masanobu",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AThree-story_Pagoda_of_Joraku-ji_Temple_in_autumn%2C_Konan%2C_Shiga.jpg",
-  "category": "architecture",
-  "fidelity": 9.64
- },
- {
-  "id": "e008a2272b",
-  "title": "File:Johannes Vermeer (1632-1675) - The Girl With The Pearl Earring (1665).jpg",
-  "author": "Johannes Vermeer",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AJohannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg",
-  "category": "art",
-  "fidelity": 6.97
- },
- {
-  "id": "a098a47a99",
-  "title": "File:A look inside an iceberg (1), Liefdefjord, Svalbard.jpg",
-  "author": "Andreas Weith",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AA_look_inside_an_iceberg_%281%29%2C_Liefdefjord%2C_Svalbard.jpg",
-  "category": "sky and water",
-  "fidelity": 6.41
- },
- {
-  "id": "5ff972899a",
-  "title": "File:Stained glass window Saint Elijah Orthodox church, Stara Pazova, Serbia.jpg",
-  "author": "unknown",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AStained_glass_window_Saint_Elijah_Orthodox_church%2C_Stara_Pazova%2C_Serbia.jpg",
-  "category": "art",
-  "fidelity": 15.28
- },
- {
-  "id": "37eef17ceb",
-  "title": "File:Rubh a' Mhail Lighthouse (3919980901).jpg",
-  "author": "Odd Wellies",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ARubh_a%27_Mhail_Lighthouse_%283919980901%29.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 4.24
- },
- {
-  "id": "0335dce707",
-  "title": "File:Orion Nebula in NIRCam long-wavelength channel.png",
-  "author": "(c) NASA, ESA, CSA / Science leads and image processing: M. McCaughrean, S. Pearson, CC BY-SA 3.0 IGO",
-  "license": "CC BY-SA 3.0 igo",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3AOrion_Nebula_in_NIRCam_long-wavelength_channel.png",
-  "category": "space",
-  "fidelity": 7.72
- },
- {
-  "id": "a77e06ce96",
-  "title": "File:Al Khazneh 02.jpg",
-  "author": "Bernard Gagnon",
+  "id": "47a6ecba1b",
+  "title": "File:Papageitaucher Fratercula arctica 02.jpg",
+  "author": "Richard Bartz",
   "license": "CC BY-SA 3.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AAl_Khazneh_02.jpg",
-  "category": "architecture",
-  "fidelity": 10.26
- },
- {
-  "id": "04c3abe881",
-  "title": "File:London MMB »1E6 Lightning.jpg",
-  "author": "mattbuck ( category )",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ALondon_MMB_%C2%BB1E6_Lightning.jpg",
-  "category": "sky and water",
-  "fidelity": 12.2
- },
- {
-  "id": "c754d44735",
-  "title": "File:Ukiyo-e woodblock print by Katsushika Hokusai, digitally enhanced by rawpixel-com 16.jpg",
-  "author": "Rawpixel",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AUkiyo-e_woodblock_print_by_Katsushika_Hokusai%2C_digitally_enhanced_by_rawpixel-com_16.jpg",
-  "category": "art",
-  "fidelity": 10.89
- },
- {
-  "id": "0c89220a2e",
-  "title": "File:2018 01 (Blue) - Chaouen.jpg",
-  "author": "Fbrandao.1963",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3A2018_01_%28Blue%29_-_Chaouen.jpg",
-  "category": "cities",
-  "fidelity": 10.0
- },
- {
-  "id": "0a96323c90",
-  "title": "File:16 - Cherry Blossoms at Hommoku.jpg",
-  "author": "Utagawa Hiroshige",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3A16_-_Cherry_Blossoms_at_Hommoku.jpg",
-  "category": "mountains",
-  "fidelity": 7.6
- },
- {
-  "id": "7c5fd630f6",
-  "title": "File:Red vintage car In Dun Laoghaire.jpg",
-  "author": "William Murphy",
-  "license": "CC BY-SA 2.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ARed_vintage_car_In_Dun_Laoghaire.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 10.0
- },
- {
-  "id": "5520af33ff",
-  "title": "File:Sydney opera house side view.jpg",
-  "author": "Mfield , Matthew Field, http://www.photography.mattfield.com",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ASydney_opera_house_side_view.jpg",
-  "category": "architecture",
-  "fidelity": 10.09
- },
- {
-  "id": "6d9adc062c",
-  "title": "File:Schwangau - Schloss Neuschwanstein (b).JPG",
-  "author": "C.Stadler/Bwag ( talk / email )",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ASchwangau_-_Schloss_Neuschwanstein_%28b%29.JPG",
-  "category": "architecture",
-  "fidelity": 11.24
- },
- {
-  "id": "527098b9d7",
-  "title": "File:Tower Bridge London Dusk Feb 2006.jpg",
-  "author": "Diliff",
-  "license": "CC BY-SA 3.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ATower_Bridge_London_Dusk_Feb_2006.jpg",
-  "category": "architecture",
-  "fidelity": 8.23
- },
- {
-  "id": "b025918e51",
-  "title": "File:Apollo 11 Launch2.jpg",
-  "author": "NASA; restored by Michel Vuijlsteke",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AApollo_11_Launch2.jpg",
-  "category": "space",
-  "fidelity": 9.03
- },
- {
-  "id": "a290879913",
-  "title": "File:Polar bear (Ursus maritimus) with its prey.jpg",
-  "author": "AWeith",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APolar_bear_%28Ursus_maritimus%29_with_its_prey.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3APapageitaucher_Fratercula_arctica_02.jpg",
   "category": "animals",
-  "fidelity": 4.9
- },
- {
-  "id": "3676d8af3f",
-  "title": "File:Mount Rainier from the Silver Queen Peak.jpg",
-  "author": "Dllu",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMount_Rainier_from_the_Silver_Queen_Peak.jpg",
-  "category": "mountains",
-  "fidelity": 4.87
- },
- {
-  "id": "f1c5dcf5ad",
-  "title": "File:Einstein cross.jpg",
-  "author": "NASA, ESA, and STScI",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEinstein_cross.jpg",
-  "category": "people and culture",
-  "fidelity": 7.84
- },
- {
-  "id": "ae9022f0a0",
-  "title": "File:Buckie Lighthouse Highlands Scotland (49224497737).jpg",
-  "author": "m.shattock",
-  "license": "CC BY-SA 2.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ABuckie_Lighthouse_Highlands_Scotland_%2849224497737%29.jpg",
-  "category": "sky and water",
-  "fidelity": 5.2
- },
- {
-  "id": "07370d7ee0",
-  "title": "File:Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
-  "author": "Lviatour",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEclipse-totale-2026-couronne-Luc-Viatour.jpg",
-  "category": "space",
-  "fidelity": 3.97
+  "fidelity": 6.2
  },
  {
   "id": "f9c57607c1",
@@ -1067,27 +617,447 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ABubo_scandiacus_-_Karlsruhe_Zoo_01.jpg",
   "category": "animals",
-  "fidelity": 5.7
+  "fidelity": 5.0
  },
  {
-  "id": "092c9d4e22",
-  "title": "File:Taj Mahal (Edited).jpeg",
-  "author": "Yann ; edited by Jim Carter",
+  "id": "ee71371c29",
+  "title": "File:Burj Khalifa Dubai, UAE at Sunset 001 by Eric Chamchoum.jpg",
+  "author": "ECWiki1",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ABurj_Khalifa_Dubai%2C_UAE_at_Sunset_001_by_Eric_Chamchoum.jpg",
+  "category": "architecture",
+  "fidelity": 5.33
+ },
+ {
+  "id": "cee4de25bc",
+  "title": "File:Heavens Above Her.jpg",
+  "author": "Ian Norman ( http://www.lonelyspeck.com )",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AHeavens_Above_Her.jpg",
+  "category": "sky and water",
+  "fidelity": 7.31
+ },
+ {
+  "id": "805aaa4904",
+  "title": "File:Machu Picchu, Perú, 2015-07-30, DD 60.JPG",
+  "author": "Diego Delso",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3ATaj_Mahal_%28Edited%29.jpeg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMachu_Picchu%2C_Per%C3%BA%2C_2015-07-30%2C_DD_60.JPG",
   "category": "architecture",
-  "fidelity": 6.82
+  "fidelity": 8.23
  },
  {
-  "id": "ef356fb91b",
-  "title": "File:Penguins at Boulders Beach 04.jpg",
+  "id": "855e8f61ab",
+  "title": "File:Panda géant (Ailuropoda melanoleuca) (1).jpg",
+  "author": "Gzen92",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APanda_g%C3%A9ant_%28Ailuropoda_melanoleuca%29_%281%29.jpg",
+  "category": "animals",
+  "fidelity": 6.67
+ },
+ {
+  "id": "be0179ecbe",
+  "title": "File:Mount Hood reflected in Mirror Lake, Oregon.jpg",
+  "author": "Oregon's Mt. Hood Territory.",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMount_Hood_reflected_in_Mirror_Lake%2C_Oregon.jpg",
+  "category": "mountains",
+  "fidelity": 6.75
+ },
+ {
+  "id": "bdcf51343d",
+  "title": "File:Burchell's zebra (Equus quagga burchellii) females head to tail.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ABurchell%27s_zebra_%28Equus_quagga_burchellii%29_females_head_to_tail.jpg",
+  "category": "animals",
+  "fidelity": 7.94
+ },
+ {
+  "id": "ea4cd0b5e0",
+  "title": "File:DMMMW Biplane (29656935087).jpg",
+  "author": "29656935087 ( photos · photo sets )",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ADMMMW_Biplane_%2829656935087%29.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 7.5
+ },
+ {
+  "id": "4023a9b033",
+  "title": "File:S65-63873 Clouds over the Western Pacific and the full Moon seen from Earth.jpg",
+  "author": "NASA",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AS65-63873_Clouds_over_the_Western_Pacific_and_the_full_Moon_seen_from_Earth.jpg",
+  "category": "sky and water",
+  "fidelity": 3.98
+ },
+ {
+  "id": "ccc0195b57",
+  "title": "File:Corinth canal tugged sailing ship.jpg",
+  "author": "Unknown author Unknown author",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3ACorinth_canal_tugged_sailing_ship.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 6.89
+ },
+ {
+  "id": "fa0198793e",
+  "title": "File:Alcazaba Alhambra Grenade Espagne.jpg",
+  "author": "Jebulon",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AAlcazaba_Alhambra_Grenade_Espagne.jpg",
+  "category": "architecture",
+  "fidelity": 8.13
+ },
+ {
+  "id": "5e27c7ff80",
+  "title": "File:名所江戶百景 両国花火-Fireworks at Ryōgoku Bridge, from the series One Hundred Famous Views of Edo MET DP121524.jpg",
+  "author": "Utagawa Hiroshige",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3A%E5%90%8D%E6%89%80%E6%B1%9F%E6%88%B6%E7%99%BE%E6%99%AF_%E4%B8%A1%E5%9B%BD%E8%8A%B1%E7%81%AB-Fireworks_at_Ry%C5%8Dgoku_Bridge%2C_from_the_series_One_Hundred_Famous_Views_of_Edo_MET_DP121524.jpg",
+  "category": "art",
+  "fidelity": 6.03
+ },
+ {
+  "id": "9154ca7c41",
+  "title": "File:Center of the Milky Way Galaxy IV – Composite.jpg",
+  "author": "NASA/JPL-Caltech/ESA/CXC/STScI",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3ACenter_of_the_Milky_Way_Galaxy_IV_%E2%80%93_Composite.jpg",
+  "category": "space",
+  "fidelity": 13.22
+ },
+ {
+  "id": "9fb58c4ddb",
+  "title": "File:Mount Denali or McKinnley.jpg",
+  "author": "zqvol",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMount_Denali_or_McKinnley.jpg",
+  "category": "mountains",
+  "fidelity": 7.26
+ },
+ {
+  "id": "8366699bcb",
+  "title": "File:Pont des Invalides et Tour Eiffel - 01.jpg",
+  "author": "Carlos Delgado",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APont_des_Invalides_et_Tour_Eiffel_-_01.jpg",
+  "category": "architecture",
+  "fidelity": 10.13
+ },
+ {
+  "id": "d53803075a",
+  "title": "File:A view towards Torres Del Paine.jpg",
+  "author": "Winky from Oxford, UK",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AA_view_towards_Torres_Del_Paine.jpg",
+  "category": "mountains",
+  "fidelity": 7.57
+ },
+ {
+  "id": "797876ee58",
+  "title": "File:Flamingo Visitor Center FL1.jpg",
+  "author": "Acroterion",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AFlamingo_Visitor_Center_FL1.jpg",
+  "category": "animals",
+  "fidelity": 9.29
+ },
+ {
+  "id": "f4d7a4a36c",
+  "title": "File:Oxbow Bend outlook in the Grand Teton National Park.jpg",
+  "author": "Michael Gäbler",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AOxbow_Bend_outlook_in_the_Grand_Teton_National_Park.jpg",
+  "category": "mountains",
+  "fidelity": 8.88
+ },
+ {
+  "id": "f2ae34d8cc",
+  "title": "File:The island of Santorini, Greece.jpg",
+  "author": "Mustang Joe",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AThe_island_of_Santorini%2C_Greece.jpg",
+  "category": "architecture",
+  "fidelity": 6.6
+ },
+ {
+  "id": "9875a08243",
+  "title": "File:De Zoeker LCD.jpg",
+  "author": "Murdockcrc",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ADe_Zoeker_LCD.jpg",
+  "category": "architecture",
+  "fidelity": 7.9
+ },
+ {
+  "id": "bb3fc692d9",
+  "title": "File:Statesman Vintage & Classic Car Rally 2016 DSC 0226.JPG",
+  "author": "Atudu",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AStatesman_Vintage_%26_Classic_Car_Rally_2016_DSC_0226.JPG",
+  "category": "vehicles and objects",
+  "fidelity": 6.54
+ },
+ {
+  "id": "4a9d950607",
+  "title": "File:Collared Kingfisher in Sundarbans National Park October 2025 by Tisha Mukherjee 02.jpg",
+  "author": "Tisha Mukherjee",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ACollared_Kingfisher_in_Sundarbans_National_Park_October_2025_by_Tisha_Mukherjee_02.jpg",
+  "category": "animals",
+  "fidelity": 9.68
+ },
+ {
+  "id": "ddb35984cb",
+  "title": "File:Steens Mountain Cooperative Management and Protection Area - Poster (25935560744).jpg",
+  "author": "mypubliclands",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASteens_Mountain_Cooperative_Management_and_Protection_Area_-_Poster_%2825935560744%29.jpg",
+  "category": "art",
+  "fidelity": 8.52
+ },
+ {
+  "id": "86bf24e600",
+  "title": "File:Claude Monet - Woman with a Parasol - Madame Monet and Her Son - Google Art Project.jpg",
+  "author": "Claude Monet",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AClaude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg",
+  "category": "art",
+  "fidelity": 6.71
+ },
+ {
+  "id": "a7030f475d",
+  "title": "File:Snow Leopard Portrait (8831988806).jpg",
+  "author": "Eric Kilby from Somerville, MA, USA",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASnow_Leopard_Portrait_%288831988806%29.jpg",
+  "category": "animals",
+  "fidelity": 6.32
+ },
+ {
+  "id": "f391d599fb",
+  "title": "File:Ukiyo-e woodblock print by Katsushika Hokusai, digitally enhanced by rawpixel-com 4.jpg",
+  "author": "Katsushika Hokusai",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AUkiyo-e_woodblock_print_by_Katsushika_Hokusai%2C_digitally_enhanced_by_rawpixel-com_4.jpg",
+  "category": "art",
+  "fidelity": 12.43
+ },
+ {
+  "id": "e008a2272b",
+  "title": "File:Johannes Vermeer (1632-1675) - The Girl With The Pearl Earring (1665).jpg",
+  "author": "Johannes Vermeer",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AJohannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg",
+  "category": "art",
+  "fidelity": 6.56
+ },
+ {
+  "id": "ca237aba0b",
+  "title": "File:Iceberg in North Star Bay, Greenland.jpg",
+  "author": "Jeremy Harbeck",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AIceberg_in_North_Star_Bay%2C_Greenland.jpg",
+  "category": "sky and water",
+  "fidelity": 4.82
+ },
+ {
+  "id": "00a9c194c2",
+  "title": "File:Top view of the rings of Saturn by Cassini - October 10, 2013.jpg",
+  "author": "NASA / JPL-Caltech / SSI / Cornell",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3ATop_view_of_the_rings_of_Saturn_by_Cassini_-_October_10%2C_2013.jpg",
+  "category": "space",
+  "fidelity": 2.39
+ },
+ {
+  "id": "a8e8accd9a",
+  "title": "File:Brooklyn Bridge Manhattan.jpg",
+  "author": "Suiseiseki",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ABrooklyn_Bridge_Manhattan.jpg",
+  "category": "architecture",
+  "fidelity": 10.42
+ },
+ {
+  "id": "c5d51d191d",
+  "title": "File:Cherry Blossom in El Retiro Park, Madrid, Spain.jpg",
   "author": "Satdeep Gill",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3APenguins_at_Boulders_Beach_04.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ACherry_Blossom_in_El_Retiro_Park%2C_Madrid%2C_Spain.jpg",
+  "category": "flowers and nature",
+  "fidelity": 6.7
+ },
+ {
+  "id": "0335dce707",
+  "title": "File:Orion Nebula in NIRCam long-wavelength channel.png",
+  "author": "(c) NASA, ESA, CSA / Science leads and image processing: M. McCaughrean, S. Pearson, CC BY-SA 3.0 IGO",
+  "license": "CC BY-SA 3.0 igo",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3AOrion_Nebula_in_NIRCam_long-wavelength_channel.png",
+  "category": "space",
+  "fidelity": 7.47
+ },
+ {
+  "id": "ff0f70a69e",
+  "title": "File:Port and lighthouse overnight storm with lightning in Port-la-Nouvelle.jpg",
+  "author": "Maxime Raynal from France",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APort_and_lighthouse_overnight_storm_with_lightning_in_Port-la-Nouvelle.jpg",
+  "category": "sky and water",
+  "fidelity": 6.27
+ },
+ {
+  "id": "7b4677213c",
+  "title": "File:Park Avenue United Methodist Church, Valdosta pumpkin patch 2016 1.jpg",
+  "author": "Michael Rivera",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APark_Avenue_United_Methodist_Church%2C_Valdosta_pumpkin_patch_2016_1.jpg",
+  "category": "flowers and nature",
+  "fidelity": 9.6
+ },
+ {
+  "id": "1695b875ef",
+  "title": "File:Tower Bridge Lights.jpg",
+  "author": "Martin Falbisoner",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ATower_Bridge_Lights.jpg",
+  "category": "architecture",
+  "fidelity": 6.57
+ },
+ {
+  "id": "4aa9f9fbe1",
+  "title": "File:Mt. Fuji framed by cherry blossoms - DPLA - 3cf87944c325cc6f50ab7b02fa020484.jpeg",
+  "author": "Department of Defense. American Forces Information Service. Defense Visual Information Center. 1994",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AMt._Fuji_framed_by_cherry_blossoms_-_DPLA_-_3cf87944c325cc6f50ab7b02fa020484.jpeg",
+  "category": "mountains",
+  "fidelity": 12.78
+ },
+ {
+  "id": "0c89220a2e",
+  "title": "File:2018 01 (Blue) - Chaouen.jpg",
+  "author": "Fbrandao.1963",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3A2018_01_%28Blue%29_-_Chaouen.jpg",
+  "category": "cities",
+  "fidelity": 9.36
+ },
+ {
+  "id": "d531c84b87",
+  "title": "File:Louisbourg Lighthouse, waves breaking in a fall storm 2.jpg",
+  "author": "Ken Heaton",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ALouisbourg_Lighthouse%2C_waves_breaking_in_a_fall_storm_2.jpg",
+  "category": "sky and water",
+  "fidelity": 4.74
+ },
+ {
+  "id": "5520af33ff",
+  "title": "File:Sydney opera house side view.jpg",
+  "author": "Mfield , Matthew Field, http://www.photography.mattfield.com",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASydney_opera_house_side_view.jpg",
+  "category": "architecture",
+  "fidelity": 9.14
+ },
+ {
+  "id": "6d9adc062c",
+  "title": "File:Schwangau - Schloss Neuschwanstein (b).JPG",
+  "author": "C.Stadler/Bwag ( talk / email )",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASchwangau_-_Schloss_Neuschwanstein_%28b%29.JPG",
+  "category": "architecture",
+  "fidelity": 10.21
+ },
+ {
+  "id": "fef0cbb86e",
+  "title": "File:Korea-Daeboreumnal-Full Moon Festival-03.jpg",
+  "author": "hojusaram",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AKorea-Daeboreumnal-Full_Moon_Festival-03.jpg",
+  "category": "space",
+  "fidelity": 7.62
+ },
+ {
+  "id": "e64a012d93",
+  "title": "File:00 0489 Mount Rainier - Washington USA.jpg",
+  "author": "W. Bulach",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3A00_0489_Mount_Rainier_-_Washington_USA.jpg",
+  "category": "mountains",
+  "fidelity": 10.11
+ },
+ {
+  "id": "bb597f6fef",
+  "title": "File:Polar bear after unlucky hunt for a seal.jpg",
+  "author": "Andreas Weith",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APolar_bear_after_unlucky_hunt_for_a_seal.jpg",
   "category": "animals",
-  "fidelity": 7.14
+  "fidelity": 6.79
+ },
+ {
+  "id": "f1c5dcf5ad",
+  "title": "File:Einstein cross.jpg",
+  "author": "NASA, ESA, and STScI",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AEinstein_cross.jpg",
+  "category": "people and culture",
+  "fidelity": 7.44
+ },
+ {
+  "id": "07370d7ee0",
+  "title": "File:Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
+  "author": "Lviatour",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AEclipse-totale-2026-couronne-Luc-Viatour.jpg",
+  "category": "space",
+  "fidelity": 3.94
  },
  {
   "id": "44c4c3e364",
@@ -1097,27 +1067,37 @@
   "license_url": "",
   "page": "https://commons.wikimedia.org/wiki/File%3AF._Champenois_imprimeur-%C3%A9diteur.jpg",
   "category": "art",
-  "fidelity": 12.88
+  "fidelity": 11.27
  },
  {
-  "id": "d4e46513af",
-  "title": "File:Red bicycle graffiti wall (Unsplash).jpg",
-  "author": "Chris Barbalis cbarbalis",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "page": "https://commons.wikimedia.org/wiki/File%3ARed_bicycle_graffiti_wall_%28Unsplash%29.jpg",
-  "category": "vehicles and objects",
-  "fidelity": 7.42
+  "id": "d28ff651b7",
+  "title": "File:Venice Gondola Grand Canal.jpg",
+  "author": "Saffron Blaze",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AVenice_Gondola_Grand_Canal.jpg",
+  "category": "architecture",
+  "fidelity": 6.35
  },
  {
-  "id": "f946f2b0a5",
-  "title": "File:Earth's City Lights by DMSP, 1994-1995 (large).jpg",
-  "author": "Data: Marc Imhoff/NASA GSFC, Christopher Elvidge/NOAA NGDC; Image: Craig Mayhew and Robert Simmon/NASA GSFC",
+  "id": "a37cc4684b",
+  "title": "File:Apollo 16 astronauts geology training 1971-06-10.jpg",
+  "author": "NASA",
   "license": "Public domain",
   "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AEarth%27s_City_Lights_by_DMSP%2C_1994-1995_%28large%29.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AApollo_16_astronauts_geology_training_1971-06-10.jpg",
   "category": "space",
-  "fidelity": 7.62
+  "fidelity": 7.83
+ },
+ {
+  "id": "fc731d4a2d",
+  "title": "File:The Great Wave off Kanagawa.jpg",
+  "author": "After Katsushika Hokusai",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AThe_Great_Wave_off_Kanagawa.jpg",
+  "category": "art",
+  "fidelity": 9.64
  },
  {
   "id": "e27442d55b",
@@ -1127,7 +1107,47 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AYosemite_Falls_Trail_May_2011_016.jpg",
   "category": "mountains",
-  "fidelity": 7.34
+  "fidelity": 6.75
+ },
+ {
+  "id": "ef356fb91b",
+  "title": "File:Penguins at Boulders Beach 04.jpg",
+  "author": "Satdeep Gill",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3APenguins_at_Boulders_Beach_04.jpg",
+  "category": "animals",
+  "fidelity": 6.55
+ },
+ {
+  "id": "e0f6ddd6f4",
+  "title": "File:Earth, Moon and Lunar Module, AS11-44-6643.jpg",
+  "author": "NASA / Apollo 11",
+  "license": "Public domain",
+  "license_url": "",
+  "page": "https://commons.wikimedia.org/wiki/File%3AEarth%2C_Moon_and_Lunar_Module%2C_AS11-44-6643.jpg",
+  "category": "space",
+  "fidelity": 9.2
+ },
+ {
+  "id": "d4e46513af",
+  "title": "File:Red bicycle graffiti wall (Unsplash).jpg",
+  "author": "Chris Barbalis cbarbalis",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "page": "https://commons.wikimedia.org/wiki/File%3ARed_bicycle_graffiti_wall_%28Unsplash%29.jpg",
+  "category": "vehicles and objects",
+  "fidelity": 6.41
+ },
+ {
+  "id": "aa89ccb161",
+  "title": "File:Aks The Reflection Taj Mahal.jpg",
+  "author": "Antrix3",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "page": "https://commons.wikimedia.org/wiki/File%3AAks_The_Reflection_Taj_Mahal.jpg",
+  "category": "architecture",
+  "fidelity": 6.44
  },
  {
   "id": "0b921dea3e",
@@ -1137,27 +1157,7 @@
   "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   "page": "https://commons.wikimedia.org/wiki/File%3AColosseum_of_Rome_and_Roman_forum.jpg",
   "category": "architecture",
-  "fidelity": 9.8
- },
- {
-  "id": "328a23e06c",
-  "title": "File:Moon Close-up.jpg",
-  "author": "Nabin K. Sapkota",
-  "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMoon_Close-up.jpg",
-  "category": "space",
-  "fidelity": 1.56
- },
- {
-  "id": "c6ec54d6af",
-  "title": "File:Messier83 - Heic1403a.jpg",
-  "author": "Credit: NASA, ESA, and the Hubble Heritage Team (STScI/AURA) Acknowledgement: William Blair (Johns Hopkins University)",
-  "license": "Public domain",
-  "license_url": "",
-  "page": "https://commons.wikimedia.org/wiki/File%3AMessier83_-_Heic1403a.jpg",
-  "category": "space",
-  "fidelity": 5.75
+  "fidelity": 8.93
  },
  {
   "id": "ba82db7d1b",
@@ -1167,7 +1167,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3ALower_Manhattan_from_Jersey_City_November_2016_002.jpg",
   "category": "cities",
-  "fidelity": 7.39
+  "fidelity": 6.17
  },
  {
   "id": "7b89136808",
@@ -1177,7 +1177,7 @@
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
   "page": "https://commons.wikimedia.org/wiki/File%3AJellyfish_bigger_than_hand.jpg",
   "category": "animals",
-  "fidelity": 5.04
+  "fidelity": 4.83
  },
  {
   "id": "b0c3df0b1c",
@@ -1187,6 +1187,6 @@
   "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   "page": "https://commons.wikimedia.org/wiki/File%3AHong_Kong_at_night_B%26W.jpg",
   "category": "cities",
-  "fidelity": 7.77
+  "fidelity": 7.41
  }
 ]
