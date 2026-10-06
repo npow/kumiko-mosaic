@@ -80,3 +80,9 @@ Credits for the images are in [examples/catalog/CREDITS.md](examples/catalog/CRE
   more columns the picture is clearly recognisable, and the panel has several thousand parts.
 - Options, colour matching, the resolution guide, patterns and geometry are in
   [docs/reference.md](docs/reference.md).
+
+## Licence
+
+The code is [MIT](LICENSE). The example images are derived from Wikimedia Commons photos and keep
+their licences, listed in [examples/LICENSE.md](examples/LICENSE.md). The frame itself is Paper View's
+and is covered by his licence; this repository does not include it.
