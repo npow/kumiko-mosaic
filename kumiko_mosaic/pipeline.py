@@ -34,6 +34,7 @@ class Params:
     enhance: bool = True                   # autocontrast + mild saturation boost before sampling
     sample_shrink: float = 0.85
     line_boost: float = 4.0                # keep thin contrasting features (cables, masts); 0 = off, 8 = strong
+    line_coherence: float = 34.0           # max colour spread (CIELAB) of a feature to count as a line, not texture
     # colours
     palette: List[str] = field(default_factory=list)   # filaments you own ("Name=#hex"); empty -> pick from filament_set
     filament_set: str = "bambu"            # purchasable catalogue to pick from: bambu | bambu-matte | bambu-basic
@@ -86,7 +87,8 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
     patf = _split_named(params.pattern_color)
     fitted, ppm = fit_image(img, grid.lattice_width, grid.lattice_height, params.fit, background=bgf.hex,
                             enhance=params.enhance)
-    sample_cells(grid, fitted, ppm, params.sample_shrink, line_boost=params.line_boost)
+    sample_cells(grid, fitted, ppm, params.sample_shrink, line_boost=params.line_boost,
+                 line_coherence=params.line_coherence)
     palette = parse_palette(params.palette) if params.palette else None
     coverage = None
     if params.pattern_mode.startswith("auto") and params.color_layer == "pattern":

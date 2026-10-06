@@ -170,7 +170,7 @@ def fit_image(img: Image.Image, target_w: float, target_h: float, mode: str = "c
 
 
 def sample_cells(grid: Grid, fitted: Image.Image, px_per_mm: float, shrink: float = 0.85,
-                 line_boost: float = 0.0, line_min_delta: float = 22.0) -> None:
+                 line_boost: float = 0.0, line_min_delta: float = 22.0, line_coherence: float = 34.0) -> None:
     """Set cell.rgb_mean = mean colour inside each (slightly shrunken) cell polygon.
 
     line_boost > 0 keeps thin, strongly contrasting features (cables, masts, outlines) that
@@ -206,10 +206,14 @@ def sample_cells(grid: Grid, fitted: Image.Image, px_per_mm: float, shrink: floa
             d = np.sqrt(((lab - rgb_to_lab(med)) ** 2).sum(1))
             feat = d > line_min_delta
             f = feat.mean()
-            if 0.02 < f < 0.5:
-                feat_col = pix[feat].mean(0)
-                w = min(1.0, f * line_boost)
-                mean = med + (feat_col - med) * w
+            if 0.03 < f < 0.45:
+                # a real thin feature has one coherent colour; texture noise does not
+                fl = lab[feat]
+                spread = float(np.sqrt(((fl - fl.mean(0)) ** 2).sum(1)).mean())
+                if spread < line_coherence:
+                    feat_col = pix[feat].mean(0)
+                    w = min(1.0, f * line_boost)
+                    mean = med + (feat_col - med) * w
         c.rgb_mean = tuple(float(v) for v in mean)
 
 

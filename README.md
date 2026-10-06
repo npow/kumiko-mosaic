@@ -142,7 +142,10 @@ dense patterns survive the `--min-hole` test (at 30 mm only `y, asanoha, mesh2, 
 * `--line-boost 4` (default) keeps thin, strongly contrasting features that plain averaging
   erases: if a small part of a cell differs sharply from the rest (a cable, a mast, an
   outline), the cell takes that colour, so the feature survives as a one-cell line. 0 turns it
-  off, 8 is aggressive and can add speckle in textured areas.
+  off, 8 is aggressive and can add speckle in textured areas. Only features with a coherent
+  colour qualify (`--line-coherence`, default 34; lower it if textured areas get speckled).
+  Checked on all five gallery images: bridge cables and Fuji's snow streaks appear, the
+  sunflower and lighthouse are unchanged.
 * `--dither` adds error diffusion (smoother gradients, noisier look).
 
 Look at `examples/gallery/index.html` (also served at `/gallery` by the web app): before/after
