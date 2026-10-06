@@ -286,3 +286,21 @@ def test_manual_crop(tmp_path, img):
     assert "red" not in names and "blue" not in names
     with pytest.raises(ValueError):
         run(str(img), str(tmp_path / "c2"), Params(cols=8, crop=[0.6, 0.0, 0.2, 1.0], preview_only=True))
+
+
+def test_spool_list_limits_every_colour(tmp_path, img):
+    from kumiko_mosaic.filaments import parse_spools
+    owned = parse_spools("""name,hex
+Warm White,#F4EEDC
+Charcoal,#1E1E22
+Red,#C02020
+Blue,#2040B0
+Mid Grey,#808080
+""")
+    assert [f.name for f in owned] == ["Warm White", "Charcoal", "Red", "Blue", "Mid Grey"]
+    s = run(str(img), str(tmp_path / "o11"), Params(cols=8, palette=[f"{f.name}={f.hex}" for f in owned],
+                                                    max_colors=4, max_backgrounds=2, export_3mf=False, export_stl=False))
+    allowed = {f.hex for f in owned}
+    used = {r["color"] for r in s["bom"]}
+    assert used <= allowed, used - allowed          # no colour outside the spools you listed, backgrounds included
+    assert {b["hex"] for b in s["backgrounds_used"]} <= allowed

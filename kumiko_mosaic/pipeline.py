@@ -145,15 +145,20 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
         if not usable:
             raise ValueError("no pattern in the ladder is printable at this pitch/strip width")
         cov0 = match.coverage_table(grid, usable, params.strip_mm, params.clearance)
-        cand = filaments.catalogue(params.filament_set)
-        if params.max_backgrounds <= 1:
-            bgs = [bgf]
-            strips = palette or match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
+        if palette:
+            # the spools you own: strips AND backgrounds are chosen from them and nothing else
+            n_bg = max(1, params.max_backgrounds)
+            bgs = match.choose_backgrounds(grid, palette, palette, usable, cov0, n_bg)
+            strips = match.choose_filaments_multi(grid, palette, bgs, usable, cov0, params.max_colors)
         else:
-            bg_cands = filaments.background_candidates(params.background_set)
-            strips = palette or match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
-            bgs = match.choose_backgrounds(grid, bg_cands, strips, usable, cov0, params.max_backgrounds)
-            if palette is None:
+            cand = filaments.catalogue(params.filament_set)
+            if params.max_backgrounds <= 1:
+                bgs = [bgf]
+                strips = match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
+            else:
+                strips = match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
+                bgs = match.choose_backgrounds(grid, filaments.background_candidates(params.background_set),
+                                               strips, usable, cov0, params.max_backgrounds)
                 strips = match.choose_filaments_multi(grid, cand, bgs, usable, cov0, params.max_colors)
         sub = match.choose_pattern_subset_multi(grid, bgs, strips, usable, cov0, params.max_patterns) \
             if params.max_patterns else usable

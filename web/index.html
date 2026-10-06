@@ -68,8 +68,11 @@
    <div><label>Enhance contrast/saturation</label><select name="enhance"><option value="true">yes</option><option value="false">no</option></select></div>
    <div><label>Thin-feature boost (0 off, 8 strong)</label><input type="number" step="1" name="line_boost" value="4" min="0" max="12"></div>
   </div>
-  <label>Filaments you own (one per line: name=#hex). Empty = pick from a purchasable catalogue:</label>
-  <select name="filament_set"><option value="bambu">Bambu PLA Matte + Basic (55 colours)</option><option value="bambu-matte">Bambu PLA Matte only</option><option value="bambu-basic">Bambu PLA Basic only</option></select>
+  <label>Spools you own (one per line: name=#hex). Leave empty to pick from a catalogue.</label>
+  <div style="font-size:11px;margin:2px 0 4px">Start from: <a href="#" data-fill="bambu-matte" class="fillset">Bambu Matte</a> · <a href="#" data-fill="bambu-basic" class="fillset">Bambu Basic</a> · <a href="#" id="spoolfile">import file</a> · <a href="#" id="spoolclear">clear</a>
+   <input type="file" id="spoolinput" accept=".csv,.txt" style="display:none"> <span id="spoolcount" style="color:#999"></span></div>
+  <div style="font-size:11px;color:#999;margin-bottom:3px">With a list, every colour in the plan, strips and backgrounds, comes from it. Saved in this browser.</div>
+  <select name="filament_set" title="used when the spool list is empty"><option value="bambu">Bambu PLA Matte + Basic (55 colours)</option><option value="bambu-matte">Bambu PLA Matte only</option><option value="bambu-basic">Bambu PLA Basic only</option></select>
   <textarea id="palette" rows="5" placeholder="black=#000000
 latte=#D2AC86
 marine blue=#1F4E9A
@@ -212,6 +215,17 @@ f.addEventListener('submit',async e=>{
  }catch(err){document.getElementById('status').textContent='Error: '+err.message}
  go.disabled=false;
 });
+(function(){const ta=document.getElementById('palette'),cnt=document.getElementById('spoolcount');
+ const count=()=>{const n=ta.value.split('\n').filter(l=>/[0-9a-fA-F]{6}\s*$/.test(l.trim())).length;cnt.textContent=n?n+' spools':''};
+ try{const saved=localStorage.getItem('kumiko.spools');if(saved!==null)ta.value=saved}catch(e){}
+ ta.addEventListener('input',()=>{try{localStorage.setItem('kumiko.spools',ta.value)}catch(e){}count()});count();
+ document.querySelectorAll('.fillset').forEach(a=>a.onclick=async ev=>{ev.preventDefault();const r=await fetch('/api/filaments?set='+a.dataset.fill);
+  ta.value=(await r.json()).map(f=>`${f.name}=${f.hex}`).join('\n');ta.dispatchEvent(new Event('input'))});
+ document.getElementById('spoolclear').onclick=ev=>{ev.preventDefault();ta.value='';ta.dispatchEvent(new Event('input'))};
+ const inp=document.getElementById('spoolinput');document.getElementById('spoolfile').onclick=ev=>{ev.preventDefault();inp.click()};
+ inp.onchange=async()=>{const f=inp.files[0];if(!f)return;const lines=(await f.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean)
+   .map(l=>{const m=l.match(/#?([0-9a-fA-F]{6})\s*$/);if(!m)return null;const name=l.slice(0,m.index).replace(/[ =,;\t"'#]+$/,'').replace(/^["']|["']$/g,'')||'#'+m[1];return `${name}=#${m[1].toUpperCase()}`}).filter(Boolean);
+   ta.value=lines.join('\n');ta.dispatchEvent(new Event('input'));inp.value=''};})();
 let pv=null,pfull=null,pvb=null;
 function pvSet(){pv.setAttribute('viewBox',`${pvb.x} ${pvb.y} ${pvb.w} ${pvb.h}`)}
 function pvUser(e){const p=pv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(pv.getScreenCTM().inverse())}

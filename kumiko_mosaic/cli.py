@@ -45,6 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--line-coherence", type=float, default=34.0,
                    help="max colour spread of a thin feature to count as a line rather than texture (lower = fewer speckles)")
     i.add_argument("--palette", nargs="*", default=[], help='filaments you own: "name=#RRGGBB" ... (empty = auto)')
+    i.add_argument("--palette-file", help="file listing the spools you own (one 'Name,#RRGGBB' per line, CSV ok); strips and backgrounds then use only these")
     i.add_argument("--max-colors", type=int, default=8)
     i.add_argument("--filament-set", choices=["bambu", "bambu-matte", "bambu-basic"], default="bambu",
                    help="purchasable catalogue to pick colours from when --palette is not given")
@@ -95,9 +96,13 @@ def main(argv=None) -> int:
     if not a.image or not a.out_dir:
         ap.error("image and out_dir are required")
     bed = a.bed if len(a.bed) == 2 else [a.bed[0], a.bed[0]]
+    palette = list(a.palette)
+    if a.palette_file:
+        from .filaments import load_spools
+        palette += [f"{f.name}={f.hex}" for f in load_spools(a.palette_file)]
     params = Params(pitch=a.pitch, mitsuke=a.mitsuke, border=a.border, orientation=a.orientation,
                     width_mm=a.width_mm, height_mm=a.height_mm, cols=a.cols, rows=a.rows,
-                    max_cells=a.max_cells, measure=a.measure, fit=a.fit, crop=([float(v) for v in a.crop.split(',')] if a.crop else None), sampling=a.sampling, smooth_mm=a.smooth_mm, line_boost=a.line_boost, line_coherence=a.line_coherence, palette=a.palette,
+                    max_cells=a.max_cells, measure=a.measure, fit=a.fit, crop=([float(v) for v in a.crop.split(',')] if a.crop else None), sampling=a.sampling, smooth_mm=a.smooth_mm, line_boost=a.line_boost, line_coherence=a.line_coherence, palette=palette,
                     max_colors=a.max_colors, filament_set=a.filament_set, dither=a.dither, enhance=not a.no_enhance, color_layer=a.color_layer,
                     background_color=a.background_color, max_backgrounds=a.max_backgrounds, background_set=a.background_set, sharpen=a.sharpen, pattern_color=a.pattern_color, frame_color=a.frame_color,
                     pattern_mode=a.pattern_mode, max_patterns=a.max_patterns, min_hole_mm=a.min_hole, color_pattern_map=json.loads(a.color_pattern_map),

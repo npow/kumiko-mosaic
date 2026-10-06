@@ -50,3 +50,25 @@ def background_candidates(name: str = "neutral") -> List[Filament]:
         return catalogue("bambu")
     by_name = {f.name: f for f in catalogue("bambu")}
     return [by_name[n] for n in NEUTRAL_NAMES if n in by_name]
+
+
+def parse_spools(text: str) -> List[Filament]:
+    """Parse a spool list: one filament per line as 'Name=#RRGGBB', 'Name,#RRGGBB' or 'Name #RRGGBB'
+    (a CSV file with a header row works too). Blank lines and lines starting with # are skipped."""
+    import re
+    out: List[Filament] = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.search(r"#?([0-9a-fA-F]{6})\s*$", line)
+        if not m:
+            continue                                   # header row or junk
+        name = line[:m.start()].rstrip(" =,;\t\"'#").strip().strip("\"'")
+        out.append(Filament(name or f"#{m.group(1).upper()}", "#" + m.group(1).upper()))
+    return out
+
+
+def load_spools(path: str) -> List[Filament]:
+    from pathlib import Path
+    return parse_spools(Path(path).read_text())

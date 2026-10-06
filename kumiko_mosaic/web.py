@@ -141,3 +141,11 @@ def api_zip(rid: str):
 def api_patterns():
     from .inserts import catalogue
     return [{"id": k, "name": v.name, "source": v.source, "note": v.note} for k, v in catalogue().items()]
+
+
+@app.get("/api/filaments")
+def api_filaments(set: str = "bambu"):
+    from .filaments import SETS
+    if set not in SETS:
+        raise HTTPException(404, f"unknown set; have {', '.join(SETS)}")
+    return [{"name": f.name, "hex": f.hex} for f in SETS[set]]
