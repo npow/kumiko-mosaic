@@ -30,7 +30,7 @@ extruded strip patterns, which is what this tool makes. His insert generator is 
 
 Source on the left, planned panel on the right, drawn with the real insert silhouettes. All at 60 columns (2.6 m wide at 50 mm pitch, 1.6 m at 30 mm), 8 Bambu PLA strip filaments, 3 grey background filaments, at most 4 line patterns, dark frame. The fidelity number is the mean CIELAB error at viewing distance (lower is better; under 10 reads as the picture from across a room). Rebuild with `python scripts/make_gallery.py && python scripts/readme_examples.py`.
 
-**The Great Wave (Hokusai)**: 60 x 35 triangles, 4260 cells, 4249 pattern inserts, fidelity 14.15
+**The Great Wave (Hokusai)**: 60 x 35 triangles, 4260 cells, 3865 pattern inserts, fidelity 13.72
 
 ![The Great Wave (Hokusai)](examples/gallery/great_wave_60cols_compare.jpg)
 
@@ -38,21 +38,31 @@ Source on the left, planned panel on the right, drawn with the real insert silho
 
 ![Golden Gate Bridge](examples/gallery/golden_gate_bridge_60cols_compare.jpg)
 
-**Toco toucan**: 60 x 31 triangles, 3780 cells, 3493 pattern inserts, fidelity 7.17
+**Toco toucan**: 60 x 31 triangles, 3780 cells, 3469 pattern inserts, fidelity 7.11
 
 ![Toco toucan](examples/gallery/toucan_60cols_compare.jpg)
 
-**Earth from Apollo 17**: 60 x 52 triangles, 6300 cells, 3960 pattern inserts, fidelity 6.12
+**Earth from Apollo 17**: 60 x 52 triangles, 6300 cells, 3973 pattern inserts, fidelity 6.22
 
 ![Earth from Apollo 17](examples/gallery/earth_60cols_compare.jpg)
 
-**The Starry Night (Van Gogh)**: 60 x 41 triangles, 4980 cells, 4903 pattern inserts, fidelity 12.76
+**The Starry Night (Van Gogh)**: 60 x 41 triangles, 4980 cells, 4942 pattern inserts, fidelity 11.27
 
 ![The Starry Night (Van Gogh)](examples/gallery/starry_night_60cols_compare.jpg)
 
-**Red Fuji (Hokusai)**: 60 x 35 triangles, 4260 cells, 4207 pattern inserts, fidelity 17.66
+**Red Fuji (Hokusai)**: 60 x 35 triangles, 4260 cells, 3363 pattern inserts, fidelity 15.29
 
 ![Red Fuji (Hokusai)](examples/gallery/red_fuji_60cols_compare.jpg)
+
+## Catalog
+
+About 1,000 Wikimedia Commons images (public domain, CC0, CC BY, CC BY-SA, with author and licence
+recorded) planned at 60 columns: animals, flowers, mountains, sky, art, architecture, space,
+vehicles. The 120 best, chosen for colour, variety and fidelity, are in `examples/catalog/`
+(browse `examples/catalog/index.html`, or `/catalog` in the web app); median fidelity error across
+all 1,000 is 8.1, 90% are under 12.4. Rebuild with `python scripts/fetch_catalog.py`,
+`python scripts/build_catalog.py` (about two hours on 20 cores) and
+`python scripts/build_catalog_site.py`.
 
 ## Install
 

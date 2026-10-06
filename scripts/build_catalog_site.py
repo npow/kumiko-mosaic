@@ -21,6 +21,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from kumiko_mosaic.imagemap import hex_to_rgb, rgb_to_lab  # noqa: E402
 
 
+def hue_bin(i: dict) -> int:
+    """Dominant hue family (0-7, 45 degree bins) of the most vivid strip filament, 8 = neutral."""
+    lab = rgb_to_lab(np.array([hex_to_rgb(h) for h in i["strip_hex"] + i["bg_hex"]], dtype=float))
+    chroma = np.sqrt(lab[:, 1] ** 2 + lab[:, 2] ** 2)
+    k = int(np.argmax(chroma))
+    if chroma[k] < 25:
+        return 8
+    return int(((np.degrees(np.arctan2(lab[k, 2], lab[k, 1])) % 360) // 45))
+
+
 def wow_score(i: dict) -> float:
     """Curation score: colourful, varied and well reproduced. Fidelity alone favours trivial
     black-background or greyscale images, so it is only a penalty above a decent level."""
@@ -79,6 +89,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=120)
     ap.add_argument("--per-category", type=int, default=18)
+    ap.add_argument("--per-hue", type=int, default=16, help="cap per dominant hue family, for colour variety")
     a = ap.parse_args()
     sources = json.load(open(CAT / "sources.json"))
     results = json.load(open(CAT / "results.json"))
@@ -98,16 +109,18 @@ def main():
     (CAT / "index.html").write_text(txt)
 
     # curated set: best wow score, capped per category and per search query for variety
-    picked, per, perq = [], {}, {}
+    picked, per, perq, perh = [], {}, {}, {}
     for i in sorted(all_items, key=wow_score, reverse=True):
         if i["fidelity"]["L_std_source"] < 12 or i["fidelity"]["mean_dE"] > 16:
             continue
-        if per.get(i["category"], 0) >= a.per_category or perq.get(i["query"], 0) >= 3:
+        hb = hue_bin(i)
+        if per.get(i["category"], 0) >= a.per_category or perq.get(i["query"], 0) >= 3 or perh.get(hb, 0) >= a.per_hue:
             continue
         i["wow"] = round(wow_score(i), 1)
         picked.append(i)
         per[i["category"]] = per.get(i["category"], 0) + 1
         perq[i["query"]] = perq.get(i["query"], 0) + 1
+        perh[hb] = perh.get(hb, 0) + 1
         if len(picked) >= a.top:
             break
     picked.sort(key=lambda i: i["fidelity"]["mean_dE"])
