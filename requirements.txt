@@ -1,0 +1,10 @@
+numpy
+pillow
+scipy
+trimesh
+networkx
+lxml
+fastapi
+uvicorn
+python-multipart
+pytest

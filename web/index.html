@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Kumiko mosaic planner</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:0;background:#1b1b1f;color:#eee;display:grid;grid-template-columns:360px 1fr;height:100vh}
+ aside{padding:14px;overflow:auto;background:#242428;border-right:1px solid #333}
+ main{padding:14px;overflow:auto}
+ h1{font-size:16px;margin:0 0 10px} h2{font-size:14px;margin:16px 0 6px;color:#d2ac86}
+ label{display:block;font-size:12px;margin:8px 0 2px;color:#bbb}
+ input,select,textarea{width:100%;box-sizing:border-box;background:#111;color:#eee;border:1px solid #444;border-radius:4px;padding:5px;font-size:13px}
+ .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ button{margin-top:12px;width:100%;padding:9px;background:#d2ac86;color:#222;border:0;border-radius:5px;font-weight:600;cursor:pointer}
+ button:disabled{opacity:.5}
+ .pal{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+ .pal span{display:inline-flex;align-items:center;gap:4px;background:#111;border:1px solid #444;border-radius:4px;padding:2px 6px;font-size:12px}
+ .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid #666}
+ #preview svg{max-width:100%;height:auto;background:#000}
+ table{border-collapse:collapse;font-size:12px;width:100%} td,th{border:1px solid #333;padding:3px 6px;text-align:left}
+ .plates{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+ .plate{background:#242428;border:1px solid #333;border-radius:6px;padding:6px;font-size:12px}
+ .plate img{width:100%;background:#222;border-radius:4px}
+ .warn{background:#5a2d1a;padding:8px;border-radius:4px;font-size:12px;margin:8px 0}
+ .ok{background:#1f4a2a;padding:8px;border-radius:4px;font-size:12px;margin:8px 0}
+ pre{font-size:11px;white-space:pre-wrap}
+ a{color:#9ec5ff}
+</style></head>
+<body>
+<aside>
+ <h1>Kumiko mosaic planner <a href="/gallery" style="font-size:12px;font-weight:normal;margin-left:8px">gallery</a></h1>
+ <form id="f">
+  <label>Image</label><input type="file" id="image" accept="image/*" required>
+  <h2>Frame</h2>
+  <div class="row">
+   <div><label>Grid pitch (mm)</label><input type="number" step="0.5" name="pitch" value="50"></div>
+   <div><label>Grid thickness (mm)</label><input type="number" step="0.1" name="mitsuke" value="3"></div>
+   <div><label>Border (mm)</label><input type="number" step="0.5" name="border" value="6"></div>
+   <div><label>Corner phase</label><select name="orientation"><option value="auto">auto (Paper View rule)</option><option value="side-corners">side at TL corner</option><option value="vertex-corners">vertex at TL corner</option></select></div>
+  </div>
+  <h2>Size</h2>
+  <label>Columns across: <b id="colsval">40</b> <span id="sizeinfo" style="color:#999"></span></label>
+  <input type="range" id="colsrange" min="4" max="80" value="40" style="width:100%">
+  <details><summary style="font-size:12px;color:#bbb;cursor:pointer">Set an exact size instead</summary>
+  <div class="row">
+   <div><label>Outer width (mm)</label><input type="number" name="width_mm" placeholder="leave empty"></div>
+   <div><label>Outer height (mm)</label><input type="number" name="height_mm"></div>
+   <div><label>Columns (triangle altitudes)</label><input type="number" name="cols"></div>
+   <div><label>Rows (pitches)</label><input type="number" name="rows"></div>
+   <div><label>Max cells</label><input type="number" name="max_cells"></div>
+   <div><label>mm refer to</label><select name="measure"><option value="outer">outer panel</option><option value="lattice">lattice (bar to bar)</option></select></div>
+  </div></details>
+  <h2>Image &amp; colour</h2>
+  <div class="row">
+   <div><label>Fit</label><select name="fit"><option>cover</option><option>contain</option><option>stretch</option></select></div>
+   <div><label>Auto colours (if no palette)</label><input type="number" name="max_colors" value="8" min="1" max="12"></div>
+   <div><label>Enhance contrast/saturation</label><select name="enhance"><option value="true">yes</option><option value="false">no</option></select></div>
+  </div>
+  <label>Filaments you own (one per line: name=#hex). Empty = pick from a purchasable catalogue:</label>
+  <select name="filament_set"><option value="bambu">Bambu PLA Matte + Basic (55 colours)</option><option value="bambu-matte">Bambu PLA Matte only</option><option value="bambu-basic">Bambu PLA Basic only</option></select>
+  <textarea id="palette" rows="5" placeholder="black=#000000
+latte=#D2AC86
+marine blue=#1F4E9A
+(empty = best purchasable filaments for this image)"></textarea>
+  <div class="row">
+   <div><label>Colour carried by</label><select name="color_layer"><option value="pattern">kumiko strips (density matched)</option><option value="background">flat background tiles</option><option value="both">both</option></select></div>
+   <div><label>Dither</label><select name="dither"><option value="false">no</option><option value="true">yes</option></select></div>
+   <div><label>Background filament</label><input name="background_color" value="Matte Charcoal=#000000"></div>
+   <div><label>Pattern filament (if bg carries colour)</label><input name="pattern_color" value="Matte Latte Brown=#D3B7A7"></div>
+   <div><label>Frame filament (dark = legible; latte #D2AC86)</label><input name="frame_color" value="#1A1A1A"></div>
+  </div>
+  <h2>Patterns</h2>
+  <label>Mode: auto | none | single:ID | luminance:dark,...,light | color &nbsp; <a href="#" id="showpat">pattern ids</a></label>
+  <input name="pattern_mode" value="auto">
+  <pre id="patlist" style="display:none;max-height:160px;overflow:auto;background:#111;padding:6px"></pre>
+  <label>Max distinct patterns (auto mode; fewer = easier to assemble)</label>
+  <div class="row"><div><input type="number" name="max_patterns" value="4" min="1" max="9"></div>
+  <div><label style="margin-top:-18px">Min opening in a pattern (mm)</label><input type="number" step="0.5" name="min_hole_mm" value="2.5"></div></div>
+  <label>Colour → pattern map (JSON, for mode "color")</label>
+  <input name="color_pattern_map" value='{}'>
+  <div class="row"><div><label>Edge half cells</label><select name="edge_halves"><option value="pattern">pattern inserts</option><option value="background">background only</option></select></div>
+  <div><label>Skip inserts matching background colour</label><select name="skip_background_matches"><option value="false">no</option><option value="true">yes</option></select></div></div>
+  <h2>Insert geometry</h2>
+  <div class="row">
+   <div><label>Strip width (mm)</label><input type="number" step="0.1" name="strip_mm" value="2"></div>
+   <div><label>Insert depth (mm)</label><input type="number" step="0.5" name="insert_depth" value="11"></div>
+   <div><label>Clearance per edge (mm)</label><input type="number" step="0.05" name="clearance" value="0.15"></div>
+   <div><label>Background thickness (mm)</label><input type="number" step="0.1" name="bg_thickness" value="2"></div>
+   <div><label>Pattern ids on preview</label><select name="labels"><option value="false">no</option><option value="true">yes</option></select></div>
+  </div>
+  <h2>Printing</h2>
+  <div class="row">
+   <div><label>Bed X (mm)</label><input type="number" name="bed_x" value="256"></div>
+   <div><label>Bed Y (mm)</label><input type="number" name="bed_y" value="256"></div>
+   <div><label>Edge margin (mm)</label><input type="number" step="0.5" name="bed_margin" value="8"></div>
+   <div><label>Part gap (mm)</label><input type="number" step="0.5" name="part_gap" value="3"></div>
+  </div>
+  <label>Optional insert library folder (server path; STL/3MF files override generated parts)</label>
+  <input name="insert_library" placeholder="e.g. /home/me/kumiko_inserts">
+  <button id="go">Plan it</button>
+ </form>
+</aside>
+<main>
+ <div id="status">Upload an image and click <b>Plan it</b>. The slider sets how wide the panel is; the image decides the rest.</div>
+ <div id="out" style="display:none">
+  <h2>Frame</h2><div id="frame"></div>
+  <h2>Source vs plan</h2><img id="compare" style="max-width:100%;border-radius:6px">
+  <h2>Preview</h2><div id="preview"></div>
+  <div class="pal" id="pal"></div>
+  <h2>Filament per colour</h2><div id="mat"></div>
+  <h2>Insert counts per colour</h2><div id="chk"></div>
+  <h2>Plates</h2><div id="missing"></div><div class="plates" id="plates"></div>
+  <h2>Assembly</h2><div id="asm"></div>
+  <h2>Downloads</h2><div id="dl"></div>
+ </div>
+</main>
+<script>
+const f=document.getElementById('f');
+let imgAspect=null;
+document.getElementById('image').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const im=new Image();im.onload=()=>{imgAspect=im.naturalWidth/im.naturalHeight;URL.revokeObjectURL(im.src);updateSize()};im.src=URL.createObjectURL(file);});
+function num(n){return parseFloat(f.querySelector(`[name="${n}"]`).value)||0}
+function updateSize(){
+ const cols=parseInt(document.getElementById('colsrange').value);document.getElementById('colsval').textContent=cols;
+ const pitch=num('pitch')||50,m=num('mitsuke')||3,b=num('border')||6,h=pitch*Math.sqrt(3)/2;
+ const w=m+cols*h+2*b;let txt=`≈ ${w.toFixed(0)} mm wide`;
+ if(imgAspect){const rows=Math.max(1,Math.round(cols*h/imgAspect/pitch));const ht=2*m+rows*pitch+2*b;txt=`≈ ${w.toFixed(0)} × ${ht.toFixed(0)} mm, ${rows} rows, ${cols*(2*rows-1)} full + ${2*cols} half cells`;}
+ document.getElementById('sizeinfo').textContent=txt;
+}
+document.getElementById('colsrange').addEventListener('input',updateSize);
+for(const n of ['pitch','mitsuke','border'])f.querySelector(`[name="${n}"]`).addEventListener('input',updateSize);
+updateSize();
+document.getElementById('showpat').addEventListener('click',async e=>{e.preventDefault();const el=document.getElementById('patlist');if(el.style.display==='none'){const r=await fetch('/api/patterns');const l=await r.json();el.textContent=l.map(p=>`${p.id.padEnd(12)} ${p.name}${p.note?'  ('+p.note+')':''}`).join('\n');el.style.display='block';}else el.style.display='none';});
+f.addEventListener('submit',async e=>{
+ e.preventDefault();
+ const fd=new FormData(); const img=document.getElementById('image').files[0];
+ if(!img){alert('choose an image');return}
+ fd.append('image',img);
+ const p={};
+ for(const el of f.querySelectorAll('[name]')){
+   let v=el.value; if(v==='')continue;
+   if(el.type==='number')v=parseFloat(v);
+   if(['dither','skip_background_matches','labels','enhance'].includes(el.name))v=(v==='true');
+   if(el.name==='color_pattern_map'){try{v=JSON.parse(v)}catch(_){alert('bad JSON in colour map');return}}
+   p[el.name]=v;
+ }
+ p.palette=document.getElementById('palette').value.split('\n').map(s=>s.trim()).filter(Boolean);
+ if(!['width_mm','height_mm','cols','rows','max_cells'].some(k=>p[k]!==undefined))p.cols=parseInt(document.getElementById('colsrange').value);
+ fd.append('params',JSON.stringify(p));
+ const go=document.getElementById('go'); go.disabled=true;
+ document.getElementById('status').textContent='Planning…';
+ try{
+  const r=await fetch('/api/run',{method:'POST',body:fd});
+  if(!r.ok){throw new Error((await r.json()).detail||r.statusText)}
+  render(await r.json());
+ }catch(err){document.getElementById('status').textContent='Error: '+err.message}
+ go.disabled=false;
+});
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+async function render(s){
+ document.getElementById('status').textContent='';
+ document.getElementById('out').style.display='block';
+ const g=s.grid;
+ document.getElementById('frame').innerHTML=`<table>
+  <tr><th>Frame Reference Generator → Triangle_Generator</th><td><b>[${g.triangle_generator[0]}, ${g.triangle_generator[1]}]</b> (${g.cols_triangle_altitudes_wide} columns × ${g.rows_pitches_tall} pitches)</td></tr>
+  <tr><th>Width parity / TR hanger plate</th><td>${g.width_parity} → ${esc(g.tr_wall_hanger_plate)}</td></tr>
+  <tr><th>Reference card check</th><td>Size A ${g.kumikodesigner_size_a_height}, Size B ${g.kumikodesigner_size_b_width}; top-left corner: ${g.top_left_corner}</td></tr>
+  <tr><th>Lattice / outer size</th><td>${g.lattice_mm[0]} × ${g.lattice_mm[1]} mm / ≈ ${g.outer_mm[0]} × ${g.outer_mm[1]} mm</td></tr>
+  <tr><th>Cells</th><td>${s.counts.full} full + ${s.counts.half} half; ${s.counts.pattern_inserts} pattern inserts (${s.counts.distinct_patterns} patterns, ${s.counts.distinct_parts} distinct parts), ${s.counts.background_inserts} background inserts, ${s.counts.plates} plates</td></tr>
+  <tr><th>Inserts</th><td>opening ${s.insert_geometry.opening_tip_to_tip_mm} mm tip to tip, clearance ${s.insert_geometry.clearance_mm} mm, strips ${s.insert_geometry.strip_mm} mm, depth ${s.insert_geometry.insert_depth_mm} mm — print one first</td></tr>
+  <tr><th>Patterns</th><td>${s.patterns_used.map(v=>`<code>${esc(v.id)}</code> ${esc(v.name)}${v.ok?'':' <b style="color:#f88">CHECK: loose parts</b>'}`).join(', ')}</td></tr></table>`;
+ document.getElementById('compare').src=s.files.compare;
+ document.getElementById('preview').innerHTML=await (await fetch(s.files.preview_svg)).text();
+ document.getElementById('pal').innerHTML=s.palette_used.map(c=>`<span><i class="sw" style="background:${c.hex}"></i>${esc(c.name)} ${c.hex}</span>`).join('');
+ document.getElementById('mat').innerHTML='<table><tr><th>colour</th><th>pattern inserts</th><th>background inserts</th><th>grams (rough)</th></tr>'+
+  Object.entries(s.material_estimate_g).map(([n,e])=>`<tr><td><i class="sw" style="background:${e.color}"></i> ${esc(n)}</td><td>${e.pattern_inserts}</td><td>${e.background_inserts}</td><td>${e.grams}</td></tr>`).join('')+'</table>';
+ document.getElementById('chk').innerHTML=s.insert_counts.length?'<ul>'+s.insert_counts.map(r=>`<li><b>${esc(r.color_name)}</b>: ${esc(r.instructions)}</li>`).join('')+'</ul>':'<i>background-only mosaic, no pattern inserts</i>';
+ document.getElementById('missing').innerHTML=s.failed_parts.length?`<div class="warn">Some parts could not be generated: ${esc(s.failed_parts.join(', '))}.</div>`:`<div class="ok">All plate files generated.</div>`;
+ const byName=Object.fromEntries(s.files.plates.map(p=>[p.name,p]));
+ document.getElementById('plates').innerHTML=s.plates.map(p=>{const fl=byName[p.name];return `<div class="plate"><b>#${p.plate}</b> <i class="sw" style="background:${p.color}"></i> ${esc(p.color_name)} · ${p.layer} · ${p.parts} parts<br>${Object.entries(p.contents).map(([k,v])=>`${esc(k)} ×${v}`).join(', ')}
+   ${fl?`<img src="${fl.svg}"><br>${fl.threemf?`<a href="${fl.threemf}">3MF</a> `:''}${fl.stl?`<a href="${fl.stl}">STL</a>`:''}`:'<br><i>no mesh files (missing inserts)</i>'}</div>`}).join('');
+ document.getElementById('asm').innerHTML=`<p class="meta" style="font-size:13px;color:#bbb">Every cell has a code: letter = pattern, digit = filament. <a href="${s.files.assembly_pdf}">assembly_sheet.pdf</a> has the legend and the panel in labelled 8-column strips; <a href="${s.files.assembly_txt}">assembly_map.txt</a> is the same as a pick list.</p>`;
+ document.getElementById('dl').innerHTML=`<a href="${s.files.zip}">Download everything (zip)</a> · <a href="${s.files.assembly_pdf}">assembly_sheet.pdf</a> · <a href="${s.files.report}">REPORT.md</a> · <a href="${s.files.assembly_csv}">assembly_map.csv</a> · <a href="${s.files.preview_png}">preview.png</a>`;
+}
+</script>
+</body></html>
