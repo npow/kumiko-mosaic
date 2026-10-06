@@ -262,3 +262,16 @@ def test_paperview_patterns_can_be_disabled(monkeypatch):
     from kumiko_mosaic.patterns import parse_mode
     with pytest.raises(ValueError):
         parse_mode("single:7")
+
+
+def test_bag_labels_and_plate_codes(tmp_path, img):
+    s = run(str(img), str(tmp_path / "o10"), Params(cols=8, max_colors=3, max_patterns=2, max_backgrounds=2,
+                                                    background_set="neutral", export_3mf=False, export_stl=False))
+    out = tmp_path / "o10"
+    assert (out / "bag_labels.pdf").stat().st_size > 5000 and (out / "plate_codes.csv").exists()
+    # every plate lists codes whose counts add up to its part count
+    for pl in s["plates"]:
+        assert sum(pl["codes"].values()) == pl["parts"]
+    # bag codes in plates match the codes used on the assembly sheet (letter+digit for strips, BG for backgrounds)
+    codes = {c for pl in s["plates"] for c in pl["codes"]}
+    assert any(c.startswith("BG") for c in codes) and any(c[0].isalpha() and c[1:2].isdigit() for c in codes)

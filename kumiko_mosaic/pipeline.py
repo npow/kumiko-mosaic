@@ -202,6 +202,16 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
     pages[0].save(out / "assembly_sheet.pdf", save_all=True, append_images=pages[1:], resolution=300)
     pages[0].save(out / "assembly_legend.png")
 
+    lab = render.bag_labels(grid, bom, plates, strip_mm=params.strip_mm)
+    lab[0].save(out / "bag_labels.pdf", save_all=True, append_images=lab[1:], resolution=300)
+    pcodes = render.plate_codes(grid, plates)
+    with open(out / "plate_codes.csv", "w", newline="") as fh:
+        import csv as _csv
+        w = _csv.writer(fh)
+        w.writerow(["plate", "file", "filament", "layer", "codes"])
+        for r in pcodes:
+            w.writerow([r["plate"], r["file"], r["color_name"], r["layer"], "; ".join(f"{k} x{v}" for k, v in r["codes"].items())])
+
     plates_dir = out / "plates"
     plates_dir.mkdir(exist_ok=True)
     exported = []
@@ -256,7 +266,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
                    "background_inserts": sum(q for k, q in bom.items() if k.layer == "background"),
                    "plates": len(plates)},
         "material_estimate_g": bom_mod.estimate_material(bom, volumes),
-        "plates": bom_mod.plate_summary(plates),
+        "plates": [{**r, "codes": c["codes"]} for r, c in zip(bom_mod.plate_summary(plates), render.plate_codes(grid, plates))],
         "plates_exported": exported,
         "failed_parts": sorted(set(failed)),
         "insert_library": {"folder": params.insert_library, "loaded": sorted(library.keys())},
@@ -310,16 +320,17 @@ def report_markdown(s: dict) -> str:
     if not s["insert_counts"]:
         L.append("- (no pattern inserts: background-only mosaic)")
     L.append("\n## Plates (one colour per plate)\n")
-    L.append("| # | file | layer | colour | parts | contents |\n|---|---|---|---|---|---|")
+    L.append("| # | file | layer | colour | parts | codes on the plate |\n|---|---|---|---|---|---|")
     for p in s["plates"]:
         L.append(f"| {p['plate']} | {p['name']} | {p['layer']} | {p['color_name']} | {p['parts']} | "
-                 + ", ".join(f"{k} x{v}" for k, v in p["contents"].items()) + " |")
+                 + ", ".join(f"{k} x{v}" for k, v in p["codes"].items()) + " |")
     if s["failed_parts"]:
         L.append("\nParts that could not be generated: " + ", ".join(s["failed_parts"]))
     L.append("\n## Files\n")
     L.append("- preview.png / preview.svg: the finished panel with real insert silhouettes")
     L.append("- assembly_sheet.pdf: printable guide; page 1 legend (letter = pattern, digit = filament), then the panel "
              "in strips of 8 columns with every cell labelled, e.g. B3 = pattern B in filament 3")
+    L.append("- bag_labels.pdf: one printable label per kind of part (code, filament, counts, plates); plate_codes.csv: codes on each plate")
     L.append("- assembly_map.txt: the same as a pick list, one line per column; assembly_map.csv: per-cell table")
     L.append("- plates/*.3mf, *.stl, *.svg: one file per plate; open in Bambu/Orca Studio, set the filament, print")
     L.append("- summary.json: everything above, machine-readable\n")

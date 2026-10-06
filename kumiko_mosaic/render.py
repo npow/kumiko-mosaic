@@ -480,3 +480,127 @@ def svg_compact(grid: Grid, *, background_color: str = "#000000", frame_color: s
     out.append(f'<path fill="{frame_color}" fill-rule="evenodd" d="M{-pad:.1f},{-pad:.1f}H{Wl + pad:.1f}V{Hl + pad:.1f}H{-pad:.1f}ZM0,0H{Wl:.1f}V{Hl:.1f}H0Z"/>')
     out.append("</svg>")
     return "".join(out)
+
+
+# ---- bag labels and per-plate codes ---------------------------------------------------------------
+
+def _bg_suffix_map(grid: Grid) -> Dict[str, str]:
+    bgs: Dict[str, int] = {}
+    for c in grid.cells:
+        if c.bg_color:
+            bgs[c.bg_color] = bgs.get(c.bg_color, 0) + 1
+    order = sorted(bgs, key=lambda h: -bgs[h])
+    return {h: ("" if i == 0 else "abcdefgh"[i - 1]) for i, h in enumerate(order)}
+
+
+def part_code(grid: Grid, layer: str, color: str, pattern: Optional[str]) -> str:
+    """Bag code of a physical part: pattern inserts 'B3' (letter = pattern, digit = strip filament);
+    background inserts 'BG', 'BG a', 'BG b' (suffix matches the lowercase letter in cell codes)."""
+    pmap, cols, _ = assembly_codes(grid)
+    if layer == "pattern":
+        cmap = {hx: str(i + 1) for i, (hx, _) in enumerate(cols)}
+        return f"{pmap[pattern]}{cmap[color]}"
+    suf = _bg_suffix_map(grid).get(color, "")
+    return "BG" + (f" {suf}" if suf else "")
+
+
+def _ranges(nums) -> str:
+    nums = sorted(set(nums))
+    out, i = [], 0
+    while i < len(nums):
+        j = i
+        while j + 1 < len(nums) and nums[j + 1] == nums[j] + 1:
+            j += 1
+        out.append(str(nums[i]) if i == j else f"{nums[i]}-{nums[j]}")
+        i = j + 1
+    return ", ".join(out)
+
+
+def plate_codes(grid: Grid, plates) -> List[dict]:
+    """For each plate: which bag codes it holds and how many of each."""
+    rows = []
+    for p in plates:
+        counts: Dict[str, int] = {}
+        for pl in p.placements:
+            k = pl.part
+            code = part_code(grid, k.layer, k.color, k.pattern)
+            counts[code] = counts.get(code, 0) + 1
+        rows.append({"plate": p.index, "file": p.name(), "color_name": p.color_name, "layer": p.layer, "codes": counts})
+    return rows
+
+
+def _fit(d, text: str, size: int, maxw: int, bold: bool = False):
+    """Largest font (down to 60% of size) in which text fits maxw; ellipsis if still too wide."""
+    for sz in range(size, int(size * 0.6) - 1, -2):
+        f = _font(sz)
+        if d.textlength(text, font=f) <= maxw:
+            return text, f
+    f = _font(int(size * 0.6))
+    while len(text) > 4 and d.textlength(text + "...", font=f) > maxw:
+        text = text[:-1]
+    return text + "...", f
+
+
+def bag_labels(grid: Grid, bom, plates, strip_mm: float = 2.0, per_page=(3, 8)) -> List[Image.Image]:
+    """Printable A4 pages (300 dpi) of labels, one per kind of part: colour swatch, pattern thumbnail,
+    code, filament name, counts (full / half L / half R) and the plates it is printed on."""
+    groups: Dict[tuple, dict] = {}
+    for k, q in bom.items():
+        g = groups.setdefault((k.layer, k.color, k.pattern),
+                              {"name": k.color_name, "full": 0, "half_L": 0, "half_R": 0, "plates": set()})
+        g[k.shape] += q
+    for p in plates:
+        for pl in p.placements:
+            k = pl.part
+            groups[(k.layer, k.color, k.pattern)]["plates"].add(p.index)
+    items = sorted(groups.items(), key=lambda kv: (kv[0][0] != "pattern", part_code(grid, *kv[0])))
+    cols_n, rows_n = per_page
+    PW, PH = 2480, 3508
+    m = 90
+    lw, lh = (PW - 2 * m) // cols_n, (PH - 2 * m) // rows_n
+    f_code, f_name, f_sm = _font(int(lh * 0.30)), _font(int(lh * 0.115)), _font(int(lh * 0.095))
+    side = grid.spec.inner_side
+    tri_h = side * SQRT3 / 2
+    pages: List[Image.Image] = []
+    for start in range(0, len(items), cols_n * rows_n):
+        pg = Image.new("RGB", (PW, PH), "white")
+        d = ImageDraw.Draw(pg)
+        for n, ((layer, color, pattern), g) in enumerate(items[start:start + cols_n * rows_n]):
+            x0 = m + (n % cols_n) * lw
+            y0 = m + (n // cols_n) * lh
+            d.rectangle([x0 + 6, y0 + 6, x0 + lw - 6, y0 + lh - 6], outline=(150, 150, 150), width=3)
+            # thumbnail: the insert in its filament colour on a dark triangle
+            tsz = int(lh * 0.62)
+            sc = tsz * 0.92 / side
+            cx, cy = x0 + 30 + tsz // 2, y0 + 30 + int(tsz * 0.70)
+            P = lambda x, y: (cx + x * sc, cy - y * sc)  # noqa: E731
+            d.polygon([P(-side / 2, -tri_h / 3), P(side / 2, -tri_h / 3), P(0, 2 * tri_h / 3)], fill=(25, 25, 25))
+            if layer == "pattern":
+                shape = inserts.canonical_polygon(pattern, side, strip_mm)
+                for gg in (shape.geoms if shape.geom_type == "MultiPolygon" else [shape]):
+                    d.polygon([P(x, y) for x, y in gg.exterior.coords], fill=hex_to_rgb(color))
+                    for hole in gg.interiors:
+                        d.polygon([P(x, y) for x, y in hole.coords], fill=(25, 25, 25))
+            else:
+                d.polygon([P(-side / 2 + 3, -tri_h / 3 + 2), P(side / 2 - 3, -tri_h / 3 + 2), P(0, 2 * tri_h / 3 - 3)],
+                          fill=hex_to_rgb(color))
+            tx = x0 + 60 + tsz
+            avail = x0 + lw - 20 - tx
+            d.text((tx, y0 + 24), part_code(grid, layer, color, pattern), fill="black", font=f_code)
+            d.rectangle([tx, y0 + 24 + int(lh * 0.36), tx + 50, y0 + 24 + int(lh * 0.36) + 36], fill=hex_to_rgb(color), outline="black", width=2)
+            t, f = _fit(d, g["name"], int(lh * 0.115), avail - 62)
+            d.text((tx + 60, y0 + 24 + int(lh * 0.36)), t, fill="black", font=f)
+            if layer == "background":
+                what = "background insert"
+            else:
+                info = inserts.catalogue().get(pattern)
+                what = info.name if info else pattern
+            t, f = _fit(d, what, int(lh * 0.095), avail)
+            d.text((tx, y0 + 24 + int(lh * 0.50)), t, fill=(70, 70, 70), font=f)
+            parts = [f"{g['full']} full"] + ([f"{g['half_L']} half L"] if g["half_L"] else []) + ([f"{g['half_R']} half R"] if g["half_R"] else [])
+            t, f = _fit(d, ", ".join(parts), int(lh * 0.115), avail, True)
+            d.text((tx, y0 + 24 + int(lh * 0.62)), t, fill="black", font=f)
+            t, f = _fit(d, f"plates {_ranges(g['plates'])}", int(lh * 0.095), avail)
+            d.text((tx, y0 + 24 + int(lh * 0.79)), t, fill=(70, 70, 70), font=f)
+        pages.append(pg)
+    return pages
