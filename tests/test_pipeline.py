@@ -317,3 +317,23 @@ def test_estimates_match_paperview_plates():
         t = b.PLATE_SECONDS + b.SECONDS_PER_MM2 * a
         assert abs(g - grams) / grams < 0.20, (pair, g)
         assert abs(t - secs) / secs < 0.20, (pair, t)
+
+
+def test_open_filament_database():
+    from kumiko_mosaic import filaments
+    bl = filaments.brands()
+    names = [b["name"] for b in bl]
+    assert {"Polymaker", "eSun", "Prusament", "Sunlu"} <= set(names) and len(bl) >= 40
+    allc = filaments.catalogue("db")
+    assert 800 < len(allc) < 2412                         # near-identical colours are listed once
+    poly = filaments.catalogue("db", ["polymaker"])       # brand names match case-insensitively
+    assert poly and all(f.name.startswith("Polymaker ") for f in poly)
+    with pytest.raises(ValueError):
+        filaments.catalogue("db", ["NoSuchBrand"])
+    assert all(len(f.hex) == 7 and f.hex[0] == "#" for f in allc)
+
+
+def test_plan_with_one_brand(tmp_path, img):
+    s = run(str(img), str(tmp_path / "o12"), Params(cols=8, max_colors=3, max_patterns=2, max_backgrounds=2,
+                                                    filament_set="db", brands=["Polymaker"], preview_only=True))
+    assert all(n["name"].startswith("Polymaker ") for n in s["palette_used"] + s["backgrounds_used"])

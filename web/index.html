@@ -69,10 +69,12 @@
    <div><label>Thin-feature boost (0 off, 8 strong)</label><input type="number" step="1" name="line_boost" value="4" min="0" max="12"></div>
   </div>
   <label>Spools you own (one per line: name=#hex). Leave empty to pick from a catalogue.</label>
-  <div style="font-size:11px;margin:2px 0 4px">Start from: <a href="#" data-fill="bambu-matte" class="fillset">Bambu Matte</a> · <a href="#" data-fill="bambu-basic" class="fillset">Bambu Basic</a> · <a href="#" id="spoolfile">import file</a> · <a href="#" id="spoolclear">clear</a>
+  <div style="font-size:11px;margin:2px 0 4px">Start from: <a href="#" data-fill="bambu-matte" class="fillset">Bambu Matte</a> · <a href="#" data-fill="bambu-basic" class="fillset">Bambu Basic</a> · <select id="fillbrand" style="width:auto;display:inline;padding:1px 4px;font-size:11px"><option value="">a brand…</option></select> · <a href="#" id="spoolfile">import file</a> · <a href="#" id="spoolclear">clear</a>
    <input type="file" id="spoolinput" accept=".csv,.txt" style="display:none"> <span id="spoolcount" style="color:#999"></span></div>
   <div style="font-size:11px;color:#999;margin-bottom:3px">With a list, every colour in the plan, strips and backgrounds, comes from it. Saved in this browser.</div>
-  <select name="filament_set" title="used when the spool list is empty"><option value="bambu">Bambu PLA Matte + Basic (55 colours)</option><option value="bambu-matte">Bambu PLA Matte only</option><option value="bambu-basic">Bambu PLA Basic only</option></select>
+  <select name="filament_set" title="used when the spool list is empty"><option value="bambu">Bambu PLA Matte + Basic (55 colours)</option><option value="bambu-matte">Bambu PLA Matte only</option><option value="bambu-basic">Bambu PLA Basic only</option><option value="db">PLA from many brands (open database)</option></select>
+  <details id="brandbox" style="margin-top:4px"><summary style="font-size:12px;color:#bbb;cursor:pointer">Limit the database to some brands <span id="brandsel" style="color:#999"></span></summary>
+   <div id="brandlist" style="max-height:150px;overflow:auto;font-size:12px;margin-top:4px;columns:2"></div></details>
   <textarea id="palette" rows="5" placeholder="black=#000000
 latte=#D2AC86
 marine blue=#1F4E9A
@@ -192,6 +194,7 @@ f.addEventListener('submit',async e=>{
    p[el.name]=v;
  }
  if(cropFrac)p.crop=cropFrac;
+ if(p.filament_set==='db'){const br=[...document.querySelectorAll('#brandlist input:checked')].map(i=>i.value);if(br.length)p.brands=br}
  p.palette=document.getElementById('palette').value.split('\n').map(s=>s.trim()).filter(Boolean);
  if(!['width_mm','height_mm','cols','rows','max_cells'].some(k=>p[k]!==undefined))p.cols=parseInt(document.getElementById('colsrange').value);
  fd.append('params',JSON.stringify(p));
@@ -226,6 +229,12 @@ f.addEventListener('submit',async e=>{
  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;const lines=(await f.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean)
    .map(l=>{const m=l.match(/#?([0-9a-fA-F]{6})\s*$/);if(!m)return null;const name=l.slice(0,m.index).replace(/[ =,;\t"'#]+$/,'').replace(/^["']|["']$/g,'')||'#'+m[1];return `${name}=#${m[1].toUpperCase()}`}).filter(Boolean);
    ta.value=lines.join('\n');ta.dispatchEvent(new Event('input'));inp.value=''};})();
+(async function(){try{const bl=await (await fetch('/api/brands')).json();const box=document.getElementById('brandlist'),fb=document.getElementById('fillbrand');
+ const upd=()=>{const n=box.querySelectorAll('input:checked').length;document.getElementById('brandsel').textContent=n?`(${n} chosen)`:'(all)'};
+ bl.forEach(b=>{const l=document.createElement('label');l.style.cssText='display:block;margin:0;color:#ddd';l.innerHTML=`<input type="checkbox" value="${b.name}" style="width:auto;margin-right:4px">${b.name} <span style="color:#888">${b.colours}</span>`;l.querySelector('input').onchange=upd;box.appendChild(l);
+  const o=document.createElement('option');o.value=b.name;o.textContent=`${b.name} (${b.colours})`;fb.appendChild(o)});upd();
+ fb.onchange=async()=>{if(!fb.value)return;const r=await fetch('/api/filaments?set=db&brands='+encodeURIComponent(fb.value));const ta=document.getElementById('palette');
+  ta.value=(await r.json()).map(f=>`${f.name}=${f.hex}`).join('\n');ta.dispatchEvent(new Event('input'));fb.value=''}}catch(e){}})();
 let pv=null,pfull=null,pvb=null;
 function pvSet(){pv.setAttribute('viewBox',`${pvb.x} ${pvb.y} ${pvb.w} ${pvb.h}`)}
 function pvUser(e){const p=pv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(pv.getScreenCTM().inverse())}

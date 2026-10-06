@@ -138,7 +138,14 @@ dense patterns survive the `--min-hole` test (at 30 mm only `y, asanoha, mesh2, 
   from a purchasable catalogue (`--filament-set bambu`: Bambu Lab PLA Matte + Basic, 55 colours
   with the manufacturer's hex codes; `bambu-matte` / `bambu-basic` to restrict). The report
   names them, e.g. "Matte Marine Blue". `--palette "Matte Dark Red=#BB3D43" ...` lists the
-  spools you already have instead. Add other brands in `kumiko_mosaic/filaments.py`. Without it, `--max-colors` filaments
+  spools you already have instead.
+* **Open database.** `--filament-set db` picks from about 1,300 distinct PLA and PLA+ colours from 55 brands,
+  from [SpoolmanDB](https://github.com/Donkie/SpoolmanDB) (MIT; a filtered snapshot is in
+  `kumiko_mosaic/data/`, refresh with `scripts/update_filament_db.py`). `--brands "Polymaker,eSun"` limits it,
+  `--list-brands` shows them. Colour-shifting, dual-tone, sparkle, wood and carbon-fibre filaments are left
+  out because their printed colour is not the single listed hex, and colours within a small difference of
+  each other are listed once. On six images the mean colour error is 8.6 with all brands against 9.8 with
+  the Bambu set; a single brand (Polymaker, eSun) is about as good as Bambu's 55. Without it, `--max-colors` filaments
   are chosen from the image, biased towards the vivid colours needed at full coverage.
 * `--background-color` is the filament of the flat inserts behind everything (default black).
 * `--frame-color` is the frame filament. **Print the frame dark** (default `#1A1A1A`): with

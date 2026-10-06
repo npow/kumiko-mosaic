@@ -144,8 +144,16 @@ def api_patterns():
 
 
 @app.get("/api/filaments")
-def api_filaments(set: str = "bambu"):
-    from .filaments import SETS
-    if set not in SETS:
-        raise HTTPException(404, f"unknown set; have {', '.join(SETS)}")
-    return [{"name": f.name, "hex": f.hex} for f in SETS[set]]
+def api_filaments(set: str = "bambu", brands: str = ""):
+    from .filaments import catalogue
+    try:
+        fl = catalogue(set, [b.strip() for b in brands.split(",") if b.strip()] or None)
+    except (KeyError, ValueError) as e:
+        raise HTTPException(404, str(e))
+    return [{"name": f.name, "hex": f.hex} for f in fl]
+
+
+@app.get("/api/brands")
+def api_brands():
+    from .filaments import brands
+    return brands()

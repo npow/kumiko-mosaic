@@ -3,9 +3,11 @@ Bambu's colour tables, as collected by the Kumiko Studio project). Add your own 
 --palette with the filaments you already have."""
 from __future__ import annotations
 
-from typing import Dict, List
+import json
+from pathlib import Path
+from typing import Dict, List, Optional, Sequence
 
-from .imagemap import Filament
+from .imagemap import Filament, hex_to_rgb
 
 BAMBU_MATTE = [
     ("Ivory White", "#FFFFFF"), ("Bone White", "#CBC6B8"), ("Desert Tan", "#E8DBB7"), ("Latte Brown", "#D3B7A7"),
@@ -32,24 +34,81 @@ SETS: Dict[str, List[Filament]] = {
 }
 SETS["bambu"] = SETS["bambu-matte"] + SETS["bambu-basic"]
 
+# ---- open database (SpoolmanDB, MIT): PLA and PLA+ from many brands ------------------------------------
+DATA = Path(__file__).parent / "data" / "filaments_pla.json"
+BRAND_PRIORITY = ["Bambu Lab", "Polymaker", "Prusament", "Prusa", "eSun", "Sunlu", "ELEGOO", "Overture", "Hatchbox",
+                  "Creality", "ANYCUBIC", "Inland", "AmazonBasics", "Protopasta", "Formfutura", "Fillamentum"]
+_DB = None
 
-def catalogue(name: str = "bambu") -> List[Filament]:
+
+def _db() -> dict:
+    global _DB
+    if _DB is None:
+        _DB = json.loads(DATA.read_text())
+    return _DB
+
+
+def brands() -> List[dict]:
+    """Brands in the open database with their number of colours, best known first."""
+    counts: Dict[str, int] = {}
+    for r in _db()["rows"]:
+        counts[r[0]] = counts.get(r[0], 0) + 1
+    order = {b.lower(): i for i, b in enumerate(BRAND_PRIORITY)}
+    return [{"name": b, "colours": counts[b]} for b in
+            sorted(counts, key=lambda b: (order.get(b.lower(), 99), b.lower()))]
+
+
+def _lab(hexes):
+    import numpy as np
+    from .imagemap import rgb_to_lab
+    return rgb_to_lab(np.array([hex_to_rgb(h) for h in hexes], dtype=float))
+
+
+def db_catalogue(brand_list: Optional[Sequence[str]] = None, materials: Sequence[str] = ("PLA", "PLA+"),
+                 min_delta_e: float = 2.5) -> List[Filament]:
+    """Filaments of the chosen brands (default all), named 'Brand Colour'. Colours that look the same
+    (CIELAB distance below min_delta_e) are listed once, the better-known brand first, so a plan does not
+    choose among hundreds of near-identical blacks."""
+    import numpy as np
+    want = {b.lower() for b in brand_list} if brand_list else None
+    known = {b["name"].lower() for b in brands()}
+    if want and not (want & known):
+        raise ValueError(f"unknown brand(s) {sorted(want)}; known: {', '.join(b['name'] for b in brands())}")
+    order = {b.lower(): i for i, b in enumerate(BRAND_PRIORITY)}
+    rows = [r for r in _db()["rows"] if r[2] in materials and (want is None or r[0].lower() in want)]
+    rows.sort(key=lambda r: (order.get(r[0].lower(), 99), r[0].lower(), r[1].lower()))
+    if not rows:
+        return []
+    lab = _lab([r[3] for r in rows])
+    keep: List[int] = []
+    kept_lab = np.empty((0, 3))
+    for i in range(len(rows)):
+        if len(keep) and float(np.sqrt(((kept_lab - lab[i]) ** 2).sum(1)).min()) < min_delta_e:
+            continue
+        keep.append(i)
+        kept_lab = np.vstack([kept_lab, lab[i]])
+    return [Filament(f"{rows[i][0]} {rows[i][1]}", rows[i][3]) for i in keep]
+
+
+def catalogue(name: str = "bambu", brand_list: Optional[Sequence[str]] = None) -> List[Filament]:
+    """name: bambu | bambu-matte | bambu-basic | db (open database, optionally limited to brand_list)."""
+    if name == "db":
+        return db_catalogue(brand_list)
     if name not in SETS:
-        raise KeyError(f"unknown filament set {name}; have {', '.join(SETS)}")
+        raise KeyError(f"unknown filament set {name}; have {', '.join(list(SETS) + ['db'])}")
     return SETS[name]
 
 
-NEUTRAL_NAMES = ["Matte Charcoal", "Basic Dark Gray", "Matte Nardo Gray", "Basic Gray", "Matte Ash Gray",
-                 "Basic Silver", "Basic Light Gray", "Matte Bone White", "Matte Ivory White"]
-
-
-def background_candidates(name: str = "neutral") -> List[Filament]:
-    """Filaments allowed as background inserts. 'neutral' = greys from black to white;
-    'all' = the whole Bambu catalogue (slower, more colourful backgrounds)."""
+def background_candidates(name: str, pool: Optional[Sequence[Filament]] = None) -> List[Filament]:
+    """Filaments allowed as background inserts. 'all' = the whole pool; 'neutral' = the near-greys in it
+    (black through white), which plan faster."""
+    pool = list(pool) if pool is not None else catalogue("bambu")
     if name == "all":
-        return catalogue("bambu")
-    by_name = {f.name: f for f in catalogue("bambu")}
-    return [by_name[n] for n in NEUTRAL_NAMES if n in by_name]
+        return pool
+    lab = _lab([f.hex for f in pool])
+    chroma = (lab[:, 1] ** 2 + lab[:, 2] ** 2) ** 0.5
+    neutral = [f for f, c in zip(pool, chroma) if c < 12]
+    return neutral or pool
 
 
 def parse_spools(text: str) -> List[Filament]:

@@ -42,7 +42,8 @@ class Params:
     line_coherence: float = 34.0           # max colour spread (CIELAB) of a feature to count as a line, not texture
     # colours
     palette: List[str] = field(default_factory=list)   # filaments you own ("Name=#hex"); empty -> pick from filament_set
-    filament_set: str = "bambu"            # purchasable catalogue to pick from: bambu | bambu-matte | bambu-basic
+    filament_set: str = "bambu"            # catalogue to pick from: bambu | bambu-matte | bambu-basic | db (open database)
+    brands: List[str] = field(default_factory=list)   # filament_set "db": limit to these brands (empty = all)
     max_colors: int = 8
     dither: bool = False
     dither_strength: float = 0.3           # share of each cell's colour error passed to its neighbours
@@ -151,13 +152,13 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
             bgs = match.choose_backgrounds(grid, palette, palette, usable, cov0, n_bg)
             strips = match.choose_filaments_multi(grid, palette, bgs, usable, cov0, params.max_colors)
         else:
-            cand = filaments.catalogue(params.filament_set)
+            cand = filaments.catalogue(params.filament_set, params.brands or None)
             if params.max_backgrounds <= 1:
                 bgs = [bgf]
                 strips = match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
             else:
                 strips = match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
-                bgs = match.choose_backgrounds(grid, filaments.background_candidates(params.background_set),
+                bgs = match.choose_backgrounds(grid, filaments.background_candidates(params.background_set, cand),
                                                strips, usable, cov0, params.max_backgrounds)
                 strips = match.choose_filaments_multi(grid, cand, bgs, usable, cov0, params.max_colors)
         sub = match.choose_pattern_subset_multi(grid, bgs, strips, usable, cov0, params.max_patterns) \

@@ -47,8 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--palette", nargs="*", default=[], help='filaments you own: "name=#RRGGBB" ... (empty = auto)')
     i.add_argument("--palette-file", help="file listing the spools you own (one 'Name,#RRGGBB' per line, CSV ok); strips and backgrounds then use only these")
     i.add_argument("--max-colors", type=int, default=8)
-    i.add_argument("--filament-set", choices=["bambu", "bambu-matte", "bambu-basic"], default="bambu",
-                   help="purchasable catalogue to pick colours from when --palette is not given")
+    i.add_argument("--filament-set", choices=["bambu", "bambu-matte", "bambu-basic", "db"], default="bambu",
+                   help="catalogue to pick colours from when no spool list is given; db = PLA from 56 brands (SpoolmanDB)")
+    i.add_argument("--brands", default="", help='with --filament-set db: comma-separated brands, e.g. "Polymaker,eSun" (empty = all)')
+    i.add_argument("--list-brands", action="store_true", help="print the brands in the open database and exit")
     i.add_argument("--no-enhance", action="store_true", help="skip autocontrast/saturation boost")
     i.add_argument("--dither", action="store_true")
     i.add_argument("--color-layer", choices=["pattern", "background", "both"], default="pattern",
@@ -88,6 +90,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> int:
     ap = build_parser()
     a = ap.parse_args(argv)
+    if a.list_brands:
+        from .filaments import brands
+        for b in brands():
+            print(f"{b['name']:24s} {b['colours']:4d} PLA colours")
+        return 0
     if a.list_patterns:
         from .inserts import catalogue
         for pid, info in catalogue().items():
@@ -103,7 +110,7 @@ def main(argv=None) -> int:
     params = Params(pitch=a.pitch, mitsuke=a.mitsuke, border=a.border, orientation=a.orientation,
                     width_mm=a.width_mm, height_mm=a.height_mm, cols=a.cols, rows=a.rows,
                     max_cells=a.max_cells, measure=a.measure, fit=a.fit, crop=([float(v) for v in a.crop.split(',')] if a.crop else None), sampling=a.sampling, smooth_mm=a.smooth_mm, line_boost=a.line_boost, line_coherence=a.line_coherence, palette=palette,
-                    max_colors=a.max_colors, filament_set=a.filament_set, dither=a.dither, enhance=not a.no_enhance, color_layer=a.color_layer,
+                    max_colors=a.max_colors, filament_set=a.filament_set, brands=[b.strip() for b in a.brands.split(',') if b.strip()], dither=a.dither, enhance=not a.no_enhance, color_layer=a.color_layer,
                     background_color=a.background_color, max_backgrounds=a.max_backgrounds, background_set=a.background_set, sharpen=a.sharpen, pattern_color=a.pattern_color, frame_color=a.frame_color,
                     pattern_mode=a.pattern_mode, max_patterns=a.max_patterns, min_hole_mm=a.min_hole, color_pattern_map=json.loads(a.color_pattern_map),
                     edge_halves=a.edge_halves, skip_background_matches=a.skip_background_matches,

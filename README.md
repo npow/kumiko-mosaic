@@ -51,9 +51,16 @@ Strips are 2 mm wide and every opening is at least 2.5 mm, so the inserts stay o
 
 ## Colours
 
-The planner picks eight filaments for the line inserts and three for the backgrounds from the 55 Bambu
-Lab PLA Matte and Basic colours, whichever fit the image best. To use spools you already have, list them
-instead.
+The planner picks eight filaments for the line inserts and three for the backgrounds, whichever fit the
+image best. The default source is the 55 Bambu Lab PLA Matte and Basic colours shown below. You can also
+choose from an open database of PLA colours from 55 brands (Polymaker, eSun, Prusament, Sunlu, Elegoo,
+Overture, Hatchbox and more), limited to the brands you buy:
+
+```bash
+python -m kumiko_mosaic.cli photo.jpg out/ --filament-set db --brands "Polymaker,eSun"
+```
+
+Or list the spools you already own and every colour in the plan will come from them.
 
 ![Filaments](docs/img/filaments.png)
 
