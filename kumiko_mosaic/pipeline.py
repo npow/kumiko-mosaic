@@ -9,6 +9,8 @@ from typing import Dict, List, Optional
 from PIL import Image
 
 from . import bom as bom_mod
+import numpy as np
+
 from . import filaments, geometry, inserts, match, render
 from .grid import FrameSpec, build_grid, size_grid
 from .imagemap import Filament, assign_colors, fit_image, parse_palette, sample_cells
@@ -43,7 +45,10 @@ class Params:
     max_colors: int = 8
     dither: bool = False
     color_layer: str = "pattern"           # pattern (coloured strips over one background, default) | background | both
-    background_color: str = "Matte Charcoal=#000000"
+    background_color: str = "Matte Charcoal=#000000"   # used when max_backgrounds == 1
+    max_backgrounds: int = 3               # auto mode: background filaments chosen per panel (1 = single colour)
+    background_set: str = "neutral"        # neutral (black..white greys) | all
+    sharpen: float = 0.0                   # unsharp mask percent before smoothing (0 = off)
     pattern_color: str = "Matte Latte Brown=#D3B7A7"
     frame_color: str = "#1A1A1A"            # frame filament; dark bars keep the picture legible (Paper View latte = #D2AC86)
     # patterns
@@ -96,20 +101,38 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
     if params.pattern_mode.startswith("auto") and params.color_layer == "pattern":
         ladder = [x.strip() for x in params.pattern_mode.split(":", 1)[1].split(",")] \
             if ":" in params.pattern_mode else match.DEFAULT_LADDER
-        if palette is None:
-            usable = match.usable_ladder(grid, ladder, params.strip_mm, params.min_hole_mm)
-            cov0 = match.coverage_table(grid, usable, params.strip_mm, params.clearance)
-            palette = match.choose_filaments(grid, filaments.catalogue(params.filament_set), bgf.rgb, usable,
-                                             cov0, params.max_colors)
-        if params.sampling == "vote":
-            coverage = match.assign_strips_vote(grid, palette, bgf.hex, ladder, params.strip_mm, fitted, ppm,
-                                                params.clearance, max_patterns=params.max_patterns,
-                                                min_hole_mm=params.min_hole_mm, smooth_mm=params.smooth_mm,
-                                                line_boost=params.line_boost)
+        usable = match.usable_ladder(grid, ladder, params.strip_mm, params.min_hole_mm)
+        if not usable:
+            raise ValueError("no pattern in the ladder is printable at this pitch/strip width")
+        cov0 = match.coverage_table(grid, usable, params.strip_mm, params.clearance)
+        cand = filaments.catalogue(params.filament_set)
+        if params.max_backgrounds <= 1:
+            bgs = [bgf]
+            strips = palette or match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
         else:
-            coverage = match.assign_strips(grid, palette, bgf.hex, ladder, params.strip_mm, params.clearance,
-                                           dither=params.dither, max_patterns=params.max_patterns,
-                                           min_hole_mm=params.min_hole_mm)
+            bg_cands = filaments.background_candidates(params.background_set)
+            strips = palette or match.choose_filaments(grid, cand, bgf.rgb, usable, cov0, params.max_colors)
+            bgs = match.choose_backgrounds(grid, bg_cands, strips, usable, cov0, params.max_backgrounds)
+            if palette is None:
+                strips = match.choose_filaments_multi(grid, cand, bgs, usable, cov0, params.max_colors)
+        sub = match.choose_pattern_subset_multi(grid, bgs, strips, usable, cov0, params.max_patterns) \
+            if params.max_patterns else usable
+        coverage = {k: cov0[k] for k in sub}
+        options = match.build_options(bgs, strips, sub, coverage)
+        if params.sampling == "vote":
+            match.assign_options_vote(grid, options, fitted, smooth_mm=params.smooth_mm,
+                                      line_boost=params.line_boost, line_coherence=params.line_coherence,
+                                      sharpen=params.sharpen)
+        else:
+            opt_lab = match.rgb_to_lab(np.array([o[3] for o in options]))
+            for c in grid.cells:
+                i = int(((opt_lab - match.rgb_to_lab(np.asarray(c.rgb_mean, dtype=float))) ** 2).sum(1).argmin())
+                b, f, pid, _ = options[i]
+                c.bg_color, c.bg_name = b.hex, b.name
+                if f is None:
+                    c.color, c.color_name, c.pattern = b.hex, "background", None
+                else:
+                    c.color, c.color_name, c.pattern = f.hex, f.name, pid
         if params.edge_halves == "background":
             for c in grid.half_cells():
                 c.pattern = None
@@ -117,12 +140,16 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
         for c in grid.cells:
             if c.pattern:
                 usage[c.color] = usage.get(c.color, 0) + 1
-        used = sorted([f for f in palette if f.hex in usage], key=lambda f: -usage[f.hex])
+        used = sorted([f for f in strips if f.hex in usage], key=lambda f: -usage[f.hex])
+        palette_used_bg = bgs
+        score = match.fidelity_score(grid, fitted, coverage)
     else:
         if params.pattern_mode.startswith("auto"):
             params.pattern_mode = "single:y"
         used = assign_colors(grid, palette, params.max_colors, params.dither)
         assign_patterns(grid, params.pattern_mode, params.color_pattern_map, params.edge_halves)
+        palette_used_bg = [bgf]
+        score = None
     if params.skip_background_matches and params.color_layer == "pattern":
         for c in grid.cells:
             if c.color and c.color.upper() == bgf.hex.upper():
@@ -189,6 +216,8 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
         "image": {"source": str(image_path), "fit": params.fit, "aspect": round(aspect, 4),
                   "lattice_aspect": round(grid.lattice_width / grid.lattice_height, 4)},
         "palette_used": [{"name": f.name, "hex": f.hex} for f in used],
+        "backgrounds_used": [{"name": f.name, "hex": f.hex} for f in palette_used_bg],
+        "fidelity": score,
         "filament_set": params.filament_set if not params.palette else "user",
         "color_plan": asdict(plan),
         "pattern_mode": params.pattern_mode,
@@ -237,6 +266,11 @@ def report_markdown(s: dict) -> str:
     L.append(f"Inserts: opening {ig['opening_tip_to_tip_mm']} mm tip to tip, clearance {ig['clearance_mm']} mm per edge, "
              f"strips {ig['strip_mm']} mm, depth {ig['insert_depth_mm']} mm; backgrounds {ig['background_thickness_mm']} mm thick. "
              "Print one of each first and adjust clearance before committing.\n")
+    if s.get("fidelity"):
+        fs = s["fidelity"]
+        L.append(f"Fidelity (viewing-distance CIELAB error, lower is better): mean {fs['mean_dE']}, p90 {fs['p90_dE']}; "
+                 f"lightness spread plan {fs['L_std_plan']} vs source {fs['L_std_source']}.")
+    L.append("Backgrounds: " + ", ".join(f"{b['name']} {b['hex']}" for b in s["backgrounds_used"]) + "\n")
     L.append("## Patterns used\n")
     for v in s["patterns_used"]:
         flag = "" if v.get("ok") else "  **CHECK: not a single connected piece touching all three edges**"

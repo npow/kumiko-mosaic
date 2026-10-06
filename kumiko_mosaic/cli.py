@@ -51,7 +51,10 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--dither", action="store_true")
     i.add_argument("--color-layer", choices=["pattern", "background", "both"], default="pattern",
                    help="pattern (default): coloured kumiko strips over one background colour, density matched to the image; background: flat tiles carry the image")
-    i.add_argument("--background-color", default="Matte Charcoal=#000000")
+    i.add_argument("--background-color", default="Matte Charcoal=#000000", help="background filament when --max-backgrounds 1")
+    i.add_argument("--max-backgrounds", type=int, default=3, help="background filaments chosen per panel (1 = single colour)")
+    i.add_argument("--background-set", choices=["neutral", "all"], default="neutral")
+    i.add_argument("--sharpen", type=float, default=0.0, help="unsharp mask percent before smoothing (e.g. 150)")
     i.add_argument("--pattern-color", default="Matte Latte Brown=#D3B7A7")
     i.add_argument("--frame-color", default="#1A1A1A", help="frame filament colour; dark bars keep the image legible (Paper View latte = #D2AC86)")
     p = ap.add_argument_group("patterns")
@@ -93,7 +96,7 @@ def main(argv=None) -> int:
                     width_mm=a.width_mm, height_mm=a.height_mm, cols=a.cols, rows=a.rows,
                     max_cells=a.max_cells, measure=a.measure, fit=a.fit, sampling=a.sampling, smooth_mm=a.smooth_mm, line_boost=a.line_boost, line_coherence=a.line_coherence, palette=a.palette,
                     max_colors=a.max_colors, filament_set=a.filament_set, dither=a.dither, enhance=not a.no_enhance, color_layer=a.color_layer,
-                    background_color=a.background_color, pattern_color=a.pattern_color, frame_color=a.frame_color,
+                    background_color=a.background_color, max_backgrounds=a.max_backgrounds, background_set=a.background_set, sharpen=a.sharpen, pattern_color=a.pattern_color, frame_color=a.frame_color,
                     pattern_mode=a.pattern_mode, max_patterns=a.max_patterns, min_hole_mm=a.min_hole, color_pattern_map=json.loads(a.color_pattern_map),
                     edge_halves=a.edge_halves, skip_background_matches=a.skip_background_matches,
                     strip_mm=a.strip, insert_depth=a.insert_depth, clearance=a.clearance,
@@ -107,6 +110,9 @@ def main(argv=None) -> int:
     c = s["counts"]
     print(f"Cells {c['cells']}  pattern inserts {c['pattern_inserts']} ({c['distinct_patterns']} patterns, "
           f"{c['distinct_parts']} distinct parts)  background inserts {c['background_inserts']}  plates {c['plates']}")
+    if s.get("fidelity"):
+        print(f"Fidelity mean dE {s['fidelity']['mean_dE']} (p90 {s['fidelity']['p90_dE']}); backgrounds: "
+              + ", ".join(b["name"] for b in s["backgrounds_used"]))
     for name, e in s["material_estimate_g"].items():
         print(f"  {name:12s} {e['color']}  pattern {e['pattern_inserts']:4d}  bg {e['background_inserts']:4d}  ~{e['grams']} g")
     for v in s["patterns_used"]:

@@ -69,8 +69,10 @@ class Cell:
     poly: List[tuple]
     half: Optional[HalfKind] = None
     side: Optional[str] = None     # "top" / "bottom" for half cells
-    color: Optional[str] = None
+    color: Optional[str] = None       # strip (pattern insert) filament
     color_name: Optional[str] = None
+    bg_color: Optional[str] = None    # background insert filament for this cell (None = panel default)
+    bg_name: Optional[str] = None
     pattern: Optional[str] = None  # insert pattern id, None = background only
     rotation: int = 0              # extra pattern rotation in the cell (0/120/240), reserved
     rgb_mean: Optional[tuple] = None

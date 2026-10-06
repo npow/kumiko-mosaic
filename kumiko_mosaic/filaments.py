@@ -37,3 +37,16 @@ def catalogue(name: str = "bambu") -> List[Filament]:
     if name not in SETS:
         raise KeyError(f"unknown filament set {name}; have {', '.join(SETS)}")
     return SETS[name]
+
+
+NEUTRAL_NAMES = ["Matte Charcoal", "Basic Dark Gray", "Matte Nardo Gray", "Basic Gray", "Matte Ash Gray",
+                 "Basic Silver", "Basic Light Gray", "Matte Bone White", "Matte Ivory White"]
+
+
+def background_candidates(name: str = "neutral") -> List[Filament]:
+    """Filaments allowed as background inserts. 'neutral' = greys from black to white;
+    'all' = the whole Bambu catalogue (slower, more colourful backgrounds)."""
+    if name == "all":
+        return catalogue("bambu")
+    by_name = {f.name: f for f in catalogue("bambu")}
+    return [by_name[n] for n in NEUTRAL_NAMES if n in by_name]

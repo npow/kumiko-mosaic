@@ -44,7 +44,9 @@ for img in sorted(SAMPLES.glob("*")):
         g = s["grid"]
         rows.append({"variant": vname, "img": f"{name}_{vname}.jpg", "grid": g["triangle_generator"],
                      "outer": g["outer_mm"], "cells": s["counts"]["cells"],
-                     "inserts": s["counts"]["pattern_inserts"], "palette": [p["hex"] for p in s["palette_used"]]})
+                     "inserts": s["counts"]["pattern_inserts"], "palette": [p["hex"] for p in s["palette_used"]],
+                     "backgrounds": [b["hex"] for b in s.get("backgrounds_used", [])],
+                     "fidelity": (s.get("fidelity") or {}).get("mean_dE")})
         print(name, vname, g["triangle_generator"], g["outer_mm"])
     cards.append({"name": name, "source": src.name, "rows": rows})
 
@@ -59,8 +61,10 @@ for c in cards:
     html.append(f"<div class='card'><h2>{c['name']}</h2>")
     for r in c["rows"]:
         pal = "".join(f"<span class='sw' style='background:{h}'></span>" for h in r["palette"])
+        bgp = "".join(f"<span class='sw' style='background:{h};border-radius:50%'></span>" for h in r.get("backgrounds", []))
+        fid = f", fidelity error {r['fidelity']}" if r.get("fidelity") is not None else ""
         html.append(f"<h3 style='font-size:14px'>{r['variant']}: {r['grid'][0]} x {r['grid'][1]}, "
-                    f"{r['outer'][0]} x {r['outer'][1]} mm, {r['cells']} cells, {r['inserts']} pattern inserts {pal}</h3>"
+                    f"{r['outer'][0]} x {r['outer'][1]} mm, {r['cells']} cells, {r['inserts']} pattern inserts{fid} &nbsp; strips {pal} &nbsp; backgrounds {bgp}</h3>"
                     f"<div class='row'><img src='{c['source']}'><img src='{r['img']}'></div>")
     html.append("</div>")
 html.append("</body></html>")

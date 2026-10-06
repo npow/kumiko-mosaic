@@ -92,9 +92,18 @@ counts and grams so you can trade off.
 
 ### Colour (how the image is reproduced)
 
-The **kumiko strips carry the colour** over one background filament (black), and the tone
-comes from strip density. The achievable colours are every (filament, pattern) pair: coverage x
-filament + (1 - coverage) x background, mixed in linear light.
+The **kumiko strips carry the colour** and the **background insert behind each cell** sets the
+base tone. By default 3 background filaments are chosen per panel from the greys (black to
+white, `--max-backgrounds 3`, `--background-set neutral|all`) together with 8 strip filaments.
+With black behind everything the panel could never be brighter than mid-grey (lines cover at
+most ~half a cell); a white or grey background behind bright cells restores the full range.
+The achievable cell colours are every (background, strip filament, pattern) triple:
+coverage x strip + (1 - coverage) x background, mixed in linear light.
+
+Every run reports a **fidelity score**: the plan and the source are both blurred to roughly
+one pitch (what the eye sees from a few metres) and compared in CIELAB; lower is better.
+On the gallery images, 3 backgrounds vs 1 cut the error by 15-40% (Golden Gate 15.0 -> 9.4).
+An unsharp-mask option (`--sharpen`) exists but made every sample worse, so it is off.
 
 Default assignment is **region voting** (`--sampling vote`, after Kopf & Lischinski's pixel-art
 abstraction): the image is smoothed with an edge-preserving median filter (`--smooth-mm 10`) to

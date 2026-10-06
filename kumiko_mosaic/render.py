@@ -30,7 +30,7 @@ def cell_colors(cell, color_layer: str, background_color: str, pattern_color: st
         return cell.color, (pattern_color if cell.pattern else None)
     if color_layer == "both":
         return cell.color, (_shade(cell.color, 0.8) if cell.pattern else None)
-    return background_color, (cell.color if cell.pattern else None)
+    return (cell.bg_color or background_color), (cell.color if cell.pattern else None)
 
 
 def _cell_transform(cell, grid: Grid):
@@ -260,9 +260,17 @@ def assembly_codes(grid: Grid):
         if c.pattern and (c.color, c.color_name) not in cols:
             cols.append((c.color, c.color_name))
     cmap = {hx: str(i + 1) for i, (hx, _) in enumerate(cols)}
+    # background filaments: lowercase letter suffix, omitted for the most common one
+    bgs: Dict[str, int] = {}
+    for c in grid.cells:
+        if c.bg_color:
+            bgs[c.bg_color] = bgs.get(c.bg_color, 0) + 1
+    bg_order = sorted(bgs, key=lambda h: -bgs[h])
+    bg_suffix = {h: ("" if i == 0 else "abcdefgh"[i - 1]) for i, h in enumerate(bg_order)}
     codes = {}
     for c in grid.cells:
-        codes[(c.col, c.row)] = f"{pmap[c.pattern]}{cmap[c.color]}" if c.pattern else "-"
+        base = f"{pmap[c.pattern]}{cmap[c.color]}" if c.pattern else "-"
+        codes[(c.col, c.row)] = base + (bg_suffix.get(c.bg_color, "") if c.bg_color else "")
     return pmap, cols, codes
 
 
@@ -327,6 +335,21 @@ def assembly_sheet(grid: Grid, *, color_layer: str, background_color: str, patte
     bg_label = background_color if color_layer == "pattern" else "cell colour"
     d.text((120, y + 20), f"'-' = no pattern insert (background {bg_label} only). Every cell also gets a background insert.",
            fill="black", font=f_s)
+    bgs = {}
+    for c in grid.cells:
+        if c.bg_color:
+            bgs.setdefault(c.bg_color, [c.bg_name or c.bg_color, 0])
+            bgs[c.bg_color][1] += 1
+    if len(bgs) > 1:
+        y += 70
+        d.text((120, y), "Background filaments (suffix letter; none = the most common)", fill="black", font=f_m)
+        y += 60
+        order = sorted(bgs, key=lambda h: -bgs[h][1])
+        for i, hx in enumerate(order):
+            d.rectangle([120, y, 220, y + 50], fill=hex_to_rgb(hx), outline="black")
+            suf = "(no suffix)" if i == 0 else f"suffix '{'abcdefgh'[i-1]}'"
+            d.text((250, y + 4), f"{suf}  =  {bgs[hx][0]}  {hx}  x{bgs[hx][1]}", fill="black", font=f_s)
+            y += 60
     # overview thumbnail
     ov = png_preview(grid, color_layer=color_layer, background_color=background_color, pattern_color=pattern_color,
                      frame_color=frame_color, labels=False, px_per_mm=1.5)
@@ -377,9 +400,19 @@ def assembly_sheet(grid: Grid, *, color_layer: str, background_color: str, patte
 def assembly_pick_list(grid: Grid) -> str:
     """Text pick list: one line per column, codes top to bottom, plus totals per code."""
     pmap, cols, codes = assembly_codes(grid)
-    lines = ["Codes: letter = pattern, digit = filament, '-' = background only.",
+    bgs = {}
+    for c in grid.cells:
+        if c.bg_color:
+            bgs.setdefault(c.bg_color, [c.bg_name or c.bg_color, 0])
+            bgs[c.bg_color][1] += 1
+    order = sorted(bgs, key=lambda h: -bgs[h][1])
+    lines = ["Codes: letter = pattern, digit = strip filament, '-' = background only"
+             + ("; lowercase suffix = background filament (none = " + bgs[order[0]][0] + ")" if len(order) > 1 else "") + ".",
              "Patterns: " + ", ".join(f"{v}={k}" for k, v in pmap.items()),
-             "Filaments: " + ", ".join(f"{i+1}={n} {hx}" for i, (hx, n) in enumerate(cols)), ""]
+             "Filaments: " + ", ".join(f"{i+1}={n} {hx}" for i, (hx, n) in enumerate(cols))]
+    if len(order) > 1:
+        lines.append("Backgrounds: " + ", ".join(f"{'abcdefgh'[i-1] if i else '(none)'}={bgs[h][0]} {h}" for i, h in enumerate(order)))
+    lines.append("")
     by_col: Dict[int, list] = {}
     for c in grid.cells:
         by_col.setdefault(c.col, []).append(c)

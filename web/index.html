@@ -63,7 +63,9 @@ marine blue=#1F4E9A
   <div class="row">
    <div><label>Colour carried by</label><select name="color_layer"><option value="pattern">kumiko strips (density matched)</option><option value="background">flat background tiles</option><option value="both">both</option></select></div>
    <div><label>Dither</label><select name="dither"><option value="false">no</option><option value="true">yes</option></select></div>
-   <div><label>Background filament</label><input name="background_color" value="Matte Charcoal=#000000"></div>
+   <div><label>Background filaments per panel (1 = single)</label><input type="number" name="max_backgrounds" value="3" min="1" max="4"></div>
+   <div><label>Background filament (if 1)</label><input name="background_color" value="Matte Charcoal=#000000"></div>
+   <div><label>Sharpen (unsharp %, 0 off)</label><input type="number" name="sharpen" value="0" min="0" max="300" step="25"></div>
    <div><label>Pattern filament (if bg carries colour)</label><input name="pattern_color" value="Matte Latte Brown=#D3B7A7"></div>
    <div><label>Frame filament (dark = legible; latte #D2AC86)</label><input name="frame_color" value="#1A1A1A"></div>
   </div>
@@ -165,6 +167,7 @@ async function render(s){
   <tr><th>Lattice / outer size</th><td>${g.lattice_mm[0]} × ${g.lattice_mm[1]} mm / ≈ ${g.outer_mm[0]} × ${g.outer_mm[1]} mm</td></tr>
   <tr><th>Cells</th><td>${s.counts.full} full + ${s.counts.half} half; ${s.counts.pattern_inserts} pattern inserts (${s.counts.distinct_patterns} patterns, ${s.counts.distinct_parts} distinct parts), ${s.counts.background_inserts} background inserts, ${s.counts.plates} plates</td></tr>
   <tr><th>Inserts</th><td>opening ${s.insert_geometry.opening_tip_to_tip_mm} mm tip to tip, clearance ${s.insert_geometry.clearance_mm} mm, strips ${s.insert_geometry.strip_mm} mm, depth ${s.insert_geometry.insert_depth_mm} mm — print one first</td></tr>
+  <tr><th>Fidelity</th><td>${s.fidelity?`mean colour error ${s.fidelity.mean_dE} (p90 ${s.fidelity.p90_dE}); lightness spread ${s.fidelity.L_std_plan} vs source ${s.fidelity.L_std_source}`:'n/a'} — backgrounds: ${(s.backgrounds_used||[]).map(b=>`<i class="sw" style="background:${b.hex}"></i>${esc(b.name)}`).join(' ')}</td></tr>
   <tr><th>Patterns</th><td>${s.patterns_used.map(v=>`<code>${esc(v.id)}</code> ${esc(v.name)}${v.ok?'':' <b style="color:#f88">CHECK: loose parts</b>'}`).join(', ')}</td></tr></table>`;
  document.getElementById('compare').src=s.files.compare;
  document.getElementById('preview').innerHTML=await (await fetch(s.files.preview_svg)).text();

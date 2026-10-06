@@ -52,6 +52,8 @@ def build_bom(grid: Grid, plan: ColorPlan) -> Dict[PartKey, int]:
         # background insert: every cell has one
         if plan.color_layer in ("background", "both"):
             bg = PartKey("background", c.color, c.color_name, None, shp)
+        elif c.bg_color:
+            bg = PartKey("background", c.bg_color, c.bg_name or c.bg_color, None, shp)
         else:
             bg = PartKey("background", plan.background_color, plan.background_name, None, shp)
         bom[bg] = bom.get(bg, 0) + 1

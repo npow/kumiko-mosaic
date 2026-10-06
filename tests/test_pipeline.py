@@ -237,3 +237,17 @@ def test_vote_mode_crisp_regions(tmp_path):
     colours = {r["color"] for r in s["bom"] if r["layer"] == "pattern"}
     assert len(colours) == 2
     assert s["params"]["sampling"] == "vote"
+
+
+def test_multi_background_assignment(tmp_path, img):
+    s = run(str(img), str(tmp_path / "o8"), Params(cols=10, max_colors=3, max_patterns=2, max_backgrounds=2,
+                                                   export_3mf=False, export_stl=False))
+    assert len(s["backgrounds_used"]) == 2
+    bg_rows = [r for r in s["bom"] if r["layer"] == "background"]
+    assert len({r["color"] for r in bg_rows}) == 2            # both backgrounds actually used
+    # a second background must not make the match worse than a single black one
+    s1 = run(str(img), str(tmp_path / "o9"), Params(cols=10, max_colors=3, max_patterns=2, max_backgrounds=1,
+                                                    export_3mf=False, export_stl=False))
+    assert s["fidelity"]["mean_dE"] <= s1["fidelity"]["mean_dE"] + 1e-6
+    # the bright white region should get a light background
+    assert any(b["name"].endswith("White") or "Gray" in b["name"] for b in s["backgrounds_used"])

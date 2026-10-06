@@ -342,3 +342,208 @@ def assign_strips_vote(grid: Grid, palette: Sequence[Filament], bg_hex: str, lad
         else:
             c.color, c.color_name, c.pattern = f.hex, f.name, pid
     return cov
+
+
+# ---- multi-background options -------------------------------------------------------------------
+
+def build_options(bgs: Sequence[Filament], strips: Sequence[Filament], ladder: Sequence[str],
+                  cov: Dict[str, float]) -> List[tuple]:
+    """Every achievable cell colour: (bg, strip or None, pattern or None, rgb)."""
+    out = []
+    for b in bgs:
+        out.append((b, None, None, np.asarray(b.rgb, dtype=float)))
+        for f in strips:
+            if f.hex == b.hex:
+                continue
+            for pid in ladder:
+                out.append((b, f, pid, mixed_rgb(f.rgb, b.rgb, cov[pid])))
+    return out
+
+
+def _total_error(targets_lab, areas, opts):
+    lab = rgb_to_lab(np.array([o[3] for o in opts]))
+    d = np.sqrt(((targets_lab[:, None, :] - lab[None, :, :]) ** 2).sum(-1)).min(1)
+    return float((d * areas).sum())
+
+
+def choose_backgrounds(grid: Grid, candidates: Sequence[Filament], strips: Sequence[Filament],
+                       ladder: Sequence[str], cov: Dict[str, float], k: int) -> List[Filament]:
+    """Best subset of k background filaments given the strip filaments (brute force)."""
+    targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
+    areas = np.array([0.5 if c.is_half else 1.0 for c in grid.cells])
+    seen, pool = set(), []
+    for f in candidates:
+        if f.hex not in seen:
+            seen.add(f.hex)
+            pool.append(f)
+    k = min(k, len(pool))
+    best, best_err = list(pool[:k]), float("inf")
+    for sub in combinations(pool, k):
+        err = _total_error(targets, areas, build_options(sub, strips, ladder, cov))
+        if err < best_err:
+            best, best_err = list(sub), err
+    return best
+
+
+def choose_filaments_multi(grid: Grid, candidates: Sequence[Filament], bgs: Sequence[Filament],
+                           ladder: Sequence[str], cov: Dict[str, float], k: int) -> List[Filament]:
+    """Greedy strip-filament selection given a set of backgrounds."""
+    targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
+    areas = np.array([0.5 if c.is_half else 1.0 for c in grid.cells])
+    seen, pool = set(), []
+    for f in candidates:
+        if f.hex not in seen:
+            seen.add(f.hex)
+            pool.append(f)
+    # per-candidate best distance per cell (min over bgs x ladder), computed once
+    B = []
+    for f in pool:
+        lab = rgb_to_lab(np.array([mixed_rgb(f.rgb, b.rgb, cov[p]) for b in bgs for p in ladder if b.hex != f.hex] or [f.rgb]))
+        B.append(np.sqrt(((targets[:, None, :] - lab[None, :, :]) ** 2).sum(-1)).min(1))
+    B = np.array(B)
+    base = np.sqrt(((targets[:, None, :] - rgb_to_lab(np.array([b.rgb for b in bgs]))[None, :, :]) ** 2).sum(-1)).min(1)
+
+    def total(idx):
+        d = B[list(idx)].min(0) if idx else np.full(len(targets), np.inf)
+        return float((np.minimum(d, base) * areas).sum())
+
+    chosen: List[int] = []
+    while len(chosen) < min(k, len(pool)):
+        chosen.append(min((i for i in range(len(pool)) if i not in chosen), key=lambda i: total(chosen + [i])))
+    improved = True
+    while improved:
+        improved = False
+        for j in range(len(chosen)):
+            for i in range(len(pool)):
+                if i in chosen:
+                    continue
+                trial = chosen[:j] + [i] + chosen[j + 1:]
+                if total(trial) < total(chosen) - 1e-9:
+                    chosen, improved = trial, True
+    return [pool[i] for i in chosen]
+
+
+def choose_pattern_subset_multi(grid: Grid, bgs, strips, ladder, cov, max_patterns: int) -> List[str]:
+    if max_patterns >= len(ladder):
+        return list(ladder)
+    targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
+    areas = np.array([0.5 if c.is_half else 1.0 for c in grid.cells])
+
+    def total(sub):
+        return _total_error(targets, areas, build_options(bgs, strips, sub, cov))
+
+    chosen: List[str] = []
+    while len(chosen) < max_patterns:
+        chosen.append(min((p for p in ladder if p not in chosen), key=lambda p: total(chosen + [p])))
+    improved = True
+    while improved:
+        improved = False
+        for j in range(len(chosen)):
+            for p in ladder:
+                if p in chosen:
+                    continue
+                trial = chosen[:j] + [p] + chosen[j + 1:]
+                if total(trial) < total(chosen) - 1e-9:
+                    chosen, improved = trial, True
+    return sorted(chosen, key=lambda p: cov[p])
+
+
+def assign_options_vote(grid: Grid, options: List[tuple], fitted, smooth_mm: float = 10.0,
+                        line_boost: float = 4.0, line_min_delta: float = 22.0, line_coherence: float = 34.0,
+                        cleanup: bool = True, sharpen: float = 0.0) -> None:
+    """Region voting over an arbitrary option list (see assign_strips_vote for the method).
+    sharpen > 0 applies an unsharp mask (percent) before smoothing."""
+    from PIL import Image, ImageDraw, ImageFilter
+    opt_lab = rgb_to_lab(np.array([o[3] for o in options]))
+    W = max(1, int(round(grid.lattice_width)))
+    H = max(1, int(round(grid.lattice_height)))
+    base = fitted.convert("RGB").resize((W, H), Image.LANCZOS)
+    if sharpen > 0:
+        base = base.filter(ImageFilter.UnsharpMask(radius=max(2, int(smooth_mm)), percent=int(sharpen), threshold=3))
+    k = max(3, int(round(smooth_mm)) | 1)
+    img = base.filter(ImageFilter.MedianFilter(k))
+    lab = rgb_to_lab(np.asarray(img, dtype=np.float64).reshape(-1, 3)).reshape(H, W, 3)
+    raw = rgb_to_lab(np.asarray(base, dtype=np.float64).reshape(-1, 3)).reshape(H, W, 3)
+    labels: Dict[Tuple[int, int], int] = {}
+    hist: Dict[Tuple[int, int], np.ndarray] = {}
+    boosted: set = set()
+    for c in grid.cells:
+        xs = [p[0] for p in c.poly]
+        ys = [p[1] for p in c.poly]
+        x0, x1 = max(0, int(min(xs))), min(W, int(np.ceil(max(xs))) + 1)
+        y0, y1 = max(0, int(min(ys))), min(H, int(np.ceil(max(ys))) + 1)
+        mask = Image.new("L", (x1 - x0, y1 - y0), 0)
+        ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in c.poly], fill=255)
+        m = np.asarray(mask) > 0
+        pl = lab[y0:y1, x0:x1][m]
+        if len(pl) == 0:
+            cx, cy = c.centroid
+            pl = lab[min(H - 1, int(cy)), min(W - 1, int(cx))][None, :]
+        li = ((pl[:, None, :] - opt_lab[None, :, :]) ** 2).sum(-1).argmin(1)
+        h = np.bincount(li, minlength=len(options)).astype(float)
+        mode = int(h.argmax())
+        pr = raw[y0:y1, x0:x1][m]
+        if line_boost > 0 and len(pr) >= 16:
+            med = np.median(pr, axis=0)
+            far = np.sqrt(((pr - med) ** 2).sum(1)) > line_min_delta
+            f = far.mean()
+            if 0.03 < f < 0.45:
+                fl = pr[far]
+                spread = float(np.sqrt(((fl - fl.mean(0)) ** 2).sum(1)).mean())
+                if spread < line_coherence:
+                    w = min(1.0, f * line_boost)
+                    target = med + (fl.mean(0) - med) * w
+                    new = int(((opt_lab - target) ** 2).sum(1).argmin())
+                    if new != mode:
+                        boosted.add((c.col, c.row))
+                        mode = new
+        labels[(c.col, c.row)] = mode
+        hist[(c.col, c.row)] = h / h.sum()
+    if cleanup:
+        nb = _cell_neighbours(grid)
+        for key_, lbl in list(labels.items()):
+            if key_ in boosted:
+                continue
+            ns = [labels[n] for n in nb[key_]]
+            if not ns or lbl in ns:
+                continue
+            vals, counts = np.unique(ns, return_counts=True)
+            best = int(vals[counts.argmax()])
+            if counts.max() >= 2 and hist[key_][best] >= 0.2:
+                labels[key_] = best
+    for c in grid.cells:
+        b, f, pid, _ = options[labels[(c.col, c.row)]]
+        c.bg_color, c.bg_name = b.hex, b.name
+        if f is None:
+            c.color, c.color_name, c.pattern = b.hex, "background", None
+        else:
+            c.color, c.color_name, c.pattern = f.hex, f.name, pid
+
+
+def fidelity_score(grid: Grid, fitted, cov: Dict[str, float], view_blur_mm: Optional[float] = None) -> dict:
+    """How close the planned panel is to the image, as seen from a distance: render each
+    cell as its achieved average colour (bg + strips), blur both to ~one pitch, mean CIELAB
+    distance. Lower is better; ~10 is 'clearly the picture', >20 is muddy."""
+    from PIL import Image, ImageDraw, ImageFilter
+    W = max(1, int(round(grid.lattice_width)))
+    H = max(1, int(round(grid.lattice_height)))
+    plan = Image.new("RGB", (W, H), (0, 0, 0))
+    d = ImageDraw.Draw(plan)
+    for c in grid.cells:
+        bg = np.array([int(c.bg_color[i:i + 2], 16) for i in (1, 3, 5)], dtype=float) if c.bg_color else np.zeros(3)
+        if c.pattern and c.color:
+            st = np.array([int(c.color[i:i + 2], 16) for i in (1, 3, 5)], dtype=float)
+            rgb = mixed_rgb(st, bg, cov.get(c.pattern, 0.3))
+        else:
+            rgb = bg
+        d.polygon([(x, y) for x, y in c.poly], fill=tuple(int(v) for v in rgb))
+    src = fitted.convert("RGB").resize((W, H), Image.LANCZOS)
+    r = (view_blur_mm or grid.spec.pitch * 0.5) / 2.0
+    a = np.asarray(plan.filter(ImageFilter.GaussianBlur(r)), dtype=float)
+    b = np.asarray(src.filter(ImageFilter.GaussianBlur(r)), dtype=float)
+    dE = np.sqrt(((rgb_to_lab(a.reshape(-1, 3)) - rgb_to_lab(b.reshape(-1, 3))) ** 2).sum(1))
+    # contrast: std of L in the plan vs the source
+    La = rgb_to_lab(a.reshape(-1, 3))[:, 0]
+    Lb = rgb_to_lab(b.reshape(-1, 3))[:, 0]
+    return {"mean_dE": round(float(dE.mean()), 2), "p90_dE": round(float(np.percentile(dE, 90)), 2),
+            "L_std_plan": round(float(La.std()), 1), "L_std_source": round(float(Lb.std()), 1)}
