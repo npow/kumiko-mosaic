@@ -304,3 +304,16 @@ Mid Grey,#808080
     used = {r["color"] for r in s["bom"]}
     assert used <= allowed, used - allowed          # no colour outside the spools you listed, backgrounds included
     assert {b["hex"] for b in s["backgrounds_used"]} <= allowed
+
+
+def test_estimates_match_paperview_plates():
+    """The weight and time models reproduce Paper View's published slicer predictions for two of his
+    insert plates (plate '3+4': 9 g, 1462 s; plate '16+17': 5 g, 990 s) within 20%."""
+    from kumiko_mosaic import bom as b
+    area = {3: 290.0, 4: 314.0, 16: 150.0, 17: 150.0}                       # outline areas from the Kumiko Studio data
+    for pair, grams, secs in (((3, 4), 9, 1462), ((16, 17), 5, 990)):
+        a = sum(area[n] for n in pair)
+        g = a * 11.0 / 1000 * 1.24 * b.PATTERN_FILL
+        t = b.PLATE_SECONDS + b.SECONDS_PER_MM2 * a
+        assert abs(g - grams) / grams < 0.20, (pair, g)
+        assert abs(t - secs) / secs < 0.20, (pair, t)

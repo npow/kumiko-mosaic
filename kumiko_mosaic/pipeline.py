@@ -312,6 +312,7 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
                    "background_inserts": sum(q for k, q in bom.items() if k.layer == "background"),
                    "plates": len(plates)},
         "material_estimate_g": bom_mod.estimate_material(bom, volumes),
+        "print_time": bom_mod.estimate_print_time(plates, volumes, params.insert_depth),
         "plates": [{**r, "codes": c["codes"]} for r, c in zip(bom_mod.plate_summary(plates), render.plate_codes(grid, plates))],
         "plates_exported": exported,
         "failed_parts": sorted(set(failed)),
@@ -356,7 +357,13 @@ def report_markdown(s: dict) -> str:
     for v in s["patterns_used"]:
         flag = "" if v.get("ok") else "  **CHECK: not a single connected piece touching all three edges**"
         L.append(f"- `{v['id']}` {v['name']} ({v['source']}){' - ' + v['note'] if v.get('note') else ''}{flag}")
-    L.append(f"\n## Filament per colour (estimate, solid volume x 0.85 x 1.24 g/cm3). Colours picked from: {s['filament_set']}\n")
+    L.append(f"\n## Filament per colour and print time (estimates). Colours picked from: {s['filament_set']}\n")
+    pt = s.get("print_time")
+    if pt:
+        L.append(f"Pattern inserts take about **{pt['hours']} h** of printing in total ({pt['pattern_plates']} plates). "
+                 "Weights and this time come from a model fitted to Paper View's own slicer predictions for his insert plates "
+                 "(mean error 6% on weight, 8% on time, plates of one or two inserts). Background inserts use a rough fill factor "
+                 "and have no time estimate. Treat everything as plus or minus 20%.\n")
     L.append("| colour | hex | pattern inserts | background inserts | grams |\n|---|---|---|---|---|")
     for name, e in s["material_estimate_g"].items():
         L.append(f"| {name} | {e['color']} | {e['pattern_inserts']} | {e['background_inserts']} | {e['grams']} |")

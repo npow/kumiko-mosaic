@@ -261,18 +261,46 @@ def plate_summary(plates: List[Plate]) -> List[dict]:
     return rows
 
 
+# Calibrated on the 21 insert plates of Paper View's "All inserts and triangle" print profile (Bambu
+# Studio's own predictions for 0.2 mm layers, 11 mm tall inserts): plate weight = 1.044 x solid volume
+# (inserts print essentially solid), plate time = 545 s + 1.80 s per mm2 of insert outline (mean error 8%,
+# worst 18%). Those plates hold one or two inserts; a full plate of 50 may differ somewhat. Backgrounds
+# (2 mm, 0.1 mm layers, 30% infill) are not in that data, so their numbers are rough.
+PATTERN_FILL = 1.044
+BACKGROUND_FILL = 0.65
+PLATE_SECONDS = 545.0
+SECONDS_PER_MM2 = 1.80
+
+
 def estimate_material(bom: Dict[PartKey, int], volumes_mm3: Dict[str, float],
-                      density_g_cm3: float = 1.24, fill_factor: float = 0.85) -> Dict[str, dict]:
-    """Filament estimate per colour from part volumes (solid volume x fill factor x density)."""
+                      density_g_cm3: float = 1.24) -> Dict[str, dict]:
+    """Filament estimate per colour: part volume x fill factor x density."""
     out: Dict[str, dict] = {}
     for k, q in bom.items():
         e = out.setdefault(k.color_name, {"color": k.color, "pattern_inserts": 0, "background_inserts": 0, "grams": 0.0})
         vol = volumes_mm3.get(k.part_id, 0.0)
+        fill = PATTERN_FILL if k.layer == "pattern" else BACKGROUND_FILL
         if k.layer == "pattern":
             e["pattern_inserts"] += q
         else:
             e["background_inserts"] += q
-        e["grams"] += q * vol / 1000.0 * density_g_cm3 * fill_factor
+        e["grams"] += q * vol / 1000.0 * density_g_cm3 * fill
     for e in out.values():
         e["grams"] = round(e["grams"], 1)
     return out
+
+
+def estimate_print_time(plates: List["Plate"], volumes_mm3: Dict[str, float], insert_depth: float = 11.0) -> dict:
+    """Print time of the pattern-insert plates from the calibrated model above. Background plates are not
+    estimated (no data). Returns hours in total and per filament colour."""
+    per_colour: Dict[str, float] = {}
+    n = 0
+    for p in plates:
+        if p.layer != "pattern":
+            continue
+        area = sum(volumes_mm3.get(pl.part.part_id, 0.0) / insert_depth for pl in p.placements)
+        per_colour[p.color_name] = per_colour.get(p.color_name, 0.0) + PLATE_SECONDS + SECONDS_PER_MM2 * area
+        n += 1
+    return {"pattern_plates": n, "hours": round(sum(per_colour.values()) / 3600, 1),
+            "hours_by_colour": {k: round(v / 3600, 1) for k, v in per_colour.items()},
+            "note": "pattern-insert plates only; calibrated on Paper View's slicer predictions (8% mean error on plates of 1-2 inserts)"}
