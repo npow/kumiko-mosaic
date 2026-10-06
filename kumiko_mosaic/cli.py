@@ -76,7 +76,8 @@ def build_parser() -> argparse.ArgumentParser:
     pr = ap.add_argument_group("printing")
     pr.add_argument("--bed", type=float, nargs="+", default=[256.0], help="bed size mm: one value or X Y")
     pr.add_argument("--bed-margin", type=float, default=8.0)
-    pr.add_argument("--gap", type=float, default=3.0)
+    pr.add_argument("--gap", type=float, default=3.0, help="preferred gap between parts on a plate, mm")
+    pr.add_argument("--min-gap", type=float, default=1.5, help="smallest gap the packer may use to fit more parts per plate")
     pr.add_argument("--insert-library", help="folder of STL/3MF files that override generated parts")
     pr.add_argument("--no-stl", action="store_true")
     pr.add_argument("--no-3mf", action="store_true")
@@ -103,7 +104,7 @@ def main(argv=None) -> int:
                     edge_halves=a.edge_halves, skip_background_matches=a.skip_background_matches,
                     strip_mm=a.strip, insert_depth=a.insert_depth, clearance=a.clearance,
                     bg_thickness=a.bg_thickness, bed_x=bed[0], bed_y=bed[1], bed_margin=a.bed_margin,
-                    part_gap=a.gap, insert_library=a.insert_library, export_stl=not a.no_stl,
+                    part_gap=a.gap, min_part_gap=a.min_gap, insert_library=a.insert_library, export_stl=not a.no_stl,
                     export_3mf=not a.no_3mf, labels=a.labels)
     s = run(a.image, a.out_dir, params)
     g = s["grid"]

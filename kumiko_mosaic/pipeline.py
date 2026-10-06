@@ -69,7 +69,8 @@ class Params:
     bed_x: float = 256.0
     bed_y: float = 256.0
     bed_margin: float = 8.0
-    part_gap: float = 3.0
+    part_gap: float = 3.0                  # preferred gap between parts on a plate (mm)
+    min_part_gap: float = 1.5              # the packer may reduce the gap to this if it fits more parts
     insert_library: Optional[str] = None   # optional folder of STL/3MF overrides
     export_stl: bool = True
     export_3mf: bool = True
@@ -207,7 +208,7 @@ def run(image_path: str, out_dir: str, params: Params, progress=None) -> dict:
                            "background_inserts": sum(q for k, q in bom.items() if k.layer == "background"),
                            "distinct_patterns": len({c.pattern for c in grid.cells if c.pattern})},
                 "patterns_used": sorted({c.pattern for c in grid.cells if c.pattern})}
-    bed = bom_mod.BedSpec(params.bed_x, params.bed_y, params.bed_margin, params.part_gap)
+    bed = bom_mod.BedSpec(params.bed_x, params.bed_y, params.bed_margin, params.part_gap, params.min_part_gap)
     library = geometry.load_insert_library(params.insert_library)
     plates = bom_mod.plan_plates(bom, grid, bed, params.clearance,
                                  footprint=geometry.library_footprint(library))

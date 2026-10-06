@@ -132,7 +132,8 @@ class BedSpec:
     size_x: float = 256.0
     size_y: float = 256.0
     margin: float = 8.0      # keep inserts away from the plate edge (Paper View's advice)
-    gap: float = 3.0         # clearance between parts
+    gap: float = 3.0         # preferred clearance between parts
+    min_gap: float = 1.5     # the packer may squeeze the gap down to this to fit more parts per plate
 
     @property
     def usable_x(self) -> float:
@@ -152,6 +153,26 @@ def insert_dimensions(grid: Grid, clearance: float) -> dict:
             "height_mm": side * SQRT3 / 2}
 
 
+def plate_capacity(side: float, trih: float, bed: BedSpec, g: float) -> int:
+    """Full inserts that fit on one plate with gap g (alternating up/down triangles in strips)."""
+    advance = side / 2.0 + g * 2 / SQRT3
+    per_strip = max(1, int(math.floor((bed.usable_x - side) / advance + 1e-9)) + 1)
+    n_strips = max(1, int(math.floor((bed.usable_y + g) / (trih + g) + 1e-9)))
+    return per_strip * n_strips
+
+
+def best_gap(side: float, trih: float, bed: BedSpec) -> float:
+    """Largest gap in [min_gap, gap] that gives the highest plate capacity."""
+    best_g, best_c = bed.gap, plate_capacity(side, trih, bed, bed.gap)
+    g = bed.gap - 0.05
+    while g >= bed.min_gap - 1e-9:
+        c = plate_capacity(side, trih, bed, g)
+        if c > best_c:
+            best_g, best_c = round(g, 2), c
+        g -= 0.05
+    return best_g
+
+
 def plan_plates(bom: Dict[PartKey, int], grid: Grid, bed: BedSpec, clearance: float = 0.2,
                 sort_by_pattern: bool = True, footprint: Optional[Tuple[float, float]] = None) -> List[Plate]:
     """Greedy strip packing. Full triangles alternate up/down along a strip; half triangles are
@@ -161,7 +182,7 @@ def plan_plates(bom: Dict[PartKey, int], grid: Grid, bed: BedSpec, clearance: fl
     side, trih = dims["side_mm"], dims["height_mm"]
     if footprint is not None:  # measured from loaded insert meshes (side, height)
         side, trih = max(side, footprint[0]), max(trih, footprint[1])
-    g = bed.gap
+    g = best_gap(side, trih, bed)
     advance = side / 2.0 + g * 2 / SQRT3          # x advance between alternating triangles
     strip_h = trih + g
     n_strips = max(1, int(math.floor((bed.usable_y + g) / strip_h)))
