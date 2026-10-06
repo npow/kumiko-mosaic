@@ -224,7 +224,6 @@ kumiko_mosaic/bom.py        BOM, counts, plate packing, filament estimate
 kumiko_mosaic/geometry.py   background/pattern part meshes, insert library, 3MF/STL/SVG export
 kumiko_mosaic/render.py     previews with silhouettes, assembly maps
 kumiko_mosaic/pipeline.py   orchestration + REPORT.md;  cli.py, web.py, web/index.html
-research/                   source material the geometry was derived from
 ```
 
 Sources: Paper View's model and instructions (MakerWorld 1614814), kumikodesigner.com (the
