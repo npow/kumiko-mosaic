@@ -53,7 +53,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="pattern (default): coloured kumiko strips over one background colour, density matched to the image; background: flat tiles carry the image")
     i.add_argument("--background-color", default="Matte Charcoal=#000000", help="background filament when --max-backgrounds 1")
     i.add_argument("--max-backgrounds", type=int, default=3, help="background filaments chosen per panel (1 = single colour)")
-    i.add_argument("--background-set", choices=["neutral", "all"], default="neutral")
+    i.add_argument("--background-set", choices=["neutral", "all"], default="all",
+                   help="all: backgrounds may be any catalogue colour (default; saturated colours need it); neutral: greys only, faster")
     i.add_argument("--sharpen", type=float, default=0.0, help="unsharp mask percent before smoothing (e.g. 150)")
     i.add_argument("--pattern-color", default="Matte Latte Brown=#D3B7A7")
     i.add_argument("--frame-color", default="#1A1A1A", help="frame filament colour; dark bars keep the image legible (Paper View latte = #D2AC86)")

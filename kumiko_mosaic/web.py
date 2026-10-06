@@ -23,6 +23,9 @@ RUNS.mkdir(exist_ok=True)
 
 app = FastAPI(title="kumiko mosaic")
 app.mount("/runs", StaticFiles(directory=str(RUNS)), name="runs")
+for _mount, _dir in (("/catalog", ROOT / "examples" / "catalog"), ("/catalog-full", ROOT / "catalog")):
+    if _dir.is_dir():
+        app.mount(_mount, StaticFiles(directory=str(_dir), html=True), name=_mount.strip("/"))
 GALLERY = ROOT / "examples" / "gallery"
 if GALLERY.is_dir():
     app.mount("/gallery", StaticFiles(directory=str(GALLERY), html=True), name="gallery")

@@ -121,8 +121,10 @@ counts and grams so you can trade off.
 ### Colour (how the image is reproduced)
 
 The **kumiko strips carry the colour** and the **background insert behind each cell** sets the
-base tone. By default 3 background filaments are chosen per panel from the greys (black to
-white, `--max-backgrounds 3`, `--background-set neutral|all`) together with 8 strip filaments.
+base tone. By default 3 background filaments are chosen per panel from the **whole filament catalogue**
+(`--max-backgrounds 3`, `--background-set all`; `neutral` restricts them to greys and plans
+faster) together with 8 strip filaments. Letting backgrounds be any colour is what makes
+saturated subjects work: with greys only, a yellow taxi or a green frog comes out olive.
 With black behind everything the panel could never be brighter than mid-grey (lines cover at
 most ~half a cell); a white or grey background behind bright cells restores the full range.
 The achievable cell colours are every (background, strip filament, pattern) triple:

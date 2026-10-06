@@ -47,7 +47,7 @@ class Params:
     color_layer: str = "pattern"           # pattern (coloured strips over one background, default) | background | both
     background_color: str = "Matte Charcoal=#000000"   # used when max_backgrounds == 1
     max_backgrounds: int = 3               # auto mode: background filaments chosen per panel (1 = single colour)
-    background_set: str = "neutral"        # neutral (black..white greys) | all
+    background_set: str = "all"            # all (any catalogue colour; saturated colours need it) | neutral (greys only, faster)
     sharpen: float = 0.0                   # unsharp mask percent before smoothing (0 = off)
     pattern_color: str = "Matte Latte Brown=#D3B7A7"
     frame_color: str = "#1A1A1A"            # frame filament; dark bars keep the picture legible (Paper View latte = #D2AC86)
@@ -71,6 +71,7 @@ class Params:
     insert_library: Optional[str] = None   # optional folder of STL/3MF overrides
     export_stl: bool = True
     export_3mf: bool = True
+    preview_only: bool = False             # catalog mode: plan + preview + fidelity, skip plates and assembly files
     labels: bool = False                   # pattern ids on the preview
 
 
@@ -157,6 +158,19 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
 
     plan = bom_mod.ColorPlan(params.color_layer, bgf.hex, bgf.name, patf.hex, patf.name)
     bom = bom_mod.build_bom(grid, plan)
+    if params.preview_only:
+        kw = dict(color_layer=params.color_layer, background_color=bgf.hex, pattern_color=patf.hex,
+                  frame_color=params.frame_color, strip_mm=params.strip_mm)
+        ppm_preview = min(3.0, 3000.0 / max(grid.lattice_width, grid.lattice_height))
+        preview = render.png_preview(grid, labels=False, px_per_mm=ppm_preview, **kw)
+        render.compare_image(fitted, preview, height=560).save(out / "compare.jpg", quality=82)
+        return {"grid": grid.summary(), "fidelity": score, "palette_used": [{"name": f.name, "hex": f.hex} for f in used],
+                "backgrounds_used": [{"name": f.name, "hex": f.hex} for f in palette_used_bg],
+                "counts": {"cells": len(grid.cells), "full": grid.n_full, "half": grid.n_half,
+                           "pattern_inserts": sum(q for k, q in bom.items() if k.layer == "pattern"),
+                           "background_inserts": sum(q for k, q in bom.items() if k.layer == "background"),
+                           "distinct_patterns": len({c.pattern for c in grid.cells if c.pattern})},
+                "patterns_used": sorted({c.pattern for c in grid.cells if c.pattern})}
     bed = bom_mod.BedSpec(params.bed_x, params.bed_y, params.bed_margin, params.part_gap)
     library = geometry.load_insert_library(params.insert_library)
     plates = bom_mod.plan_plates(bom, grid, bed, params.clearance,

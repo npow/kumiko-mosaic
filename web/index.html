@@ -25,7 +25,7 @@
 </style></head>
 <body>
 <aside>
- <h1>Kumiko mosaic planner <a href="/gallery" style="font-size:12px;font-weight:normal;margin-left:8px">gallery</a></h1>
+ <h1>Kumiko mosaic planner <a href="/gallery" style="font-size:12px;font-weight:normal;margin-left:8px">gallery</a> <a href="/catalog/" style="font-size:12px;font-weight:normal;margin-left:8px">catalog</a></h1>
  <form id="f">
   <label>Image</label><input type="file" id="image" accept="image/*" required>
   <h2>Frame</h2>
@@ -64,6 +64,7 @@ marine blue=#1F4E9A
    <div><label>Colour carried by</label><select name="color_layer"><option value="pattern">kumiko strips (density matched)</option><option value="background">flat background tiles</option><option value="both">both</option></select></div>
    <div><label>Dither</label><select name="dither"><option value="false">no</option><option value="true">yes</option></select></div>
    <div><label>Background filaments per panel (1 = single)</label><input type="number" name="max_backgrounds" value="3" min="1" max="4"></div>
+   <div><label>Background colours from</label><select name="background_set"><option value="all">whole catalogue (saturated colours work)</option><option value="neutral">greys only (faster)</option></select></div>
    <div><label>Background filament (if 1)</label><input name="background_color" value="Matte Charcoal=#000000"></div>
    <div><label>Sharpen (unsharp %, 0 off)</label><input type="number" name="sharpen" value="0" min="0" max="300" step="25"></div>
    <div><label>Pattern filament (if bg carries colour)</label><input name="pattern_color" value="Matte Latte Brown=#D3B7A7"></div>
