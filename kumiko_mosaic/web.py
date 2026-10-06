@@ -23,6 +23,19 @@ RUNS.mkdir(exist_ok=True)
 
 app = FastAPI(title="kumiko mosaic")
 app.mount("/runs", StaticFiles(directory=str(RUNS)), name="runs")
+from fastapi.responses import Response  # noqa: E402
+
+
+@app.get("/catalog/v/{cid}.svg")
+def catalog_vector(cid: str):
+    """Vector plan stored gzipped (about 50 KB); the browser inflates it transparently."""
+    f = ROOT / "examples" / "catalog" / "v" / f"{Path(cid).name}.svgz"
+    if not f.exists():
+        raise HTTPException(404)
+    return Response(f.read_bytes(), media_type="image/svg+xml",
+                    headers={"Content-Encoding": "gzip", "Cache-Control": "public, max-age=3600"})
+
+
 for _mount, _dir in (("/catalog", ROOT / "examples" / "catalog"), ("/catalog-full", ROOT / "catalog")):
     if _dir.is_dir():
         app.mount(_mount, StaticFiles(directory=str(_dir), html=True), name=_mount.strip("/"))

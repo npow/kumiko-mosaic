@@ -428,3 +428,55 @@ def assembly_pick_list(grid: Grid) -> str:
         totals[code] = totals.get(code, 0) + 1
     lines += ["", "Totals: " + ", ".join(f"{k} x{v}" for k, v in sorted(totals.items()))]
     return "\n".join(lines) + "\n"
+
+
+# ---- compact, zoomable SVG ------------------------------------------------------------------------
+
+def svg_compact(grid: Grid, *, background_color: str = "#000000", frame_color: str = "#1A1A1A",
+                strip_mm: float = 2.0) -> str:
+    """Resolution-independent plan: one <path> per pattern in <defs>, one <use> with a transform per
+    cell, backgrounds merged into one path per colour, lattice bars as a single stroked path.
+    ~150 bytes per cell (a 60-column panel is under a megabyte; gzip makes it ~100 KB)."""
+    s = grid.spec
+    m = s.mitsuke
+    pad = s.border + m
+    Wl, Hl = grid.lattice_width, grid.lattice_height
+    f = lambda v: f"{v:.1f}".rstrip("0").rstrip(".") if abs(v) >= 0.05 else "0"  # noqa: E731
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{-pad:.1f} {-pad:.1f} {Wl + 2 * pad:.1f} {Hl + 2 * pad:.1f}">']
+    pats = sorted({c.pattern for c in grid.cells if c.pattern})
+    out.append("<defs>")
+    shapes = {}
+    for p in pats:
+        shapes[p] = inserts.canonical_polygon(p, s.inner_side, strip_mm)
+        out.append(f'<path id="{p}" fill-rule="evenodd" d="{inserts.polygon_to_svg_paths(shapes[p], nd=2)}"/>')
+    out.append("</defs>")
+    out.append(f'<rect x="{-pad:.1f}" y="{-pad:.1f}" width="{Wl + 2 * pad:.1f}" height="{Hl + 2 * pad:.1f}" fill="{frame_color}"/>')
+    # backgrounds, one path per colour
+    bgs = {}
+    for c in grid.cells:
+        d = "M" + "L".join(f"{f(x)},{f(y)}" for x, y in c.poly) + "Z"
+        bgs.setdefault(c.bg_color or background_color, []).append(d)
+    for col, ds in bgs.items():
+        out.append(f'<path fill="{col}" d="{"".join(ds)}"/>')
+    # strips: full cells via <use>, half cells as explicit clipped paths
+    by_col = {}
+    for c in grid.cells:
+        if c.pattern:
+            by_col.setdefault(c.color, []).append(c)
+    for col, cells in by_col.items():
+        out.append(f'<g fill="{col}">')
+        for c in cells:
+            a, b, d_, e, x0, y0 = _cell_transform(c, grid)
+            if not c.is_half:
+                out.append(f'<use href="#{c.pattern}" transform="matrix({f(a)} {f(d_)} {f(b)} {f(e)} {x0:.1f} {y0:.1f})"/>')
+            else:
+                shape = _half_mask(c, grid, affine_transform(shapes[c.pattern], [a, b, d_, e, x0, y0]))
+                dd = inserts.polygon_to_svg_paths(shape, nd=1)
+                if dd:
+                    out.append(f'<path fill-rule="evenodd" d="{dd}"/>')
+        out.append("</g>")
+    bars = "".join("M" + "L".join(f"{f(x)},{f(y)}" for x, y in c.poly) + "Z" for c in grid.cells)
+    out.append(f'<path fill="none" stroke="{frame_color}" stroke-width="{m}" stroke-linejoin="round" d="{bars}"/>')
+    out.append(f'<path fill="{frame_color}" fill-rule="evenodd" d="M{-pad:.1f},{-pad:.1f}H{Wl + pad:.1f}V{Hl + pad:.1f}H{-pad:.1f}ZM0,0H{Wl:.1f}V{Hl:.1f}H0Z"/>')
+    out.append("</svg>")
+    return "".join(out)

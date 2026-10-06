@@ -71,6 +71,7 @@ class Params:
     insert_library: Optional[str] = None   # optional folder of STL/3MF overrides
     export_stl: bool = True
     export_3mf: bool = True
+    write_svg: bool = False                # preview_only mode: also write plan.svg (compact, zoomable)
     preview_only: bool = False             # catalog mode: plan + preview + fidelity, skip plates and assembly files
     labels: bool = False                   # pattern ids on the preview
 
@@ -164,6 +165,9 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
         ppm_preview = min(3.0, 3000.0 / max(grid.lattice_width, grid.lattice_height))
         preview = render.png_preview(grid, labels=False, px_per_mm=ppm_preview, **kw)
         render.compare_image(fitted, preview, height=560).save(out / "compare.jpg", quality=82)
+        if params.write_svg:
+            (out / "plan.svg").write_text(render.svg_compact(grid, background_color=bgf.hex,
+                                                             frame_color=params.frame_color, strip_mm=params.strip_mm))
         return {"grid": grid.summary(), "fidelity": score, "palette_used": [{"name": f.name, "hex": f.hex} for f in used],
                 "backgrounds_used": [{"name": f.name, "hex": f.hex} for f in palette_used_bg],
                 "counts": {"cells": len(grid.cells), "full": grid.n_full, "half": grid.n_half,

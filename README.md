@@ -56,13 +56,23 @@ Source on the left, planned panel on the right, drawn with the real insert silho
 
 ## Catalog
 
-About 1,000 Wikimedia Commons images (public domain, CC0, CC BY, CC BY-SA, with author and licence
-recorded) planned at 60 columns: animals, flowers, mountains, sky, art, architecture, space,
-vehicles. The 120 best, chosen for colour, variety and fidelity, are in `examples/catalog/`
-(browse `examples/catalog/index.html`, or `/catalog` in the web app); median fidelity error across
-all 1,000 is 8.1, 90% are under 12.4. Rebuild with `python scripts/fetch_catalog.py`,
-`python scripts/build_catalog.py` (about two hours on 20 cores) and
-`python scripts/build_catalog_site.py`.
+![120 kumiko plans](examples/catalog_wall.jpg)
+
+About 1,000 Wikimedia Commons images (public domain, CC0, CC BY, CC BY-SA; author and licence recorded)
+planned at 60 columns: animals, flowers, mountains, sky, art, architecture, space, vehicles. The 120
+best, chosen for colour, variety and fidelity, are in `examples/catalog/`. Median fidelity error over
+all 1,000 is 8.1 and 90% are under 12.4.
+
+Run the web app and open `/catalog/`: a gap-free mosaic of the kumiko plans (justified rows, no
+captions), filterable by category and sortable by colour or fidelity. Hover a tile to see the original
+photo; click it to open a **vector zoom viewer** (wheel to zoom at the cursor, drag to pan,
+double-click to zoom in, pinch on touch, buttons for the original photo, fit, and the raw SVG). The
+plans are resolution independent SVGs of 50 KB each, so you can zoom until single line inserts fill the
+screen. Credits for every image: `examples/catalog/CREDITS.md`.
+
+Rebuild: `python scripts/fetch_catalog.py`, `python scripts/build_catalog.py` (about two hours on 20
+cores), `python scripts/build_catalog_tiles.py`, `python scripts/build_catalog_zoom.py`. All 1,000 plans
+are browsable locally at `/catalog-full/` (thumbnails only; vectors exist for the curated set).
 
 ## Install
 
