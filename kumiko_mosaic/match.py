@@ -366,9 +366,15 @@ def _total_error(targets_lab, areas, opts):
     return float((d * areas).sum())
 
 
+def _min_dist(targets_lab, labs):
+    return np.sqrt(((targets_lab[:, None, :] - labs[None, :, :]) ** 2).sum(-1)).min(1)
+
+
 def choose_backgrounds(grid: Grid, candidates: Sequence[Filament], strips: Sequence[Filament],
                        ladder: Sequence[str], cov: Dict[str, float], k: int) -> List[Filament]:
-    """Best subset of k background filaments given the strip filaments (brute force)."""
+    """Best subset of k background filaments given the strip filaments: exhaustive for a short
+    candidate list, greedy forward selection plus a swap pass for a long one. Each candidate's best
+    per-cell distance is computed once, so a trial subset is just an array minimum."""
     targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
     areas = np.array([0.5 if c.is_half else 1.0 for c in grid.cells])
     seen, pool = set(), []
@@ -377,34 +383,35 @@ def choose_backgrounds(grid: Grid, candidates: Sequence[Filament], strips: Seque
             seen.add(f.hex)
             pool.append(f)
     k = min(k, len(pool))
+    D = []
+    for bg in pool:
+        rgbs = [np.asarray(bg.rgb, dtype=float)] + [mixed_rgb(f.rgb, bg.rgb, cov[p])
+                                                    for f in strips if f.hex != bg.hex for p in ladder]
+        D.append(_min_dist(targets, rgb_to_lab(np.array(rgbs))))
+    D = np.array(D)                                   # (candidates, cells)
 
-    def total(sub):
-        return _total_error(targets, areas, build_options(sub, strips, ladder, cov))
+    def total(idx):
+        return float((D[list(idx)].min(0) * areas).sum())
 
     if len(pool) <= 12:
-        best, best_err = list(pool[:k]), float("inf")
-        for sub in combinations(pool, k):
-            err = total(sub)
-            if err < best_err:
-                best, best_err = list(sub), err
-        return best
-    # large candidate set (e.g. the whole catalogue): greedy forward selection + swap pass
-    chosen: List[Filament] = []
+        best = min(combinations(range(len(pool)), k), key=total)
+        return [pool[i] for i in best]
+    chosen: List[int] = []
     while len(chosen) < k:
-        chosen.append(min((f for f in pool if f not in chosen), key=lambda f: total(chosen + [f])))
+        chosen.append(min((i for i in range(len(pool)) if i not in chosen), key=lambda i: total(chosen + [i])))
     improved = True
     while improved:
         improved = False
         cur = total(chosen)
         for j in range(len(chosen)):
-            for f in pool:
-                if f in chosen:
+            for i in range(len(pool)):
+                if i in chosen:
                     continue
-                trial = chosen[:j] + [f] + chosen[j + 1:]
+                trial = chosen[:j] + [i] + chosen[j + 1:]
                 t = total(trial)
                 if t < cur - 1e-9:
                     chosen, cur, improved = trial, t, True
-    return chosen
+    return [pool[i] for i in chosen]
 
 
 def choose_filaments_multi(grid: Grid, candidates: Sequence[Filament], bgs: Sequence[Filament],
@@ -450,62 +457,93 @@ def choose_pattern_subset_multi(grid: Grid, bgs, strips, ladder, cov, max_patter
         return list(ladder)
     targets = rgb_to_lab(np.array([c.rgb_mean for c in grid.cells], dtype=float))
     areas = np.array([0.5 if c.is_half else 1.0 for c in grid.cells])
+    base = _min_dist(targets, rgb_to_lab(np.array([b.rgb for b in bgs], dtype=float)))   # background only
+    D = []
+    for pid in ladder:
+        rgbs = [mixed_rgb(f.rgb, b.rgb, cov[pid]) for b in bgs for f in strips if f.hex != b.hex]
+        D.append(_min_dist(targets, rgb_to_lab(np.array(rgbs))) if rgbs else np.full(len(targets), np.inf))
+    D = np.array(D)                                   # (patterns, cells)
 
-    def total(sub):
-        return _total_error(targets, areas, build_options(bgs, strips, sub, cov))
+    def total(idx):
+        d = np.minimum(base, D[list(idx)].min(0)) if idx else base
+        return float((d * areas).sum())
 
-    chosen: List[str] = []
+    chosen: List[int] = []
     while len(chosen) < max_patterns:
-        chosen.append(min((p for p in ladder if p not in chosen), key=lambda p: total(chosen + [p])))
+        chosen.append(min((i for i in range(len(ladder)) if i not in chosen), key=lambda i: total(chosen + [i])))
     improved = True
     while improved:
         improved = False
+        cur = total(chosen)
         for j in range(len(chosen)):
-            for p in ladder:
-                if p in chosen:
+            for i in range(len(ladder)):
+                if i in chosen:
                     continue
-                trial = chosen[:j] + [p] + chosen[j + 1:]
-                if total(trial) < total(chosen) - 1e-9:
-                    chosen, improved = trial, True
-    return sorted(chosen, key=lambda p: cov[p])
+                trial = chosen[:j] + [i] + chosen[j + 1:]
+                t = total(trial)
+                if t < cur - 1e-9:
+                    chosen, cur, improved = trial, t, True
+    return sorted((ladder[i] for i in chosen), key=lambda p: cov[p])
+
+
+def _cell_index_map(grid: Grid, w: int, h: int, scale: float) -> np.ndarray:
+    """Flat (w*h) array with the index of the cell covering each pixel, -1 outside the lattice."""
+    from PIL import Image, ImageDraw
+    im = Image.new("I", (w, h), 0)
+    d = ImageDraw.Draw(im)
+    for i, c in enumerate(grid.cells):
+        d.polygon([(x * scale, y * scale) for x, y in c.poly], fill=i + 1)
+    return np.asarray(im).reshape(-1).astype(np.int64) - 1
 
 
 def assign_options_vote(grid: Grid, options: List[tuple], fitted, smooth_mm: float = 10.0,
                         line_boost: float = 4.0, line_min_delta: float = 22.0, line_coherence: float = 34.0,
                         cleanup: bool = True, sharpen: float = 0.0) -> None:
     """Region voting over an arbitrary option list (see assign_strips_vote for the method).
-    sharpen > 0 applies an unsharp mask (percent) before smoothing."""
-    from PIL import Image, ImageDraw, ImageFilter
+    sharpen > 0 applies an unsharp mask (percent) before smoothing.
+
+    Vectorised: every cell is drawn once into an index image, pixels are labelled with their nearest
+    option via a KD-tree, and the per-cell majority comes from one bincount. The median filter runs at
+    half resolution; thin-feature detection uses the full-resolution pixels."""
+    from PIL import Image, ImageFilter
+    from scipy.spatial import cKDTree
+    n_opt = len(options)
     opt_lab = rgb_to_lab(np.array([o[3] for o in options]))
+    tree = cKDTree(opt_lab)
+    n = len(grid.cells)
     W = max(1, int(round(grid.lattice_width)))
     H = max(1, int(round(grid.lattice_height)))
     base = fitted.convert("RGB").resize((W, H), Image.LANCZOS)
     if sharpen > 0:
         base = base.filter(ImageFilter.UnsharpMask(radius=max(2, int(smooth_mm)), percent=int(sharpen), threshold=3))
-    k = max(3, int(round(smooth_mm)) | 1)
-    img = base.filter(ImageFilter.MedianFilter(k))
-    lab = rgb_to_lab(np.asarray(img, dtype=np.float64).reshape(-1, 3)).reshape(H, W, 3)
-    raw = rgb_to_lab(np.asarray(base, dtype=np.float64).reshape(-1, 3)).reshape(H, W, 3)
-    labels: Dict[Tuple[int, int], int] = {}
-    hist: Dict[Tuple[int, int], np.ndarray] = {}
+
+    # --- majority label per cell on the smoothed half-resolution image
+    hw, hh = max(1, W // 2), max(1, H // 2)
+    half = base.resize((hw, hh), Image.BOX).filter(ImageFilter.MedianFilter(max(3, int(round(smooth_mm / 2.0)) | 1)))
+    _, pix_label = tree.query(rgb_to_lab(np.asarray(half, dtype=np.float64).reshape(-1, 3)))
+    cm_half = _cell_index_map(grid, hw, hh, hw / grid.lattice_width)
+    ok = cm_half >= 0
+    counts = np.bincount(cm_half[ok] * n_opt + pix_label[ok], minlength=n * n_opt).reshape(n, n_opt).astype(float)
+    total = counts.sum(1)
+    mode = counts.argmax(1)
+    for i in np.where(total == 0)[0]:                       # cell too small for the half-res map: use its centre pixel
+        cx, cy = grid.cells[i].centroid
+        mode[i] = pix_label[min(hh - 1, int(cy * hh / grid.lattice_height)) * hw + min(hw - 1, int(cx * hw / grid.lattice_width))]
+    hist_all = counts / np.maximum(total, 1)[:, None]
+
+    # --- thin features on the full-resolution pixels (cables, masts, outlines)
     boosted: set = set()
-    for c in grid.cells:
-        xs = [p[0] for p in c.poly]
-        ys = [p[1] for p in c.poly]
-        x0, x1 = max(0, int(min(xs))), min(W, int(np.ceil(max(xs))) + 1)
-        y0, y1 = max(0, int(min(ys))), min(H, int(np.ceil(max(ys))) + 1)
-        mask = Image.new("L", (x1 - x0, y1 - y0), 0)
-        ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in c.poly], fill=255)
-        m = np.asarray(mask) > 0
-        pl = lab[y0:y1, x0:x1][m]
-        if len(pl) == 0:
-            cx, cy = c.centroid
-            pl = lab[min(H - 1, int(cy)), min(W - 1, int(cx))][None, :]
-        li = ((pl[:, None, :] - opt_lab[None, :, :]) ** 2).sum(-1).argmin(1)
-        h = np.bincount(li, minlength=len(options)).astype(float)
-        mode = int(h.argmax())
-        pr = raw[y0:y1, x0:x1][m]
-        if line_boost > 0 and len(pr) >= 16:
+    if line_boost > 0:
+        raw = rgb_to_lab(np.asarray(base, dtype=np.float64).reshape(-1, 3))
+        cm = _cell_index_map(grid, W, H, 1.0)
+        order = np.argsort(cm, kind="stable")
+        sorted_ids = cm[order]
+        starts = np.searchsorted(sorted_ids, np.arange(n))
+        ends = np.searchsorted(sorted_ids, np.arange(n), side="right")
+        for i in range(n):
+            if ends[i] - starts[i] < 16:
+                continue
+            pr = raw[order[starts[i]:ends[i]]]
             med = np.median(pr, axis=0)
             far = np.sqrt(((pr - med) ** 2).sum(1)) > line_min_delta
             f = far.mean()
@@ -514,13 +552,12 @@ def assign_options_vote(grid: Grid, options: List[tuple], fitted, smooth_mm: flo
                 spread = float(np.sqrt(((fl - fl.mean(0)) ** 2).sum(1)).mean())
                 if spread < line_coherence:
                     w = min(1.0, f * line_boost)
-                    target = med + (fl.mean(0) - med) * w
-                    new = int(((opt_lab - target) ** 2).sum(1).argmin())
-                    if new != mode:
-                        boosted.add((c.col, c.row))
-                        mode = new
-        labels[(c.col, c.row)] = mode
-        hist[(c.col, c.row)] = h / h.sum()
+                    new = int(tree.query(med + (fl.mean(0) - med) * w)[1])
+                    if new != mode[i]:
+                        boosted.add((grid.cells[i].col, grid.cells[i].row))
+                        mode[i] = new
+    labels: Dict[Tuple[int, int], int] = {(c.col, c.row): int(mode[i]) for i, c in enumerate(grid.cells)}
+    hist: Dict[Tuple[int, int], np.ndarray] = {(c.col, c.row): hist_all[i] for i, c in enumerate(grid.cells)}
     if cleanup:
         nb = _cell_neighbours(grid)
         for key_, lbl in list(labels.items()):

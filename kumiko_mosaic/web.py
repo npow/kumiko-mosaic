@@ -70,7 +70,7 @@ async def api_run(image: UploadFile = File(...), params: str = Form("{}")):
         raise HTTPException(400, str(e))
     summary["run_id"] = rid
     summary["files"] = {
-        "preview_svg": f"/runs/{rid}/preview.svg",
+        "preview_svg": f"/runs/{rid}/{'plan.svg' if (rdir / 'plan.svg').exists() else 'preview.svg'}",
         "plan_svg": f"/runs/{rid}/plan.svg" if (rdir / "plan.svg").exists() else None,
         "preview_png": f"/runs/{rid}/preview.png",
         "compare": f"/runs/{rid}/compare.jpg",

@@ -493,15 +493,25 @@ def _bg_suffix_map(grid: Grid) -> Dict[str, str]:
     return {h: ("" if i == 0 else "abcdefgh"[i - 1]) for i, h in enumerate(order)}
 
 
+class PartCoder:
+    """Bag codes of physical parts, with the maps computed once per grid."""
+
+    def __init__(self, grid: Grid):
+        self.pmap, cols, _ = assembly_codes(grid)
+        self.cmap = {hx: str(i + 1) for i, (hx, _) in enumerate(cols)}
+        self.bgsuf = _bg_suffix_map(grid)
+
+    def __call__(self, layer: str, color: str, pattern: Optional[str]) -> str:
+        if layer == "pattern":
+            return f"{self.pmap[pattern]}{self.cmap[color]}"
+        suf = self.bgsuf.get(color, "")
+        return "BG" + (f" {suf}" if suf else "")
+
+
 def part_code(grid: Grid, layer: str, color: str, pattern: Optional[str]) -> str:
     """Bag code of a physical part: pattern inserts 'B3' (letter = pattern, digit = strip filament);
     background inserts 'BG', 'BG a', 'BG b' (suffix matches the lowercase letter in cell codes)."""
-    pmap, cols, _ = assembly_codes(grid)
-    if layer == "pattern":
-        cmap = {hx: str(i + 1) for i, (hx, _) in enumerate(cols)}
-        return f"{pmap[pattern]}{cmap[color]}"
-    suf = _bg_suffix_map(grid).get(color, "")
-    return "BG" + (f" {suf}" if suf else "")
+    return PartCoder(grid)(layer, color, pattern)
 
 
 def _ranges(nums) -> str:
@@ -519,11 +529,12 @@ def _ranges(nums) -> str:
 def plate_codes(grid: Grid, plates) -> List[dict]:
     """For each plate: which bag codes it holds and how many of each."""
     rows = []
+    coder = PartCoder(grid)
     for p in plates:
         counts: Dict[str, int] = {}
         for pl in p.placements:
             k = pl.part
-            code = part_code(grid, k.layer, k.color, k.pattern)
+            code = coder(k.layer, k.color, k.pattern)
             counts[code] = counts.get(code, 0) + 1
         rows.append({"plate": p.index, "file": p.name(), "color_name": p.color_name, "layer": p.layer, "codes": counts})
     return rows
@@ -553,7 +564,8 @@ def bag_labels(grid: Grid, bom, plates, strip_mm: float = 2.0, per_page=(3, 8)) 
         for pl in p.placements:
             k = pl.part
             groups[(k.layer, k.color, k.pattern)]["plates"].add(p.index)
-    items = sorted(groups.items(), key=lambda kv: (kv[0][0] != "pattern", part_code(grid, *kv[0])))
+    coder = PartCoder(grid)
+    items = sorted(groups.items(), key=lambda kv: (kv[0][0] != "pattern", coder(*kv[0])))
     cols_n, rows_n = per_page
     PW, PH = 2480, 3508
     m = 90
@@ -586,7 +598,7 @@ def bag_labels(grid: Grid, bom, plates, strip_mm: float = 2.0, per_page=(3, 8)) 
                           fill=hex_to_rgb(color))
             tx = x0 + 60 + tsz
             avail = x0 + lw - 20 - tx
-            d.text((tx, y0 + 24), part_code(grid, layer, color, pattern), fill="black", font=f_code)
+            d.text((tx, y0 + 24), coder(layer, color, pattern), fill="black", font=f_code)
             d.rectangle([tx, y0 + 24 + int(lh * 0.36), tx + 50, y0 + 24 + int(lh * 0.36) + 36], fill=hex_to_rgb(color), outline="black", width=2)
             t, f = _fit(d, g["name"], int(lh * 0.115), avail - 62)
             d.text((tx + 60, y0 + 24 + int(lh * 0.36)), t, fill="black", font=f)

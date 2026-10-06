@@ -80,7 +80,23 @@ def _split_named(s: str) -> Filament:
     return parse_palette([s])[0]
 
 
+class _Timer:
+    """Wall-clock per pipeline stage, reported in summary.json under 'seconds'."""
+
+    def __init__(self):
+        import time
+        self._t = time.time()
+        self._time = time
+        self.stages = {}
+
+    def lap(self, name: str):
+        now = self._time.time()
+        self.stages[name] = round(now - self._t, 1)
+        self._t = now
+
+
 def run(image_path: str, out_dir: str, params: Params) -> dict:
+    tm = _Timer()
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     img = Image.open(image_path)
@@ -157,6 +173,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
             if c.color and c.color.upper() == bgf.hex.upper():
                 c.pattern = None
 
+    tm.lap("match")
     plan = bom_mod.ColorPlan(params.color_layer, bgf.hex, bgf.name, patf.hex, patf.name)
     bom = bom_mod.build_bom(grid, plan)
     if params.preview_only:
@@ -183,14 +200,17 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
                                             insert_depth=params.insert_depth, strip_mm=params.strip_mm)
     volumes = {pid: geometry.mesh_volume(m) for pid, m in meshes.items()}
 
+    tm.lap("plan_parts")
     # ---- files -------------------------------------------------------------------------------
     fitted.save(out / "fitted_image.png")
     kw = dict(color_layer=params.color_layer, background_color=bgf.hex, pattern_color=patf.hex,
               frame_color=params.frame_color, strip_mm=params.strip_mm)
-    (out / "preview.svg").write_text(render.svg_preview(grid, labels=params.labels, **kw))
-    if params.color_layer == "pattern":                     # compact vector plan for the zoom viewer
+    if params.color_layer == "pattern":
+        # compact vector plan (1 MB at 60 columns); the full preview.svg would be 6 MB of the same picture
         (out / "plan.svg").write_text(render.svg_compact(grid, background_color=bgf.hex,
                                                          frame_color=params.frame_color, strip_mm=params.strip_mm))
+    else:
+        (out / "preview.svg").write_text(render.svg_preview(grid, labels=params.labels, **kw))
     ppm_preview = min(3.0, 4000.0 / max(grid.lattice_width, grid.lattice_height))
     preview = render.png_preview(grid, labels=params.labels, px_per_mm=ppm_preview, **kw)
     preview.save(out / "preview.png")
@@ -212,6 +232,7 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
         for r in pcodes:
             w.writerow([r["plate"], r["file"], r["color_name"], r["layer"], "; ".join(f"{k} x{v}" for k, v in r["codes"].items())])
 
+    tm.lap("previews_and_sheets")
     plates_dir = out / "plates"
     plates_dir.mkdir(exist_ok=True)
     exported = []
@@ -242,7 +263,9 @@ def run(image_path: str, out_dir: str, params: Params) -> dict:
             v["note"] = info.note
         checks.append(v)
 
+    tm.lap("plate_files")
     summary = {
+        "seconds": tm.stages,
         "grid": grid.summary(),
         "image": {"source": str(image_path), "fit": params.fit, "aspect": round(aspect, 4),
                   "lattice_aspect": round(grid.lattice_width / grid.lattice_height, 4)},
@@ -327,7 +350,7 @@ def report_markdown(s: dict) -> str:
     if s["failed_parts"]:
         L.append("\nParts that could not be generated: " + ", ".join(s["failed_parts"]))
     L.append("\n## Files\n")
-    L.append("- preview.png / preview.svg: the finished panel with real insert silhouettes")
+    L.append("- preview.png and plan.svg (or preview.svg): the finished panel with the insert shapes; the SVG zooms without loss")
     L.append("- assembly_sheet.pdf: printable guide; page 1 legend (letter = pattern, digit = filament), then the panel "
              "in strips of 8 columns with every cell labelled, e.g. B3 = pattern B in filament 3")
     L.append("- bag_labels.pdf: one printable label per kind of part (code, filament, counts, plates); plate_codes.csv: codes on each plate")

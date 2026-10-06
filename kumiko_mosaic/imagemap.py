@@ -148,7 +148,7 @@ def enhance_image(img: Image.Image, contrast_cutoff: float = 1.0, saturation: fl
 
 
 def fit_image(img: Image.Image, target_w: float, target_h: float, mode: str = "cover",
-              px_per_mm: float = 4.0, background: str = "#000000", enhance: bool = True) -> Tuple[Image.Image, float]:
+              px_per_mm: float = 2.0, background: str = "#000000", enhance: bool = True) -> Tuple[Image.Image, float]:
     """Return an RGB image covering exactly the lattice rectangle at px_per_mm resolution."""
     img = ImageOps.exif_transpose(img).convert("RGB")
     if enhance:
