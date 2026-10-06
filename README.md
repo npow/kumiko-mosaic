@@ -35,6 +35,24 @@ python -m kumiko_mosaic.cli photo.jpg out/
 
 `out/` gets the preview, `REPORT.md` (frame settings, filaments, part counts), the assembly sheet and the plate files.
 
+## What goes in the panel
+
+**Inserts.** Every triangle gets a flat *background insert* plus an optional *line insert*, a kumiko
+pattern of thin strips. Seventeen line patterns are available at the default size, from sparse to
+dense. The planner puts a sparse pattern where the image is dark and a dense one where it is bright,
+and uses at most four per panel so there are fewer kinds of parts to sort.
+
+![Line patterns](docs/img/patterns.png)
+
+Strips are 2 mm wide and every opening is at least 2.5 mm, so they stay lines rather than turning into
+plates. Paper View's 40 original inserts can also be used (`--pattern-mode single:7`).
+
+**Colours.** All colours are real, purchasable filaments: Bambu Lab PLA Matte and Basic, 55 in total.
+The planner chooses eight for the line inserts and three for the backgrounds, whatever fits the image
+best, or you can list the spools you already own.
+
+![Filaments](docs/img/filaments.png)
+
 ## Examples
 
 ![Tour: photo, kumiko plan, zoom into the line inserts](examples/catalog_tour.gif)
